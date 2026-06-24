@@ -36,7 +36,10 @@
         .container { padding: 24px; }
         .toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
         .toolbar .stats { display: flex; gap: 16px; }
-        .toolbar .stat { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; }
+        .toolbar .stat { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; user-select: none; border: 2px solid transparent; }
+        .toolbar .stat:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .toolbar .stat.active { border-color: currentColor; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        .stat-all { background: #f5f5f5; color: #333; }
         .stat-online { background: #e8f5e9; color: #2e7d32; }
         .stat-offline { background: #ffebee; color: #c62828; }
         .stat-slow { background: #fff3e0; color: #e65100; }
@@ -109,10 +112,10 @@
         <div class="container">
             <div class="toolbar">
                 <div class="stats" id="statsBar">
-                    <span class="stat stat-total" id="statTotal">总计: 0</span>
-                    <span class="stat stat-online" id="statOnline">在线: 0</span>
-                    <span class="stat stat-slow" id="statSlow">缓慢: 0</span>
-                    <span class="stat stat-offline" id="statOffline">离线: 0</span>
+                    <span class="stat stat-all active" id="statAll" onclick="setFilter('all')">全部: 0</span>
+                    <span class="stat stat-online" id="statOnline" onclick="setFilter('online')">在线: 0</span>
+                    <span class="stat stat-slow" id="statSlow" onclick="setFilter('slow')">缓慢: 0</span>
+                    <span class="stat stat-offline" id="statOffline" onclick="setFilter('offline')">离线: 0</span>
                 </div>
                 <button class="btn-check" id="btnCheckAll" onclick="checkAll()">
                     <span>💓</span> 检测全部站点
@@ -138,6 +141,16 @@
 
         let allSites = [];
         let isChecking = false;
+        let currentFilter = 'all';
+
+        function setFilter(filter) {
+            currentFilter = filter;
+            // Update active class
+            document.querySelectorAll('.stat').forEach(el => el.classList.remove('active'));
+            const idMap = { all: 'statAll', online: 'statOnline', slow: 'statSlow', offline: 'statOffline' };
+            document.getElementById(idMap[filter]).classList.add('active');
+            renderSites(allSites);
+        }
 
         async function loadSites() {
             const res = await fetch('/api/sites');
@@ -149,10 +162,25 @@
         function renderSites(sites) {
             const tbody = document.getElementById('sitesBody');
             const empty = document.getElementById('emptyState');
-            if (!sites || sites.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+
+            // Apply filter
+            let filtered = sites;
+            if (currentFilter !== 'all') {
+                filtered = sites.filter(s => s._healthStatus === currentFilter);
+            }
+
+            if (!filtered || filtered.length === 0) {
+                tbody.innerHTML = '';
+                empty.style.display = 'block';
+                empty.textContent = currentFilter === 'all' ? '暂无站点' :
+                    currentFilter === 'online' ? '没有在线站点' :
+                    currentFilter === 'slow' ? '没有缓慢站点' :
+                    currentFilter === 'offline' ? '没有离线站点' : '暂无站点';
+                return;
+            }
             empty.style.display = 'none';
 
-            tbody.innerHTML = sites.map(s => {
+            tbody.innerHTML = filtered.map(s => {
                 const status = s._healthStatus || 'pending';
                 const latency = s._healthLatency || '-';
                 const lastCheck = s._healthTime || '-';
@@ -173,7 +201,7 @@
             const online = allSites.filter(s => s._healthStatus === 'online').length;
             const slow = allSites.filter(s => s._healthStatus === 'slow').length;
             const offline = allSites.filter(s => s._healthStatus === 'offline').length;
-            document.getElementById('statTotal').textContent = `总计: ${total}`;
+            document.getElementById('statAll').textContent = `全部: ${total}`;
             document.getElementById('statOnline').textContent = `在线: ${online}`;
             document.getElementById('statSlow').textContent = `缓慢: ${slow}`;
             document.getElementById('statOffline').textContent = `离线: ${offline}`;
