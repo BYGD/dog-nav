@@ -40,8 +40,10 @@
   <img src="screenshot-combined.png" alt="DogNav Dark & Light Mode" width="90%" style="border-radius:12px; box-shadow: 0 16px 48px rgba(0,0,0,0.3)">
 </p>
 
-<p align="center" style="margin-top:16px">
-  本项目可一键部署到腾讯云 EdgeOne，点击下方按钮即可快速部署 
+---
+
+<p align="center" style="margin-top:16px; font-size:1.1em; color:#888">
+  This project can be deployed to Tencent Cloud EdgeOne with one click.
 </p>
 
 <p align="center">
