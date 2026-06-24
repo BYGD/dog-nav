@@ -352,6 +352,52 @@ app.delete('/api/links/:id', requireAuth, async (c) => {
 });
 
 // ═══════════════════════════════════════════
+// FETCH ICON API
+// ═══════════════════════════════════════════
+
+app.get('/api/fetch-icon', async (c) => {
+    const url = c.req.query('url');
+    if (!url) return c.json({ error: 'Missing url parameter' }, 400);
+
+    try {
+        const parsed = new URL(url);
+        const origin = parsed.origin;
+
+        // Fetch the page HTML
+        const resp = await fetch(url, {
+            headers: { 'User-Agent': 'Mozilla/5.0' },
+            redirect: 'follow',
+        });
+        const html = await resp.text();
+
+        // Try to find favicon in <link> tags
+        const patterns = [
+            /<link[^>]+rel=["'](?:shortcut )?icon["'][^>]+href=["']([^"']+)["']/i,
+            /<link[^>]+href=["']([^"']+)["'][^>]+rel=["'](?:shortcut )?icon["']/i,
+            /<link[^>]+rel=["']apple-touch-icon["'][^>]+href=["']([^"']+)["']/i,
+            /<link[^>]+href=["']([^"']+)["'][^>]+rel=["']apple-touch-icon["']/i,
+        ];
+
+        for (const pat of patterns) {
+            const m = html.match(pat);
+            if (m && m[1]) {
+                let icon = m[1].trim();
+                if (icon.startsWith('data:')) return c.json({ icon });
+                if (icon.startsWith('//')) return c.json({ icon: 'https:' + icon });
+                if (icon.startsWith('/')) return c.json({ icon: origin + icon });
+                if (icon.startsWith('http')) return c.json({ icon });
+                return c.json({ icon: origin + '/' + icon });
+            }
+        }
+
+        // Fallback to /favicon.ico
+        return c.json({ icon: origin + '/favicon.ico' });
+    } catch (err) {
+        return c.json({ icon: '' });
+    }
+});
+
+// ═══════════════════════════════════════════
 // USERS API
 // ═══════════════════════════════════════════
 

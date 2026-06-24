@@ -1,100 +1,194 @@
-<p align="center">
-  <img src="https://nav.cangdog.com/ico.ico" alt="DogNav Logo" width="100" style="border-radius:50%; box-shadow: 0 8px 32px rgba(127,90,240,0.3)">
-</p>
+<div align="center">
 
-<h1 align="center" style="font-size:2.5em; margin-bottom:0">
-  Dog<span style="color:#7f5af0">Nav</span>
-</h1>
+<img src="https://raw.githubusercontent.com/BYGD/dog-nav/main/ico.ico" width="100" style="border-radius:50%" alt="DogNav Logo">
 
-<p align="center" style="font-size:1.2em; color:#888; margin-top:8px">
-  发现互联网的无限精彩 — Discover the Best of the Internet
-</p>
+# 🐕 DogNav
 
-<p align="center">
-  <a href="https://nav.cangdog.com">
-    <img src="https://img.shields.io/badge/_Live_Demo-nav.cangdog.com-7f5af0?style=flat-square" alt="Live Demo">
-  </a>
-  <img src="https://img.shields.io/badge/version-1.2.0-blue?style=flat-square" alt="Version">
-  <img src="https://img.shields.io/badge/sites-146+-2cb67d?style=flat-square" alt="Sites">
-  <img src="https://img.shields.io/badge/categories-10-e16162?style=flat-square" alt="Categories">
-  <img src="https://img.shields.io/badge/size-~40KB-lightgrey?style=flat-square" alt="Size">
-  <img src="https://img.shields.io/badge/license-MIT-7f5af0?style=flat-square" alt="License">
-  <img src="https://img.shields.io/badge/dependencies-zero-2cb67d?style=flat-square" alt="Zero Dependencies">
-</p>
+### ✨ Discover the Best of the Internet ✨
 
-<p align="center">
-  <a href="https://nav.cangdog.com">🚀 在线访问</a>
-  ·
-  <a href="https://nav.cangdog.com/contribute.html">📮 提交站点</a>
-  ·
-  <a href="https://nav.cangdog.com/links.html">🔗 友情链接</a>
-  ·
-  <a href="https://nav.cangdog.com/about.html">📖 关于项目</a>
-</p>
+**A curated navigation site with full CMS backend — self-hosted or one-click deploy to Cloudflare.**
+
+[![Live Demo](https://img.shields.io/badge/Live_Demo-nav.cangdog.com-FF6B6B?style=flat-square)](https://nav.cangdog.com)
+[![Cloudflare](https://img.shields.io/badge/Cloudflare-dognav.ccgg.workers.dev-F38020?style=flat-square&logo=cloudflare&logoColor=white)](https://dognav.ccgg.workers.dev)
+[![Version](https://img.shields.io/badge/Version-2.0-4ECDC4?style=flat-square)]()
+[![Sites](https://img.shields.io/badge/Sites-151+-45B7D1?style=flat-square)]()
+[![Categories](https://img.shields.io/badge/Categories-10-96CEB4?style=flat-square)]()
+[![License](https://img.shields.io/badge/License-MIT-FFEAA7?style=flat-square)]()
+
+<br>
+
+[![Deploy to Cloudflare](https://img.shields.io/badge/Deploy_to_Cloudflare_Workers-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)](#cloudflare-one-click-deploy)
+
+</div>
 
 ---
 
-##  Preview
+## 📋 Table of Contents
 
-<p align="center">
-  <img src="screenshot-combined.png" alt="DogNav Dark & Light Mode" width="90%" style="border-radius:12px; box-shadow: 0 16px 48px rgba(0,0,0,0.3)">
-</p>
+```
+dog-nav/
+├── 📖 About
+├── 🌟 Features
+├── 🏗️ Architecture
+├── 🚀 Quick Start
+│   ├── Local Development
+│   └── Cloudflare One-Click Deploy
+├── 🔧 Admin Panel
+├── 📁 Project Structure
+├── 🛠️ Tech Stack
+├── 📸 Screenshots
+└── 📄 License
+```
 
 ---
 
-<p align="center" style="margin-top:16px; font-size:1.1em; color:#888">
-  This project can be deployed to Tencent Cloud EdgeOne with one click.
-</p>
+## 📖 About
 
-<p align="center">
-  <a href="https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2FBYGD%2Fdog-nav">
-    <img src="https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg" alt="Deploy to EdgeOne">
-  </a>
-</p>
+DogNav is a carefully curated website navigation directory that helps you discover the best of the internet. It features a **glassmorphism UI** with dark/light theme support, **151+ hand-picked sites** across 10 categories, and a **full CMS backend** for easy content management.
+
+Originally built as a pure static frontend, DogNav has evolved into a full-stack application with two deployment options: a local Node.js CMS and a serverless Cloudflare Workers version.
 
 ---
 
 ## 🌟 Features
 
 | Feature | Description |
-|---------|-------------|
-| 🎨 **Glassmorphism UI** | 毛玻璃质感设计，支持白天/黑夜模式一键切换 |
-| 🔍 **Multi-Engine Search** | 内置百度、Google、Bing、GitHub、B站、知乎 6 大搜索引擎 |
-| 📂 **10 Categories** | 推荐、影视、动漫、软件、工具、资讯、社区、AI、开发、设计 |
-|  **Zero Dependencies** | 纯 HTML/CSS/JS 实现，无需构建工具，打开即用 |
-| 📱 **Fully Responsive** | 完美适配桌面端、平板、手机等各种屏幕尺寸 |
-| 🇨🇳 **China Optimized** | 所有资源国内可达，CDN 使用 cdnjs.snrat.com |
-| 🖱️ **Mouse Glow Effect** | 卡片跟随鼠标的光晕交互效果 |
-| 🎭 **Smooth Animations** | 滚动渐现、分类切换、主题切换均有流畅过渡动画 |
+|:--------|:------------|
+| 🎨 **Glassmorphism UI** | Modern frosted-glass design with smooth animations and mouse glow effects |
+| 🌓 **Dark / Light Mode** | Seamless theme switching with persistent preference |
+| 🔍 **Multi-Engine Search** | Google, Bing, Baidu, DuckDuckGo — search directly from the nav bar |
+| 📂 **10 Categories** | Recommend, Video, Anime, Software, Tools, News, Community, AI, Dev, Design |
+| 📱 **Fully Responsive** | Optimized for desktop, tablet, and mobile devices |
+| 🇨🇳 **China Optimized** | All sites accessible from mainland China, CDN via Chinese-friendly providers |
+| 🗄️ **Full CMS Backend** | Manage sites, categories, pages, links, users, and settings via admin panel |
+| 📊 **Click Analytics** | Track site popularity with built-in click counting |
+| 📝 **User Submissions** | Visitors can submit sites for admin review and approval |
+| ☁️ **Cloudflare Deploy** | One-click deploy to Cloudflare Workers + D1 serverless stack |
+| 🔐 **Admin Auth** | Bearer token authentication with action audit logging |
+| 📦 **Zero Config** | Pre-seeded with 151 sites, 10 categories, and default settings |
 
 ---
 
-## 📊 Categories Overview
+## 🏗️ Architecture
+
+DogNav provides **two deployment modes** with the same frontend and API:
 
 ```
-⭐ 常用推荐 (17)    🎬 影视资源 (15)    🌸 动漫 (8)
-💿 软件博客 (9)      🔧 在线工具 (23)    📰 资讯 (14)
-💬 社区 (12)        🤖 AI 工具 (15)      开发编程 (20)
-🎨 设计素材 (16)
+┌─────────────────────────────────────────────────────┐
+│                  Frontend (HTML/CSS/JS)              │
+│   index.html · about.html · links.html · contribute  │
+│              + 12 admin panel pages                  │
+└────────────────────┬────────────────────────────────┘
+                     │ fetch('/api/...')
+        ┌────────────┴────────────┐
+        ▼                         ▼
+┌───────────────┐       ┌──────────────────┐
+│  Local Mode   │       │  Cloudflare Mode  │
+│               │       │                   │
+│  Express.js   │       │  Hono Framework   │
+│  + sql.js     │       │  + D1 (SQLite)    │
+│  + multer     │       │  + Workers Assets │
+│  Port 3000    │       │  Edge Runtime     │
+└───────────────┘       └──────────────────┘
 ```
 
-**Total: 146+ sites** carefully curated across 10 categories.
+| | Local Mode | Cloudflare Mode |
+|:--|:-----------|:----------------|
+| **Runtime** | Node.js (Express) | Cloudflare Workers (Hono) |
+| **Database** | sql.js (file-based SQLite) | D1 (serverless SQLite) |
+| **Upload** | multer → `./uploads` | Not included |
+| **Deploy** | `node server.js` | `wrangler deploy` |
+| **Cost** | Free (self-hosted) | Free tier generous |
 
 ---
 
-## 🛠️ Tech Stack
+## 🚀 Quick Start
 
-<p align="center">
-  <img src="https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white" alt="HTML5">
-  <img src="https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white" alt="CSS3">
-  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black" alt="JavaScript">
-  <img src="https://img.shields.io/badge/Font_Awesome-339AF0?style=flat-square&logo=font-awesome&logoColor=white" alt="Font Awesome">
-  <img src="https://img.shields.io/badge/Google_Fonts-4285F4?style=flat-square&logo=google&logoColor=white" alt="Google Fonts">
-</p>
+### Local Development
 
-- **CSS Features**: Custom Properties, Grid Layout, `backdrop-filter`, `clamp()`, Keyframe Animations
-- **JS Features**: IntersectionObserver, Event Delegation, Dynamic DOM Rendering
-- **Fonts**: Sora (Latin) + Noto Sans SC (Chinese)
+```bash
+# Clone the repository
+git clone https://github.com/BYGD/dog-nav.git
+cd dog-nav
+
+# Install dependencies
+npm install
+
+# Seed the database (first time)
+node seed.js
+
+# Start the server
+npm start
+# → http://localhost:3000
+```
+
+**Default admin:** `admin` / `admin123`
+
+### Cloudflare One-Click Deploy
+
+```bash
+# Clone the repository
+git clone https://github.com/BYGD/dog-nav.git
+cd dog-nav/cloudflare
+
+# Install dependencies
+npm install
+
+# One-click deploy (handles auth, D1 creation, schema, seed, and deploy)
+npm run deploy
+```
+
+The deploy script will:
+
+1. Check & install Wrangler CLI
+2. Guide you through Cloudflare login (browser OAuth)
+3. Create a D1 database (or reuse existing)
+4. Update `wrangler.toml` with the database ID
+5. Run `schema.sql` + `seed.sql` to initialize data
+6. Deploy the Worker with all static assets
+
+**Your site will be live at:** `https://dognav.<your-subdomain>.workers.dev`
+
+### Manual Cloudflare Deploy
+
+```bash
+cd cloudflare
+
+# Login to Cloudflare
+npx wrangler login
+
+# Create D1 database
+npx wrangler d1 create dognav
+# → Copy the database_id to wrangler.toml
+
+# Initialize database
+npx wrangler d1 execute dognav --remote --file=./schema.sql
+npx wrangler d1 execute dognav --remote --file=./seed.sql
+
+# Deploy
+npx wrangler deploy
+```
+
+---
+
+## 🔧 Admin Panel
+
+Access the admin panel at `/admin` — a full CMS to manage every aspect of your navigation site.
+
+| Module | Description |
+|:-------|:------------|
+| 📊 **Dashboard** | Overview with site stats, recent submissions, and quick actions |
+| 🌐 **Sites** | Add, edit, delete, and reorder navigation sites |
+| 📂 **Categories** | Manage site categories with icons and sort order |
+| 📄 **Pages** | Rich-text editor for About, Contribute, and Links pages |
+| 🔗 **Links** | Manage friend links displayed on the Links page |
+| 📝 **Submissions** | Review and approve/reject user-submitted sites |
+| 📈 **Statistics** | Click analytics with per-site tracking |
+| 👥 **Users** | Manage admin accounts and permissions |
+| ⚙️ **Settings** | Site title, description, footer, SEO, and appearance settings |
+| 📋 **Logs** | Admin action audit trail |
+| 🚨 **Reports** | View and resolve dead link / issue reports from visitors |
+| 💾 **Backup** | Export and import database backups |
 
 ---
 
@@ -102,55 +196,104 @@
 
 ```
 dog-nav/
-├── index.html          # Main page — 146 sites, search, categories
-├── links.html          # Friend links — 16 partner sites
-├── about.html          # About page — project info & stats
-├── contribute.html     # Submission form — mailto integration
-├── ico.ico             # Favicon
-── css/
-│   ├── style.css       # Main styles
-│   └── font-awesome.css # Icon library
+├── index.html              # Main navigation page
+├── about.html              # About page (CMS-driven)
+├── links.html              # Friend links page (CMS-driven)
+├── contribute.html          # Site submission page (CMS-driven)
+├── server.js               # Local CMS server (Express + sql.js, 1005 lines)
+├── seed.js                 # Database seed script
+├── package.json            # Node.js dependencies
+│
+├── css/
+│   ├── style.css           # Main stylesheet (glassmorphism, themes)
+│   └── font-awesome.css    # Icon library
 ├── js/
-│   ── app.js          # Application logic
-└── ico/                # Site favicon images (100+)
+│   └── app.js              # Frontend logic (rendering, search, themes)
+├── ico/                    # Site favicon images
+│
+├── admin/                  # Admin panel (12 pages)
+│   ├── index.html          # Login page
+│   ├── dashboard.html      # Main dashboard
+│   ├── categories.html     # Category management
+│   ├── ...                 # (see Admin Panel section)
+│   └── backup.html         # Database backup
+│
+├── cloudflare/             # Cloudflare Workers deployment
+│   ├── src/
+│   │   └── index.js        # Hono API backend (446 lines)
+│   ├── public/             # Static assets (copy of frontend)
+│   ├── schema.sql          # D1 database schema (10 tables)
+│   ├── seed.sql            # Seed data (151 sites, 10 categories)
+│   ├── deploy.js           # One-click deploy script
+│   ├── wrangler.toml       # Cloudflare configuration
+│   └── package.json        # CF dependencies (hono, wrangler)
+│
+├── robots.txt              # Search engine rules
+├── sitemap.xml             # XML sitemap
+└── README.md               # This file
 ```
 
 ---
 
-## 🚀 Deployment
+## 🛠️ Tech Stack
 
-Hosted on **Tencent Cloud EdgeOne** — a global edge computing platform.
+**Frontend**
 
-| Item | Value |
-|------|-------|
-| Domain | `nav.cangdog.com` |
-| Provider | Tencent Cloud EdgeOne |
-| Protocol | HTTPS |
-| CDN | Global edge nodes |
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
+![Font Awesome](https://img.shields.io/badge/Font_Awesome-528DD7?style=flat-square&logo=font-awesome&logoColor=white)
+
+**Local Backend**
+
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?style=flat-square&logo=express&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white)
+
+**Cloudflare Backend**
+
+![Cloudflare Workers](https://img.shields.io/badge/Cloudflare_Workers-F38020?style=flat-square&logo=cloudflare&logoColor=white)
+![Hono](https://img.shields.io/badge/Hono-E36002?style=flat-square)
+![D1](https://img.shields.io/badge/D1_SQLite-004B85?style=flat-square)
 
 ---
 
-## 🤝 Contributing
+## 📸 Screenshots
 
-We welcome contributions! Here's how you can help:
+<div align="center">
 
-1. **Report dead links** — Open an issue with the broken URL
-2. **Suggest new sites** — Use the [Submit Page](https://nav.cangdog.com/contribute.html) or open an issue
-3. **Add friend links** — If you run a quality site, reach out via [links page](https://nav.cangdog.com/links.html)
-4. **Improve code** — Fork, make changes, and submit a PR
+**Dark Theme**
+
+![Dark Mode](https://raw.githubusercontent.com/BYGD/dog-nav/main/screenshot.png)
+
+**Light Theme**
+
+![Light Mode](https://raw.githubusercontent.com/BYGD/dog-nav/main/screenshot-light.png)
+
+</div>
+
+---
+
+## 🌍 Deployment Links
+
+| Platform | URL | Notes |
+|:---------|:----|:------|
+| Tencent EdgeOne | [nav.cangdog.com](https://nav.cangdog.com) | Static frontend (original) |
+| Cloudflare Workers | [dognav.ccgg.workers.dev](https://dognav.ccgg.workers.dev) | Full-stack with CMS |
+| Local | `localhost:3000` | Self-hosted with Node.js |
 
 ---
 
 ## 📄 License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is open source under the [MIT License](LICENSE).
 
 ---
 
-<p align="center">
-  Made with 💜 by <a href="https://github.com/BYGD">BYGD</a>
-</p>
+<div align="center">
 
-<p align="center">
-  <sub>© 2026 DogNav. All rights reserved.</sub>
-</p>
+**⭐ If you find this project useful, consider giving it a star! ⭐**
+
+[Live Demo](https://nav.cangdog.com) · [Cloudflare Demo](https://dognav.ccgg.workers.dev) · [Report Bug](https://github.com/BYGD/dog-nav/issues) · [Request Feature](https://github.com/BYGD/dog-nav/issues)
+
+</div>

@@ -932,6 +932,69 @@ app.delete('/api/links/:id', requireAuth, (req, res) => {
 });
 
 // ═══════════════════════════════════════════
+// FETCH ICON API
+// ═══════════════════════════════════════════
+
+const https = require('https');
+const http = require('http');
+
+app.get('/api/fetch-icon', async (req, res) => {
+    const url = req.query.url;
+    if (!url) return res.status(400).json({ error: 'Missing url parameter' });
+
+    try {
+        const origin = new URL(url).origin;
+        const iconUrl = await fetchFavicon(url, origin);
+        res.json({ icon: iconUrl });
+    } catch (err) {
+        res.json({ icon: '' });
+    }
+});
+
+function fetchFavicon(pageUrl, origin) {
+    return new Promise((resolve, reject) => {
+        const mod = pageUrl.startsWith('https') ? https : http;
+        const req = mod.get(pageUrl, { timeout: 5000, headers: { 'User-Agent': 'Mozilla/5.0' } }, (resp) => {
+            if (resp.statusCode >= 300 && resp.statusCode < 400 && resp.headers.location) {
+                const newOrigin = new URL(resp.headers.location).origin;
+                fetchFavicon(resp.headers.location, newOrigin).then(resolve).catch(reject);
+                return;
+            }
+            let html = '';
+            resp.on('data', chunk => {
+                html += chunk;
+                if (html.length > 50000) { resp.destroy(); parseAndResolve(html, origin).then(resolve); }
+            });
+            resp.on('end', () => parseAndResolve(html, origin).then(resolve));
+            resp.on('error', () => resolve(origin + '/favicon.ico'));
+        });
+        req.on('error', () => resolve(origin + '/favicon.ico'));
+        req.on('timeout', () => { req.destroy(); resolve(origin + '/favicon.ico'); });
+    });
+}
+
+async function parseAndResolve(html, origin) {
+    const iconPatterns = [
+        /<link[^>]+rel=["'](?:shortcut )?icon["'][^>]+href=["']([^"']+)["']/i,
+        /<link[^>]+href=["']([^"']+)["'][^>]+rel=["'](?:shortcut )?icon["']/i,
+        /<link[^>]+rel=["']apple-touch-icon["'][^>]+href=["']([^"']+)["']/i,
+        /<link[^>]+href=["']([^"']+)["'][^>]+rel=["']apple-touch-icon["']/i,
+    ];
+    for (const pat of iconPatterns) {
+        const m = html.match(pat);
+        if (m && m[1]) {
+            let icon = m[1].trim();
+            if (icon.startsWith('data:')) return icon;
+            if (icon.startsWith('//')) return 'https:' + icon;
+            if (icon.startsWith('/')) return origin + icon;
+            if (icon.startsWith('http')) return icon;
+            return origin + '/' + icon;
+        }
+    }
+    return origin + '/favicon.ico';
+}
+
+// ═══════════════════════════════════════════
 // USERS API
 // ═══════════════════════════════════════════
 
