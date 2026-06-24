@@ -23,12 +23,6 @@
 </p>
 
 <p align="center">
-  <a href="https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2FBYGD%2Fdog-nav">
-    <img src="https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg" alt="Deploy to EdgeOne">
-  </a>
-</p>
-
-<p align="center">
   <a href="https://dog-nav.edgeone.dev">🚀 在线访问</a>
   ·
   <a href="https://dog-nav.edgeone.dev/contribute.html">📮 提交站点</a>
@@ -44,6 +38,16 @@
 
 <p align="center">
   <img src="screenshot-combined.png" alt="DogNav Dark & Light Mode" width="90%" style="border-radius:12px; box-shadow: 0 16px 48px rgba(0,0,0,0.3)">
+</p>
+
+<p align="center" style="margin-top:16px">
+  本项目可一键部署到腾讯云 EdgeOne，点击下方按钮即可快速部署 
+</p>
+
+<p align="center">
+  <a href="https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2FBYGD%2Fdog-nav">
+    <img src="https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg" alt="Deploy to EdgeOne">
+  </a>
 </p>
 
 ---
