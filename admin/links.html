@@ -402,8 +402,7 @@
 
         async function fetchDesc() {
             const urlInput = document.getElementById('linkUrl');
-            const nameInput = document.getElementById('linkName');
-            const descInput = document.getElementById('linkDesc');
+                        const descInput = document.getElementById('linkDesc');
             const btn = document.getElementById('fetchDescBtn');
             const url = urlInput.value.trim();
             if (!url) { showToast('请先填写URL', 'error'); return; }
@@ -413,7 +412,6 @@
                 const res = await fetch('/api/fetch-icon?url=' + encodeURIComponent(url));
                 const data = await res.json();
                 let filled = 0;
-                if (data.title && !nameInput.value.trim()) { nameInput.value = data.title; filled++; }
                 if (data.description && !descInput.value.trim()) { descInput.value = data.description; filled++; }
                 showToast(filled > 0 ? '已自动填充 ' + filled + ' 项' : '未获取到信息，可手动填写', filled > 0 ? 'success' : 'error');
             } catch (err) {
