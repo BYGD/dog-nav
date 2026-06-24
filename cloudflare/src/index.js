@@ -50,7 +50,9 @@ app.put('/api/auth/password', requireAuth, async (c) => {
 // ═══════════════════════════════════════════
 
 app.get('/api/sites', async (c) => {
-    const { results } = await c.env.DB.prepare('SELECT * FROM sites ORDER BY sort_order, category, name').all();
+    const sort = c.req.query('sort');
+    const orderBy = sort === 'created' ? 'created_at DESC, id DESC' : 'sort_order, category, name';
+    const { results } = await c.env.DB.prepare(`SELECT * FROM sites ORDER BY ${orderBy}`).all();
     return c.json(results);
 });
 

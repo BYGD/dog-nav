@@ -331,7 +331,9 @@ app.put('/api/auth/password', requireAuth, (req, res) => {
 
 app.get('/api/sites', (req, res) => {
     try {
-        const result = db.exec("SELECT * FROM sites ORDER BY sort_order, category, name");
+        const sort = req.query.sort;
+        const orderBy = sort === 'created' ? 'created_at DESC, id DESC' : 'sort_order, category, name';
+        const result = db.exec(`SELECT * FROM sites ORDER BY ${orderBy}`);
         res.json(result[0] ? result[0].values.map(row => {
             const obj = {};
             result[0].columns.forEach((col, i) => obj[col] = row[i]);

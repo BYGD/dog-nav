@@ -261,7 +261,7 @@
         function authHeaders() { return { 'Authorization': 'Bearer ' + sessionStorage.getItem('admin_token'), 'Content-Type': 'application/json' }; }
 
         async function loadSites() {
-            const res = await fetch('/api/sites');
+            const res = await fetch('/api/sites?sort=created');
             allSites = await res.json();
             renderSites(allSites);
             updateStats();
