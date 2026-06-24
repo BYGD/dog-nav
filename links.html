@@ -201,8 +201,13 @@
 
 <script>
 const H = document.documentElement;
+const savedTheme = localStorage.getItem('dognav-theme');
+if (savedTheme) H.setAttribute('data-theme', savedTheme);
+
 document.getElementById('themeBtn').addEventListener('click', () => {
-    H.setAttribute('data-theme', H.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    const next = H.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    H.setAttribute('data-theme', next);
+    localStorage.setItem('dognav-theme', next);
 });
 document.getElementById('mobBtn').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
 const obs = new IntersectionObserver(entries => {
