@@ -1,0 +1,11 @@
+name = "dognav"
+main = "src/index.js"
+compatibility_date = "2025-06-25"
+
+[assets]
+directory = "./public"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "dognav"
+database_id = "84b114ec-d76d-47cb-92cb-0e807a41679e"

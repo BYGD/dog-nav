@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DogNav 管理后台</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f2f5; min-height: 100vh; display: flex; }
+
+        /* ═══ SIDEBAR ═══ */
+        .sidebar {
+            width: 240px;
+            background: #1e1e2d;
+            min-height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            transition: width 0.3s;
+        }
+        .sidebar-brand {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .sidebar-brand .logo { font-size: 28px; }
+        .sidebar-brand .text { font-size: 18px; font-weight: 700; color: white; }
+        .sidebar-brand .text span { color: #7c83ff; }
+        .sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+        .nav-section { padding: 8px 20px 4px; font-size: 11px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 1px; margin-top: 8px; }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 20px;
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .sidebar-nav a:hover { color: white; background: rgba(255,255,255,0.05); }
+        .sidebar-nav a.active {
+            color: white;
+            background: rgba(124,131,255,0.1);
+            border-left-color: #7c83ff;
+        }
+        .sidebar-nav a .icon { font-size: 18px; width: 24px; text-align: center; }
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .sidebar-footer a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255,255,255,0.4);
+            text-decoration: none;
+            font-size: 13px;
+            padding: 8px 0;
+        }
+        .sidebar-footer a:hover { color: #ff6b6b; }
+
+        /* ═══ MAIN CONTENT ═══ */
+        .main { margin-left: 240px; flex: 1; min-height: 100vh; }
+        .topbar {
+            background: white;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .topbar h1 { font-size: 18px; color: #333; font-weight: 600; }
+        .topbar .user-info { display: flex; align-items: center; gap: 12px; font-size: 14px; color: #666; }
+        .topbar .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: 600; }
+        .container { padding: 24px; }
+
+        /* ═══ STATS ═══ */
+        .stats { display: flex; gap: 20px; margin-bottom: 24px; }
+        .stat-card { background: white; padding: 20px 24px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); flex: 1; }
+        .stat-card .number { font-size: 28px; font-weight: 700; color: #7c83ff; }
+        .stat-card .label { font-size: 13px; color: #888; margin-top: 4px; }
+
+        /* ═══ TOOLBAR ═══ */
+        .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+        .btn-add { padding: 10px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; }
+        .btn-add:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102,126,234,0.4); }
+        .search-box { padding: 10px 16px; border: 1px solid #e0e0e0; border-radius: 8px; width: 260px; font-size: 14px; }
+        .search-box:focus { outline: none; border-color: #7c83ff; }
+        .category-filter { padding: 10px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; background: white; }
+
+        /* ═══ TABLE ═══ */
+        .sites-table { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #fafbfc; padding: 12px 16px; text-align: left; font-weight: 600; color: #555; font-size: 13px; border-bottom: 1px solid #eee; }
+        td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+        tr:hover { background: #fafbfc; }
+        .site-name { font-weight: 600; color: #333; }
+        .site-url { color: #7c83ff; font-size: 13px; }
+        .site-category { display: inline-block; padding: 4px 10px; background: #f0f0f0; border-radius: 12px; font-size: 12px; color: #666; }
+        .btn-edit, .btn-delete { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; margin-right: 6px; }
+        .btn-edit { background: #e8f0fe; color: #1a73e8; }
+        .btn-edit:hover { background: #d2e3fc; }
+        .btn-delete { background: #fce8e6; color: #d93025; }
+        .btn-delete:hover { background: #f8d7da; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #999; }
+
+        /* ═══ MODAL ═══ */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-overlay.show { display: flex; }
+        .modal { background: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+        .modal h2 { margin-bottom: 20px; color: #333; }
+        .modal .form-group { margin-bottom: 16px; }
+        .modal label { display: block; margin-bottom: 6px; font-weight: 500; color: #555; font-size: 14px; }
+        .modal input, .modal select, .modal textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-family: inherit; }
+        .modal input:focus, .modal select:focus, .modal textarea:focus { outline: none; border-color: #7c83ff; }
+        .modal textarea { resize: vertical; min-height: 60px; }
+        .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; }
+        .btn-cancel { padding: 10px 20px; background: #f5f5f5; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; }
+        .btn-save { padding: 10px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="logo">🐕</div>
+            <div class="text">Dog<span>Nav</span></div>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">内容管理</div>
+            <a href="/admin/dashboard" class="active"><span class="icon">📋</span> 站点管理</a>
+            <a href="/admin/categories"><span class="icon">📂</span> 分类管理</a>
+            <a href="/admin/pages"><span class="icon">📄</span> 页面管理</a>
+            <a href="/admin/links"><span class="icon">🔗</span> 友链管理</a>
+
+            <div class="nav-section">互动管理</div>
+            <a href="/admin/submissions"><span class="icon">📮</span> 提交审核</a>
+            <a href="/admin/reports"><span class="icon">🚨</span> 举报管理</a>
+
+            <div class="nav-section">数据分析</div>
+            <a href="/admin/stats"><span class="icon">📊</span> 统计看板</a>
+            <a href="/admin/logs"><span class="icon">📝</span> 操作日志</a>
+
+            <div class="nav-section">系统</div>
+            <a href="/admin/users"><span class="icon">👥</span> 用户管理</a>
+            <a href="/admin/backup"><span class="icon">💾</span> 备份恢复</a>
+            <a href="/admin/settings"><span class="icon">⚙️</span> 系统设置</a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" onclick="logout()"><span class="icon">🚪</span> 退出登录</a>
+        </div>
+    </aside>
+
+    <!-- ═══ MAIN ═══ -->
+    <div class="main">
+        <div class="topbar">
+            <h1>站点管理</h1>
+            <div class="user-info">
+                <div class="avatar">A</div>
+                <span>Admin</span>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="number" id="totalSites">0</div>
+                    <div class="label">总站点数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="totalCategories">0</div>
+                    <div class="label">分类数</div>
+                </div>
+            </div>
+
+            <div class="toolbar">
+                <button class="btn-add" onclick="openModal()">+ 添加网站</button>
+                <input type="text" class="search-box" id="searchBox" placeholder="搜索网站名称或描述...">
+                <select class="category-filter" id="categoryFilter">
+                    <option value="">全部分类</option>
+                </select>
+            </div>
+
+            <div class="sites-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>URL</th>
+                            <th>描述</th>
+                            <th>分类</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sitesTableBody"></tbody>
+                </table>
+                <div class="empty-state" id="emptyState" style="display:none">暂无数据</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ MODAL ═══ -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <h2 id="modalTitle">添加网站</h2>
+            <form id="siteForm">
+                <input type="hidden" id="siteId">
+                <div class="form-group"><label>网站名称 *</label><input type="text" id="siteName" required></div>
+                <div class="form-group"><label>URL *</label><input type="url" id="siteUrl" required placeholder="https://"></div>
+                <div class="form-group"><label>描述</label><textarea id="siteDesc"></textarea></div>
+                <div class="form-group"><label>图标 (emoji 或 URL)</label><input type="text" id="siteIcon" placeholder="🌐 或 https://..."></div>
+                <div class="form-group">
+                    <label>分类 *</label>
+                    <select id="siteCategory" required>
+                        <option value="recommend">⭐ 常用推荐</option>
+                        <option value="video">🎬 影视资源</option>
+                        <option value="anime">🌸 动漫</option>
+                        <option value="software">💿 软件博客</option>
+                        <option value="tools">🔧 在线工具</option>
+                        <option value="news">📰 资讯</option>
+                        <option value="community">💬 社区</option>
+                        <option value="ai">🤖 AI 工具</option>
+                        <option value="dev">💻 开发编程</option>
+                        <option value="design">🎨 设计素材</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>排序权重</label><input type="number" id="siteSort" value="0" min="0"></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">取消</button>
+                    <button type="submit" class="btn-save">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const CATEGORIES = {
+            recommend: '⭐ 常用推荐', video: '🎬 影视资源', anime: '🌸 动漫',
+            software: '💿 软件博客', tools: '🔧 在线工具', news: '📰 资讯',
+            community: '💬 社区', ai: '🤖 AI 工具', dev: '💻 开发编程', design: '🎨 设计素材'
+        };
+
+        let allSites = [];
+
+        if (!sessionStorage.getItem('admin_logged_in')) window.location.href = '/admin';
+        function logout() { sessionStorage.removeItem('admin_logged_in'); sessionStorage.removeItem('admin_token'); window.location.href = '/admin'; }
+        function authHeaders() { return { 'Authorization': 'Bearer ' + sessionStorage.getItem('admin_token'), 'Content-Type': 'application/json' }; }
+
+        async function loadSites() {
+            const res = await fetch('/api/sites');
+            allSites = await res.json();
+            renderSites(allSites);
+            updateStats();
+            updateCategoryFilter();
+        }
+
+        function renderSites(sites) {
+            const tbody = document.getElementById('sitesTableBody');
+            const empty = document.getElementById('emptyState');
+            if (sites.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+            empty.style.display = 'none';
+            tbody.innerHTML = sites.map(s => `
+                <tr>
+                    <td><div class="site-name">${s.icon ? s.icon + ' ' : ''}${s.name}</div></td>
+                    <td><a href="${s.url}" target="_blank" class="site-url">${s.url}</a></td>
+                    <td>${s.description || '-'}</td>
+                    <td><span class="site-category">${CATEGORIES[s.category] || s.category}</span></td>
+                    <td>
+                        <button class="btn-edit" onclick="editSite(${s.id})">编辑</button>
+                        <button class="btn-delete" onclick="deleteSite(${s.id})">删除</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateStats() {
+            document.getElementById('totalSites').textContent = allSites.length;
+            document.getElementById('totalCategories').textContent = new Set(allSites.map(s => s.category)).size;
+        }
+
+        function updateCategoryFilter() {
+            const select = document.getElementById('categoryFilter');
+            const cats = [...new Set(allSites.map(s => s.category))];
+            select.innerHTML = '<option value="">全部分类</option>' + cats.map(c => `<option value="${c}">${CATEGORIES[c] || c}</option>`).join('');
+        }
+
+        function openModal(site = null) {
+            document.getElementById('modalTitle').textContent = site ? '编辑网站' : '添加网站';
+            document.getElementById('siteId').value = site ? site.id : '';
+            document.getElementById('siteName').value = site ? site.name : '';
+            document.getElementById('siteUrl').value = site ? site.url : '';
+            document.getElementById('siteDesc').value = site ? site.description || '' : '';
+            document.getElementById('siteIcon').value = site ? site.icon || '' : '';
+            document.getElementById('siteCategory').value = site ? site.category : 'recommend';
+            document.getElementById('siteSort').value = site ? site.sort_order || 0 : 0;
+            document.getElementById('modalOverlay').classList.add('show');
+        }
+
+        function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
+
+        function editSite(id) { const site = allSites.find(s => s.id === id); if (site) openModal(site); }
+
+        async function deleteSite(id) {
+            if (!confirm('确定要删除这个网站吗？')) return;
+            await fetch(`/api/sites/${id}`, { method: 'DELETE', headers: authHeaders() });
+            loadSites();
+        }
+
+        document.getElementById('siteForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('siteId').value;
+            const data = {
+                name: document.getElementById('siteName').value,
+                url: document.getElementById('siteUrl').value,
+                description: document.getElementById('siteDesc').value,
+                icon: document.getElementById('siteIcon').value,
+                category: document.getElementById('siteCategory').value,
+                sort_order: parseInt(document.getElementById('siteSort').value) || 0
+            };
+            const url = id ? `/api/sites/${id}` : '/api/sites';
+            const method = id ? 'PUT' : 'POST';
+            await fetch(url, { method, headers: authHeaders(), body: JSON.stringify(data) });
+            closeModal();
+            loadSites();
+        });
+
+        document.getElementById('searchBox').addEventListener('input', filterSites);
+        document.getElementById('categoryFilter').addEventListener('change', filterSites);
+
+        function filterSites() {
+            const search = document.getElementById('searchBox').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            let filtered = allSites;
+            if (search) filtered = filtered.filter(s => s.name.toLowerCase().includes(search) || (s.description && s.description.toLowerCase().includes(search)));
+            if (category) filtered = filtered.filter(s => s.category === category);
+            renderSites(filtered);
+        }
+
+        document.getElementById('modalOverlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal(); });
+        loadSites();
+    </script>
+</body>
+</html>

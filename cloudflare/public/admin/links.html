@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DogNav 友链管理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f2f5; min-height: 100vh; display: flex; }
+        .sidebar {
+            width: 240px; background: #1e1e2d; min-height: 100vh; position: fixed; left: 0; top: 0;
+            display: flex; flex-direction: column; z-index: 100;
+        }
+        .sidebar-brand { padding: 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar-brand .logo { font-size: 28px; }
+        .sidebar-brand .text { font-size: 18px; font-weight: 700; color: white; }
+        .sidebar-brand .text span { color: #7c83ff; }
+        .sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+        .nav-section { padding: 8px 20px 4px; font-size: 11px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 1px; margin-top: 8px; }
+        .sidebar-nav a {
+            display: flex; align-items: center; gap: 12px; padding: 10px 20px;
+            color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px;
+            transition: all 0.2s; border-left: 3px solid transparent;
+        }
+        .sidebar-nav a:hover { color: white; background: rgba(255,255,255,0.05); }
+        .sidebar-nav a.active { color: white; background: rgba(124,131,255,0.1); border-left-color: #7c83ff; }
+        .sidebar-nav a .icon { font-size: 18px; width: 24px; text-align: center; }
+        .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .sidebar-footer a { display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,0.4); text-decoration: none; font-size: 13px; padding: 8px 0; }
+        .sidebar-footer a:hover { color: #ff6b6b; }
+        .main { margin-left: 240px; flex: 1; min-height: 100vh; }
+        .topbar { background: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 50; }
+        .topbar h1 { font-size: 18px; color: #333; font-weight: 600; }
+        .topbar .user-info { display: flex; align-items: center; gap: 12px; font-size: 14px; color: #666; }
+        .topbar .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: 600; }
+        .container { padding: 24px; }
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .btn-add {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .btn-add:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102,126,234,0.4); }
+        .stats {
+            font-size: 14px;
+            color: #666;
+        }
+        .links-table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            background: #f8f9fa;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #555;
+            font-size: 13px;
+            border-bottom: 2px solid #eee;
+        }
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        tr:hover { background: #f8f9fa; }
+        .link-name { font-weight: 600; color: #333; }
+        .link-url { color: #667eea; font-size: 13px; }
+        .btn-edit, .btn-delete {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-right: 6px;
+        }
+        .btn-edit { background: #e3f2fd; color: #1976d2; }
+        .btn-edit:hover { background: #bbdefb; }
+        .btn-delete { background: #ffebee; color: #c62828; }
+        .btn-delete:hover { background: #ffcdd2; }
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal h2 { margin-bottom: 20px; color: #333; }
+        .modal .form-group { margin-bottom: 16px; }
+        .modal label { display: block; margin-bottom: 6px; font-weight: 500; color: #555; font-size: 14px; }
+        .modal input, .modal textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        .modal input:focus, .modal textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .modal textarea { resize: vertical; min-height: 60px; }
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+        .btn-cancel {
+            padding: 10px 20px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .btn-save {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            background: #333;
+            color: white;
+            border-radius: 8px;
+            font-size: 14px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s;
+            z-index: 1001;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .toast.success { background: #22c55e; }
+        .toast.error { background: #ef4444; }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="logo">🐕</div>
+            <div class="text">Dog<span>Nav</span></div>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">内容管理</div>
+            <a href="/admin/dashboard"><span class="icon">📋</span> 站点管理</a>
+            <a href="/admin/categories"><span class="icon">📂</span> 分类管理</a>
+            <a href="/admin/pages"><span class="icon">📄</span> 页面管理</a>
+            <a href="/admin/links" class="active"><span class="icon">🔗</span> 友链管理</a>
+            <div class="nav-section">互动管理</div>
+            <a href="/admin/submissions"><span class="icon">📮</span> 提交审核</a>
+            <a href="/admin/reports"><span class="icon">🚨</span> 举报管理</a>
+            <div class="nav-section">数据分析</div>
+            <a href="/admin/stats"><span class="icon">📊</span> 统计看板</a>
+            <a href="/admin/logs"><span class="icon">📝</span> 操作日志</a>
+            <div class="nav-section">系统</div>
+            <a href="/admin/users"><span class="icon">👥</span> 用户管理</a>
+            <a href="/admin/backup"><span class="icon">💾</span> 备份恢复</a>
+            <a href="/admin/settings"><span class="icon">⚙️</span> 系统设置</a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" onclick="logout()"><span class="icon">🚪</span> 退出登录</a>
+        </div>
+    </aside>
+
+    <div class="main">
+        <div class="topbar">
+            <h1>友链管理</h1>
+            <div class="user-info">
+                <div class="avatar">A</div>
+                <span>Admin</span>
+            </div>
+        </div>
+        <div class="container">
+            <div class="toolbar">
+                <button class="btn-add" onclick="openModal()">+ 添加友链</button>
+                <div class="stats" id="stats">共 0 个友链</div>
+            </div>
+
+            <div class="links-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>URL</th>
+                            <th>描述</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="linksTableBody">
+                    </tbody>
+                </table>
+                <div class="empty-state" id="emptyState" style="display:none">
+                    暂无友链
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <h2 id="modalTitle">添加友链</h2>
+            <form id="linkForm">
+                <input type="hidden" id="linkId">
+                <div class="form-group">
+                    <label>网站名称 *</label>
+                    <input type="text" id="linkName" required>
+                </div>
+                <div class="form-group">
+                    <label>URL *</label>
+                    <input type="url" id="linkUrl" required placeholder="https://">
+                </div>
+                <div class="form-group">
+                    <label>描述</label>
+                    <textarea id="linkDesc"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>图标 (emoji 或 URL)</label>
+                    <input type="text" id="linkIcon" placeholder="🌐 或 https://...">
+                </div>
+                <div class="form-group">
+                    <label>排序权重</label>
+                    <input type="number" id="linkSort" value="0" min="0">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">取消</button>
+                    <button type="submit" class="btn-save">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        if (!sessionStorage.getItem('admin_logged_in')) {
+            window.location.href = '/admin';
+        }
+
+        function logout() {
+            sessionStorage.removeItem('admin_logged_in');
+            sessionStorage.removeItem('admin_token');
+            window.location.href = '/admin';
+        }
+        function authHeaders() { return { 'Authorization': 'Bearer ' + sessionStorage.getItem('admin_token'), 'Content-Type': 'application/json' }; }
+
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.className = 'toast ' + type + ' show';
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        let allLinks = [];
+
+        async function loadLinks() {
+            try {
+                const res = await fetch('/api/links');
+                allLinks = await res.json();
+                renderLinks(allLinks);
+                document.getElementById('stats').textContent = `共 ${allLinks.length} 个友链`;
+            } catch (err) {
+                showToast('加载友链失败', 'error');
+            }
+        }
+
+        function renderLinks(links) {
+            const tbody = document.getElementById('linksTableBody');
+            const empty = document.getElementById('emptyState');
+
+            if (links.length === 0) {
+                tbody.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+
+            empty.style.display = 'none';
+            tbody.innerHTML = links.map(l => `
+                <tr>
+                    <td><div class="link-name">${l.icon ? l.icon + ' ' : ''}${l.name}</div></td>
+                    <td><a href="${l.url}" target="_blank" class="link-url">${l.url}</a></td>
+                    <td>${l.description || '-'}</td>
+                    <td>
+                        <button class="btn-edit" onclick="editLink(${l.id})">编辑</button>
+                        <button class="btn-delete" onclick="deleteLink(${l.id})">删除</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openModal(link = null) {
+            document.getElementById('modalTitle').textContent = link ? '编辑友链' : '添加友链';
+            document.getElementById('linkId').value = link ? link.id : '';
+            document.getElementById('linkName').value = link ? link.name : '';
+            document.getElementById('linkUrl').value = link ? link.url : '';
+            document.getElementById('linkDesc').value = link ? link.description || '' : '';
+            document.getElementById('linkIcon').value = link ? link.icon || '' : '';
+            document.getElementById('linkSort').value = link ? link.sort_order || 0 : 0;
+            document.getElementById('modalOverlay').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('show');
+        }
+
+        function editLink(id) {
+            const link = allLinks.find(l => l.id === id);
+            if (link) openModal(link);
+        }
+
+        async function deleteLink(id) {
+            if (!confirm('确定要删除这个友链吗？')) return;
+            try {
+                await fetch(`/api/links/${id}`, { method: 'DELETE', headers: authHeaders() });
+                showToast('已删除');
+                loadLinks();
+            } catch (err) {
+                showToast('删除失败', 'error');
+            }
+        }
+
+        document.getElementById('linkForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('linkId').value;
+            const data = {
+                name: document.getElementById('linkName').value,
+                url: document.getElementById('linkUrl').value,
+                description: document.getElementById('linkDesc').value,
+                icon: document.getElementById('linkIcon').value,
+                sort_order: parseInt(document.getElementById('linkSort').value) || 0
+            };
+
+            const url = id ? `/api/links/${id}` : '/api/links';
+            const method = id ? 'PUT' : 'POST';
+
+            try {
+                const res = await fetch(url, {
+                    method,
+                    headers: authHeaders(),
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                if (result.message || result.id) {
+                    showToast(id ? '已更新' : '已添加');
+                    closeModal();
+                    loadLinks();
+                } else {
+                    showToast('保存失败', 'error');
+                }
+            } catch (err) {
+                showToast('保存失败', 'error');
+            }
+        });
+
+        document.getElementById('modalOverlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeModal();
+        });
+
+        loadLinks();
+    </script>
+</body>
+</html>
