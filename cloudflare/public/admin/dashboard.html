@@ -322,46 +322,58 @@
             loadSites();
         }
 
-        async function fetchMeta() {
+        async function fetchIcon() {
             const urlInput = document.getElementById('siteUrl');
+            const iconInput = document.getElementById('siteIcon');
+            const btn = document.getElementById('fetchIconBtn');
             const url = urlInput.value.trim();
             if (!url) { showToast('请先填写URL'); return; }
-            const iconBtn = document.getElementById('fetchIconBtn');
-            const descBtn = document.getElementById('fetchDescBtn');
-            iconBtn.disabled = true; iconBtn.textContent = '⏳ 获取中...';
-            descBtn.disabled = true; descBtn.textContent = '⏳ 获取中...';
+            btn.disabled = true;
+            btn.textContent = '⏳ 获取中...';
+            try {
+                const res = await fetch('/api/fetch-icon?url=' + encodeURIComponent(url));
+                const data = await res.json();
+                if (data.icon) {
+                    iconInput.value = data.icon;
+                    showToast('图标已获取');
+                } else {
+                    showToast('未找到图标，可手动填写');
+                }
+            } catch (err) {
+                showToast('获取失败');
+            }
+            btn.disabled = false;
+            btn.textContent = ' 自动获取';
+        }
+
+        async function fetchDesc() {
+            const urlInput = document.getElementById('siteUrl');
+            const nameInput = document.getElementById('siteName');
+            const descInput = document.getElementById('siteDesc');
+            const btn = document.getElementById('fetchDescBtn');
+            const url = urlInput.value.trim();
+            if (!url) { showToast('请先填写URL'); return; }
+            btn.disabled = true;
+            btn.textContent = '⏳ 获取中...';
             try {
                 const res = await fetch('/api/fetch-icon?url=' + encodeURIComponent(url));
                 const data = await res.json();
                 let filled = 0;
-                if (data.icon) {
-                    const iconInput = document.getElementById('siteIcon');
-                    if (!iconInput.value.trim()) { iconInput.value = data.icon; filled++; }
-                }
-                if (data.title) {
-                    const nameInput = document.getElementById('siteName');
-                    if (!nameInput.value.trim()) { nameInput.value = data.title; filled++; }
-                }
-                if (data.description) {
-                    const descInput = document.getElementById('siteDesc');
-                    if (!descInput.value.trim()) { descInput.value = data.description; filled++; }
-                }
+                if (data.title && !nameInput.value.trim()) { nameInput.value = data.title; filled++; }
+                if (data.description && !descInput.value.trim()) { descInput.value = data.description; filled++; }
                 showToast(filled > 0 ? '已自动填充 ' + filled + ' 项' : '未获取到信息，可手动填写');
             } catch (err) {
                 showToast('获取失败');
             }
-            iconBtn.disabled = false; iconBtn.textContent = ' 自动获取';
-            descBtn.disabled = false; descBtn.textContent = ' 自动获取';
+            btn.disabled = false;
+            btn.textContent = ' 自动获取';
         }
-        function fetchIcon() { fetchMeta(); }
 
         document.getElementById('siteUrl').addEventListener('blur', () => {
-            const nameInput = document.getElementById('siteName');
             const iconInput = document.getElementById('siteIcon');
-            const descInput = document.getElementById('siteDesc');
-            const url = document.getElementById('siteUrl').value.trim();
-            if (url && !nameInput.value.trim() && !iconInput.value.trim() && !descInput.value.trim()) {
-                fetchMeta();
+            if (!iconInput.value.trim()) {
+                const url = document.getElementById('siteUrl').value.trim();
+                if (url) fetchIcon();
             }
         });
 

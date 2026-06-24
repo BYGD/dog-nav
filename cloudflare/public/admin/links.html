@@ -268,7 +268,7 @@
                     <input type="url" id="linkUrl" required placeholder="https://">
                 </div>
                 <div class="form-group">
-                    <label>描述</label>
+                    <label>描述 <button type="button" class="btn-fetch-icon" id="fetchDescBtn" onclick="fetchMeta()" title="从URL自动获取名称和描述"> 自动获取</button></label>
                     <textarea id="linkDesc"></textarea>
                 </div>
                 <div class="form-group">
@@ -382,7 +382,6 @@
             const btn = document.getElementById('fetchIconBtn');
             const url = urlInput.value.trim();
             if (!url) { showToast('请先填写URL', 'error'); return; }
-
             btn.disabled = true;
             btn.textContent = '⏳ 获取中...';
             try {
@@ -398,7 +397,30 @@
                 showToast('获取失败', 'error');
             }
             btn.disabled = false;
-            btn.textContent = '🔗 自动获取';
+            btn.textContent = ' 自动获取';
+        }
+
+        async function fetchDesc() {
+            const urlInput = document.getElementById('linkUrl');
+            const nameInput = document.getElementById('linkName');
+            const descInput = document.getElementById('linkDesc');
+            const btn = document.getElementById('fetchDescBtn');
+            const url = urlInput.value.trim();
+            if (!url) { showToast('请先填写URL', 'error'); return; }
+            btn.disabled = true;
+            btn.textContent = '⏳ 获取中...';
+            try {
+                const res = await fetch('/api/fetch-icon?url=' + encodeURIComponent(url));
+                const data = await res.json();
+                let filled = 0;
+                if (data.title && !nameInput.value.trim()) { nameInput.value = data.title; filled++; }
+                if (data.description && !descInput.value.trim()) { descInput.value = data.description; filled++; }
+                showToast(filled > 0 ? '已自动填充 ' + filled + ' 项' : '未获取到信息，可手动填写', filled > 0 ? 'success' : 'error');
+            } catch (err) {
+                showToast('获取失败', 'error');
+            }
+            btn.disabled = false;
+            btn.textContent = ' 自动获取';
         }
 
         // Auto-fetch icon when URL field loses focus (only if icon is empty)
