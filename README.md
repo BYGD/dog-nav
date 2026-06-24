@@ -23,6 +23,12 @@
 </p>
 
 <p align="center">
+  <a href="https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2FBYGD%2Fdog-nav">
+    <img src="https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg" alt="Deploy to EdgeOne">
+  </a>
+</p>
+
+<p align="center">
   <a href="https://dog-nav.edgeone.dev">🚀 在线访问</a>
   ·
   <a href="https://dog-nav.edgeone.dev/contribute.html">📮 提交站点</a>
