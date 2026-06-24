@@ -127,6 +127,10 @@
         .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; }
         .btn-cancel { padding: 10px 20px; background: #f5f5f5; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; }
         .btn-save { padding: 10px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .btn-fetch-icon { float: right; background: #7c83ff; color: white; border: none; padding: 2px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; transition: background 0.2s; }
+        .btn-fetch-icon:hover { background: #6366f1; }
+        .btn-fetch-icon:disabled { background: #aaa; cursor: not-allowed; }
+        .site-icon-img { width: 18px; height: 18px; vertical-align: middle; margin-right: 6px; border-radius: 3px; object-fit: cover; }
     </style>
 </head>
 <body>
@@ -218,7 +222,7 @@
                 <div class="form-group"><label>网站名称 *</label><input type="text" id="siteName" required></div>
                 <div class="form-group"><label>URL *</label><input type="url" id="siteUrl" required placeholder="https://"></div>
                 <div class="form-group"><label>描述</label><textarea id="siteDesc"></textarea></div>
-                <div class="form-group"><label>图标 (emoji 或 URL)</label><input type="text" id="siteIcon" placeholder="🌐 或 https://..."></div>
+                <div class="form-group"><label>图标 (emoji 或 URL) <button type="button" class="btn-fetch-icon" id="fetchIconBtn" onclick="fetchIcon()" title="从URL自动获取图标">🔗 自动获取</button></label><input type="text" id="siteIcon" placeholder="🌐 或 https://..."></div>
                 <div class="form-group">
                     <label>分类 *</label>
                     <select id="siteCategory" required>
@@ -269,9 +273,11 @@
             const empty = document.getElementById('emptyState');
             if (sites.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
             empty.style.display = 'none';
-            tbody.innerHTML = sites.map(s => `
+            tbody.innerHTML = sites.map(s => {
+                const iconHtml = s.icon ? (s.icon.startsWith('http') ? `<img class="site-icon-img" src="${s.icon}" onerror="this.style.display='none'">` : s.icon + ' ') : '';
+                return `
                 <tr>
-                    <td><div class="site-name">${s.icon ? s.icon + ' ' : ''}${s.name}</div></td>
+                    <td><div class="site-name">${iconHtml}${s.name}</div></td>
                     <td><a href="${s.url}" target="_blank" class="site-url">${s.url}</a></td>
                     <td>${s.description || '-'}</td>
                     <td><span class="site-category">${CATEGORIES[s.category] || s.category}</span></td>
@@ -279,8 +285,8 @@
                         <button class="btn-edit" onclick="editSite(${s.id})">编辑</button>
                         <button class="btn-delete" onclick="deleteSite(${s.id})">删除</button>
                     </td>
-                </tr>
-            `).join('');
+                </tr>`;
+            }).join('');
         }
 
         function updateStats() {
@@ -314,6 +320,45 @@
             if (!confirm('确定要删除这个网站吗？')) return;
             await fetch(`/api/sites/${id}`, { method: 'DELETE', headers: authHeaders() });
             loadSites();
+        }
+
+        async function fetchIcon() {
+            const urlInput = document.getElementById('siteUrl');
+            const iconInput = document.getElementById('siteIcon');
+            const btn = document.getElementById('fetchIconBtn');
+            const url = urlInput.value.trim();
+            if (!url) { showToast('请先填写URL'); return; }
+            btn.disabled = true;
+            btn.textContent = '⏳ 获取中...';
+            try {
+                const res = await fetch('/api/fetch-icon?url=' + encodeURIComponent(url));
+                const data = await res.json();
+                if (data.icon) {
+                    iconInput.value = data.icon;
+                    showToast('图标已获取');
+                } else {
+                    showToast('未找到图标，可手动填写');
+                }
+            } catch (err) {
+                showToast('获取失败');
+            }
+            btn.disabled = false;
+            btn.textContent = '🔗 自动获取';
+        }
+
+        document.getElementById('siteUrl').addEventListener('blur', () => {
+            const iconInput = document.getElementById('siteIcon');
+            if (!iconInput.value.trim()) {
+                const url = document.getElementById('siteUrl').value.trim();
+                if (url) fetchIcon();
+            }
+        });
+
+        function showToast(msg) {
+            let t = document.getElementById('toast');
+            if (!t) { t = document.createElement('div'); t.id = 'toast'; t.style.cssText = 'position:fixed;top:20px;right:20px;padding:12px 20px;background:#333;color:#fff;border-radius:8px;font-size:14px;z-index:9999;opacity:0;transition:opacity .3s'; document.body.appendChild(t); }
+            t.textContent = msg; t.style.opacity = '1';
+            setTimeout(() => { t.style.opacity = '0'; }, 2000);
         }
 
         document.getElementById('siteForm').addEventListener('submit', async (e) => {

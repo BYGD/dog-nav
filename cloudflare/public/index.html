@@ -899,10 +899,11 @@ function render(cat = 'all') {
             const url = s.u || s.url;
             const desc = s.d || s.description || '';
             const icon = s.i || s.icon || '🌐';
+            const iconHtml = icon.startsWith('http') ? `<img src="${icon}" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML='🌐'">` : icon;
             const id = s.id || '';
             const nf = s.nofollow ? 'noopener nofollow' : 'noopener';
             return `<a href="${url}" target="_blank" rel="${nf}" class="card rv" title="${name} — ${desc}" data-id="${id}" onclick="trackClick(event,'${id}','${url.replace(/'/g, "\\'")}')">
-                <div class="card-row"><div class="card-fav">${icon}</div><div class="card-name">${name}</div></div>
+                <div class="card-row"><div class="card-fav">${iconHtml}</div><div class="card-name">${name}</div></div>
                 <div class="card-desc">${desc}</div>
             </a>`;
         }).join('')}</div>`;
