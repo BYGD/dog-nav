@@ -624,18 +624,39 @@ const WEATHER_EMOJI = {
     const content = document.getElementById('weatherContent');
 
     try {
-        // Step 1: Get location by IP
-        const geoRes = await fetch(`https://geoapi.qweather.com/v2/city/lookup?location=auto&key=${WEATHER_KEY}`);
+        // Step 1: Get user's city from IP geolocation
+        let cityName = '';
+
+        // Try multiple IP geolocation services
+        const ipSources = [
+            { url: 'https://ipinfo.io/json', parse: d => d.city },
+            { url: 'http://ip-api.com/json/?lang=zh-CN', parse: d => d.city },
+            { url: 'https://whois.pconline.com.cn/ipJson.jsp?json=true', parse: d => d.city },
+        ];
+
+        for (const src of ipSources) {
+            try {
+                const res = await fetch(src.url, { signal: AbortSignal.timeout(4000) });
+                const data = await res.json();
+                cityName = src.parse(data);
+                if (cityName) break;
+            } catch (e) { /* try next source */ }
+        }
+
+        if (!cityName) throw new Error('All IP geolocation sources failed');
+
+        // Step 2: Look up QWeather location ID by city name
+        const geoRes = await fetch(`https://geoapi.qweather.com/v2/city/lookup?location=${encodeURIComponent(cityName)}&key=${WEATHER_KEY}`);
         const geoData = await geoRes.json();
 
         if (geoData.code !== '200' || !geoData.location || geoData.location.length === 0) {
-            throw new Error('Location lookup failed');
+            throw new Error('Location lookup failed for: ' + cityName);
         }
 
         const locationId = geoData.location[0].id;
-        const cityName = geoData.location[0].name;
+        const displayName = geoData.location[0].name;
 
-        // Step 2: Get current weather
+        // Step 3: Get current weather
         const weatherRes = await fetch(`https://devapi.qweather.com/v7/weather/now?location=${locationId}&key=${WEATHER_KEY}`);
         const weatherData = await weatherRes.json();
 
@@ -647,7 +668,7 @@ const WEATHER_EMOJI = {
         const emoji = WEATHER_EMOJI[now.icon] || '🌡️';
 
         // Populate widget
-        document.getElementById('weatherCity').textContent = cityName;
+        document.getElementById('weatherCity').textContent = displayName;
         document.getElementById('weatherIcon').textContent = emoji;
         document.getElementById('weatherTemp').textContent = now.temp + '°C';
         document.getElementById('weatherDesc').textContent = now.text;
