@@ -173,10 +173,6 @@
                     <input type="url" id="site_icon" placeholder="https://example.com/favicon.ico">
                     <div class="hint">浏览器标签页显示的图标 URL，建议 32x32 或 64x64</div>
                 </div>
-                <div class="form-group">
-                    <label>页脚文字</label>
-                    <input type="text" id="footer_text" placeholder="DogNav © 2026">
-                </div>
             </div>
 
             <div class="card">
@@ -258,7 +254,7 @@
 
         async function saveSettings() {
             const settings = {};
-            const fields = ['site_name', 'site_description', 'site_icon', 'footer_text', 'weather_api_key', 'weather_enabled'];
+            const fields = ['site_name', 'site_description', 'site_icon', 'weather_api_key', 'weather_enabled'];
             fields.forEach(key => {
                 const el = document.getElementById(key);
                 if (el) settings[key] = el.value;
