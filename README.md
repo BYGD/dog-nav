@@ -4,253 +4,257 @@
 
 # 🐕 DogNav
 
-### ✨ Discover the Best of the Internet ✨
+### ✨ 发现互联网的无限精彩 ✨
 
-**A curated navigation site with full CMS backend — self-hosted or one-click deploy to Cloudflare.**
+**一个精心策划的网址导航站，自带完整 CMS 后台 — 支持本地部署或一键部署到 Cloudflare。**
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-nav.cangdog.com-FF6B6B?style=flat-square)](https://nav.cangdog.com)
+[![在线演示](https://img.shields.io/badge/在线演示-nav.cangdog.com-FF6B6B?style=flat-square)](https://nav.cangdog.com)
 [![Cloudflare](https://img.shields.io/badge/Cloudflare-dognav.ccgg.workers.dev-F38020?style=flat-square&logo=cloudflare&logoColor=white)](https://dognav.ccgg.workers.dev)
-[![Version](https://img.shields.io/badge/Version-2.0-4ECDC4?style=flat-square)]()
-[![Sites](https://img.shields.io/badge/Sites-151+-45B7D1?style=flat-square)]()
-[![Categories](https://img.shields.io/badge/Categories-10-96CEB4?style=flat-square)]()
-[![License](https://img.shields.io/badge/License-MIT-FFEAA7?style=flat-square)]()
+[![版本](https://img.shields.io/badge/版本-2.1-4ECDC4?style=flat-square)]()
+[![收录站点](https://img.shields.io/badge/收录站点-150+-45B7D1?style=flat-square)]()
+[![分类](https://img.shields.io/badge/分类-10-96CEB4?style=flat-square)]()
+[![开源协议](https://img.shields.io/badge/开源协议-MIT-FFEAA7?style=flat-square)]()
 
 <br>
 
-[![Deploy to Cloudflare](https://img.shields.io/badge/Deploy_to_Cloudflare_Workers-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)](#cloudflare-one-click-deploy)
+<a href="https://dash.cloudflare.com/sign-up?pt=f&utm_source=workers-github" target="_blank">
+<img src="https://img.shields.io/badge/一键部署到_Cloudflare-F38020?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Deploy to Cloudflare">
+</a>
 
 </div>
 
 ---
 
-## 📋 Table of Contents
+## 📋 目录
 
 ```
 dog-nav/
-├── 📖 About
-├── 🌟 Features
-├── 🏗️ Architecture
-├── 🚀 Quick Start
-│   ├── Local Development
-│   └── Cloudflare One-Click Deploy
-├── 🔧 Admin Panel
-├── 📁 Project Structure
-├── 🛠️ Tech Stack
-├── 📸 Screenshots
-└── 📄 License
+├── 📖 简介
+├── 🌟 功能特性
+├── 🏗️ 架构设计
+├── 🚀 快速开始
+│   ├── 本地开发
+│   └── Cloudflare 一键部署
+├── 🔧 后台管理
+├── 📁 项目结构
+├── 🛠️ 技术栈
+├── 📸 截图预览
+└── 📄 开源协议
 ```
 
 ---
 
-## 📖 About
+## 📖 简介
 
-DogNav is a carefully curated website navigation directory that helps you discover the best of the internet. It features a **glassmorphism UI** with dark/light theme support, **151+ hand-picked sites** across 10 categories, and a **full CMS backend** for easy content management.
+DogNav 是一个精心策划的网址导航站，帮助你发现互联网上最优质的网站。采用**玻璃拟态 UI** 设计，支持深色/浅色主题切换，收录了 **150+ 精选站点**，涵盖 10 个分类，并配备**完整的 CMS 后台**，方便管理内容。
 
-Originally built as a pure static frontend, DogNav has evolved into a full-stack application with two deployment options: a local Node.js CMS and a serverless Cloudflare Workers version.
-
----
-
-## 🌟 Features
-
-| Feature | Description |
-|:--------|:------------|
-| 🎨 **Glassmorphism UI** | Modern frosted-glass design with smooth animations and mouse glow effects |
-| 🌓 **Dark / Light Mode** | Seamless theme switching with persistent preference |
-| 🔍 **Multi-Engine Search** | Google, Bing, Baidu, DuckDuckGo — search directly from the nav bar |
-| 📂 **10 Categories** | Recommend, Video, Anime, Software, Tools, News, Community, AI, Dev, Design |
-| 📱 **Fully Responsive** | Optimized for desktop, tablet, and mobile devices |
-| 🇨🇳 **China Optimized** | All sites accessible from mainland China, CDN via Chinese-friendly providers |
-| 🗄️ **Full CMS Backend** | Manage sites, categories, pages, links, users, and settings via admin panel |
-| 📊 **Click Analytics** | Track site popularity with built-in click counting |
-| 📝 **User Submissions** | Visitors can submit sites for admin review and approval |
-| ☁️ **Cloudflare Deploy** | One-click deploy to Cloudflare Workers + D1 serverless stack |
-| 🔐 **Admin Auth** | Bearer token authentication with action audit logging |
-| 📦 **Zero Config** | Pre-seeded with 151 sites, 10 categories, and default settings |
+最初作为纯静态前端构建，DogNav 已发展为一个全栈应用，提供两种部署方式：本地 Node.js CMS 和无服务器 Cloudflare Workers 版本。
 
 ---
 
-## 🏗️ Architecture
+## 🌟 功能特性
 
-DogNav provides **two deployment modes** with the same frontend and API:
+| 功能 | 说明 |
+|:-----|:-----|
+| 🎨 **玻璃拟态 UI** | 现代毛玻璃设计，流畅动画与鼠标光晕特效 |
+| 🌓 **深色 / 浅色模式** | 一键切换主题，自动记住用户偏好 |
+| 🔍 **多引擎搜索** | 谷歌、必应、百度、DuckDuckGo — 导航栏内直接搜索 |
+| 📂 **10 大分类** | 推荐、视频、动漫、软件、工具、资讯、社区、AI、开发、设计 |
+| 📱 **全端响应式** | 针对桌面、平板和移动端全面适配 |
+| 🇨🇳 **国内可达** | 所有收录站点从大陆均可访问，CDN 使用国内友好服务商 |
+| 🗄️ **完整 CMS 后台** | 通过管理面板管理站点、分类、页面、友链、用户和设置 |
+| 🩺 **站点健康监控** | 批量检测所有站点可用性 — 按在线 / 缓慢 / 离线筛选 |
+| 🔄 **自动获取元信息** | 输入网址一键获取图标、站名和描述 |
+| 🖼️ **自定义 Favicon** | 在系统设置中上传自己的站点图标 |
+| 📊 **点击统计** | 内置点击计数，追踪站点热度 |
+| 📝 **用户提交** | 访客可提交网站，由管理员审核收录 |
+| ☁️ **Cloudflare 部署** | 一键部署到 Cloudflare Workers + D1 无服务器架构 |
+| 🔐 **后台鉴权** | Bearer Token 认证，操作日志全程记录 |
+| 📦 **开箱即用** | 预置 150+ 站点、10 个分类和默认设置 |
+
+---
+
+## 🏗️ 架构设计
+
+DogNav 提供**两种部署模式**，前端和 API 完全一致：
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│                  Frontend (HTML/CSS/JS)              │
+│                  前端 (HTML/CSS/JS)                   │
 │   index.html · about.html · links.html · contribute  │
-│              + 12 admin panel pages                  │
+│                + 13 个后台管理页面                     │
 └────────────────────┬────────────────────────────────┘
                      │ fetch('/api/...')
         ┌────────────┴────────────┐
         ▼                         ▼
 ┌───────────────┐       ┌──────────────────┐
-│  Local Mode   │       │  Cloudflare Mode  │
+│   本地模式     │       │  Cloudflare 模式  │
 │               │       │                   │
-│  Express.js   │       │  Hono Framework   │
+│  Express.js   │       │  Hono 框架        │
 │  + sql.js     │       │  + D1 (SQLite)    │
 │  + multer     │       │  + Workers Assets │
-│  Port 3000    │       │  Edge Runtime     │
+│  端口 3000    │       │  边缘运行时       │
 └───────────────┘       └──────────────────┘
 ```
 
-| | Local Mode | Cloudflare Mode |
-|:--|:-----------|:----------------|
-| **Runtime** | Node.js (Express) | Cloudflare Workers (Hono) |
-| **Database** | sql.js (file-based SQLite) | D1 (serverless SQLite) |
-| **Upload** | multer → `./uploads` | Not included |
-| **Deploy** | `node server.js` | `wrangler deploy` |
-| **Cost** | Free (self-hosted) | Free tier generous |
+| | 本地模式 | Cloudflare 模式 |
+|:--|:---------|:---------------|
+| **运行时** | Node.js (Express) | Cloudflare Workers (Hono) |
+| **数据库** | sql.js（文件型 SQLite） | D1（无服务器 SQLite） |
+| **部署方式** | \`node server.js\` | \`wrangler deploy\` |
+| **费用** | 免费（自备服务器） | 免费额度充裕 |
 
 ---
 
-## 🚀 Quick Start
+## 🚀 快速开始
 
-### Local Development
+### 本地开发
 
 ```bash
-# Clone the repository
+# 克隆仓库
 git clone https://github.com/BYGD/dog-nav.git
 cd dog-nav
 
-# Install dependencies
+# 安装依赖
 npm install
 
-# Seed the database (first time)
+# 初始化数据库（首次运行）
 node seed.js
 
-# Start the server
+# 启动服务
 npm start
 # → http://localhost:3000
 ```
 
-**Default admin:** `admin` / `admin123`
+**默认管理员：** `admin` / `admin123`
 
-### Cloudflare One-Click Deploy
+### Cloudflare 一键部署
 
 ```bash
-# Clone the repository
+# 克隆仓库
 git clone https://github.com/BYGD/dog-nav.git
 cd dog-nav/cloudflare
 
-# Install dependencies
+# 安装依赖
 npm install
 
-# One-click deploy (handles auth, D1 creation, schema, seed, and deploy)
+# 一键部署（自动处理认证、创建 D1、初始化数据、部署上线）
 npm run deploy
 ```
 
-The deploy script will:
+部署脚本会自动完成以下步骤：
 
-1. Check & install Wrangler CLI
-2. Guide you through Cloudflare login (browser OAuth)
-3. Create a D1 database (or reuse existing)
-4. Update `wrangler.toml` with the database ID
-5. Run `schema.sql` + `seed.sql` to initialize data
-6. Deploy the Worker with all static assets
+1. 检查并安装 Wrangler CLI
+2. 引导你通过浏览器登录 Cloudflare（OAuth）
+3. 创建 D1 数据库（或复用已有的）
+4. 更新 `wrangler.toml` 中的数据库 ID
+5. 执行 `schema.sql` + `seed.sql` 初始化数据
+6. 部署 Worker 及所有静态资源
 
-**Your site will be live at:** `https://dognav.<your-subdomain>.workers.dev`
+**你的站点将上线于：** `https://dognav.<你的子域名>.workers.dev`
 
-### Manual Cloudflare Deploy
+### 手动部署到 Cloudflare
 
 ```bash
 cd cloudflare
 
-# Login to Cloudflare
+# 登录 Cloudflare
 npx wrangler login
 
-# Create D1 database
+# 创建 D1 数据库
 npx wrangler d1 create dognav
-# → Copy the database_id to wrangler.toml
+# → 将 database_id 复制到 wrangler.toml
 
-# Initialize database
+# 初始化数据库
 npx wrangler d1 execute dognav --remote --file=./schema.sql
 npx wrangler d1 execute dognav --remote --file=./seed.sql
 
-# Deploy
+# 部署
 npx wrangler deploy
 ```
 
 ---
 
-## 🔧 Admin Panel
+## 🔧 后台管理
 
-Access the admin panel at `/admin` — a full CMS to manage every aspect of your navigation site.
+访问 `/admin` 进入后台 — 一个完整的 CMS，管理导航站的方方面面。
 
-| Module | Description |
-|:-------|:------------|
-| 📊 **Dashboard** | Overview with site stats, recent submissions, and quick actions |
-| 🌐 **Sites** | Add, edit, delete, and reorder navigation sites |
-| 📂 **Categories** | Manage site categories with icons and sort order |
-| 📄 **Pages** | Rich-text editor for About, Contribute, and Links pages |
-| 🔗 **Links** | Manage friend links displayed on the Links page |
-| 📝 **Submissions** | Review and approve/reject user-submitted sites |
-| 📈 **Statistics** | Click analytics with per-site tracking |
-| 👥 **Users** | Manage admin accounts and permissions |
-| ⚙️ **Settings** | Site title, description, footer, SEO, and appearance settings |
-| 📋 **Logs** | Admin action audit trail |
-| 🚨 **Reports** | View and resolve dead link / issue reports from visitors |
-| 💾 **Backup** | Export and import database backups |
+| 模块 | 说明 |
+|:-----|:-----|
+| 📋 **站点管理** | 增删改查导航站点，支持一键获取图标和描述 |
+| 📂 **分类管理** | 管理站点分类，自定义图标和排序 |
+| 📄 **页面管理** | 可视化编辑关于、友链、投稿等页面内容 |
+| 🔗 **友链管理** | 管理友情链接，支持自动获取站点元信息 |
+| 📮 **提交审核** | 审核访客提交的站点，一键通过或拒绝 |
+| 🩺 **站点检测** | 批量可用性监控 — 按在线 / 缓慢 / 离线筛选 |
+| 📊 **统计看板** | 点击量分析，逐站追踪 |
+| 📝 **操作日志** | 管理员操作审计记录 |
+| 👥 **用户管理** | 管理管理员账号和权限 |
+| 💾 **备份恢复** | 导出和导入数据库备份 |
+| ⚙️ **系统设置** | 站点名称、描述、自定义图标、天气组件 |
 
 ---
 
-## 📁 Project Structure
+## 📁 项目结构
 
 ```
 dog-nav/
-├── index.html              # Main navigation page
-├── about.html              # About page (CMS-driven)
-├── links.html              # Friend links page (CMS-driven)
-├── contribute.html          # Site submission page (CMS-driven)
-├── server.js               # Local CMS server (Express + sql.js, 1005 lines)
-├── seed.js                 # Database seed script
-├── package.json            # Node.js dependencies
+├── index.html              # 主页导航
+├── about.html              # 关于页面（CMS 驱动）
+├── links.html              # 友链页面（CMS 驱动）
+├── contribute.html          # 投稿页面（CMS 驱动）
+├── server.js               # 本地 CMS 服务（Express + sql.js，约 1150 行）
+├── seed.js                 # 数据库初始化脚本
+├── package.json            # Node.js 依赖
 │
 ├── css/
-│   ├── style.css           # Main stylesheet (glassmorphism, themes)
-│   └── font-awesome.css    # Icon library
+│   ├── style.css           # 主样式表（玻璃拟态、主题）
+│   └── font-awesome.css    # 图标库
 ├── js/
-│   └── app.js              # Frontend logic (rendering, search, themes)
-├── ico/                    # Site favicon images
+│   └── app.js              # 前端逻辑（渲染、搜索、主题）
+├── ico/                    # 站点图标
 │
-├── admin/                  # Admin panel (12 pages)
-│   ├── index.html          # Login page
-│   ├── dashboard.html      # Main dashboard
-│   ├── categories.html     # Category management
-│   ├── ...                 # (see Admin Panel section)
-│   └── backup.html         # Database backup
+├── admin/                  # 后台管理（13 个页面）
+│   ├── index.html          # 登录页
+│   ├── dashboard.html      # 站点管理
+│   ├── categories.html     # 分类管理
+│   ├── health.html         # 站点检测
+│   ├── ...                 # （见后台管理章节）
+│   └── backup.html         # 备份恢复
 │
-├── cloudflare/             # Cloudflare Workers deployment
+├── cloudflare/             # Cloudflare Workers 部署
 │   ├── src/
-│   │   └── index.js        # Hono API backend (446 lines)
-│   ├── public/             # Static assets (copy of frontend)
-│   ├── schema.sql          # D1 database schema (10 tables)
-│   ├── seed.sql            # Seed data (151 sites, 10 categories)
-│   ├── deploy.js           # One-click deploy script
-│   ├── wrangler.toml       # Cloudflare configuration
-│   └── package.json        # CF dependencies (hono, wrangler)
+│   │   └── index.js        # Hono API 后端（约 540 行）
+│   ├── public/             # 静态资源（前端副本）
+│   ├── schema.sql          # D1 数据库结构（10 张表）
+│   ├── seed.sql            # 种子数据
+│   ├── deploy.js           # 一键部署脚本
+│   ├── wrangler.toml       # Cloudflare 配置
+│   └── package.json        # CF 依赖（hono, wrangler）
 │
-├── robots.txt              # Search engine rules
-├── sitemap.xml             # XML sitemap
-└── README.md               # This file
+├── robots.txt              # 搜索引擎规则
+├── sitemap.xml             # XML 站点地图
+└── README.md               # 本文件
 ```
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ 技术栈
 
-**Frontend**
+**前端**
 
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
 ![Font Awesome](https://img.shields.io/badge/Font_Awesome-528DD7?style=flat-square&logo=font-awesome&logoColor=white)
 
-**Local Backend**
+**本地后端**
 
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=node.js&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-000000?style=flat-square&logo=express&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white)
 
-**Cloudflare Backend**
+**Cloudflare 后端**
 
 ![Cloudflare Workers](https://img.shields.io/badge/Cloudflare_Workers-F38020?style=flat-square&logo=cloudflare&logoColor=white)
 ![Hono](https://img.shields.io/badge/Hono-E36002?style=flat-square)
@@ -258,42 +262,42 @@ dog-nav/
 
 ---
 
-## 📸 Screenshots
+## 📸 截图预览
 
 <div align="center">
 
-**Dark Theme**
+**深色主题**
 
-![Dark Mode](https://raw.githubusercontent.com/BYGD/dog-nav/main/screenshot.png)
+![深色模式](https://raw.githubusercontent.com/BYGD/dog-nav/main/screenshot.png)
 
-**Light Theme**
+**浅色主题**
 
-![Light Mode](https://raw.githubusercontent.com/BYGD/dog-nav/main/screenshot-light.png)
+![浅色模式](https://raw.githubusercontent.com/BYGD/dog-nav/main/screenshot-light.png)
 
 </div>
 
 ---
 
-## 🌍 Deployment Links
+## 🌍 在线地址
 
-| Platform | URL | Notes |
-|:---------|:----|:------|
-| Tencent EdgeOne | [nav.cangdog.com](https://nav.cangdog.com) | Static frontend (original) |
-| Cloudflare Workers | [dognav.ccgg.workers.dev](https://dognav.ccgg.workers.dev) | Full-stack with CMS |
-| Local | `localhost:3000` | Self-hosted with Node.js |
+| 平台 | 地址 | 说明 |
+|:-----|:-----|:-----|
+| Cloudflare Workers | [dognav.ccgg.workers.dev](https://dognav.ccgg.workers.dev) | 全栈 CMS 版本 |
+| 自定义域名 | [nav.cangdog.com](https://nav.cangdog.com) | 前端演示 |
+| 本地部署 | `localhost:3000` | 自备 Node.js 环境 |
 
 ---
 
-## 📄 License
+## 📄 开源协议
 
-This project is open source under the [MIT License](LICENSE).
+本项目基于 [MIT License](LICENSE) 开源。
 
 ---
 
 <div align="center">
 
-**⭐ If you find this project useful, consider giving it a star! ⭐**
+**⭐ 如果觉得这个项目对你有帮助，欢迎点个 Star！⭐**
 
-[Live Demo](https://nav.cangdog.com) · [Cloudflare Demo](https://dognav.ccgg.workers.dev) · [Report Bug](https://github.com/BYGD/dog-nav/issues) · [Request Feature](https://github.com/BYGD/dog-nav/issues)
+[在线演示](https://nav.cangdog.com) · [Cloudflare 版](https://dognav.ccgg.workers.dev) · [反馈问题](https://github.com/BYGD/dog-nav/issues) · [提出建议](https://github.com/BYGD/dog-nav/issues)
 
 </div>
