@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DogNav 举报管理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f2f5; min-height: 100vh; display: flex; }
+        .sidebar {
+            width: 240px; background: #1e1e2d; min-height: 100vh; position: fixed; left: 0; top: 0;
+            display: flex; flex-direction: column; z-index: 100;
+        }
+        .sidebar-brand { padding: 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar-brand .logo { font-size: 28px; }
+        .sidebar-brand .text { font-size: 18px; font-weight: 700; color: white; }
+        .sidebar-brand .text span { color: #7c83ff; }
+        .sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+        .nav-section { padding: 8px 20px 4px; font-size: 11px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 1px; margin-top: 8px; }
+        .sidebar-nav a {
+            display: flex; align-items: center; gap: 12px; padding: 10px 20px;
+            color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px;
+            transition: all 0.2s; border-left: 3px solid transparent;
+        }
+        .sidebar-nav a:hover { color: white; background: rgba(255,255,255,0.05); }
+        .sidebar-nav a.active { color: white; background: rgba(124,131,255,0.1); border-left-color: #7c83ff; }
+        .sidebar-nav a .icon { font-size: 18px; width: 24px; text-align: center; }
+        .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .sidebar-footer a { display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,0.4); text-decoration: none; font-size: 13px; padding: 8px 0; }
+        .sidebar-footer a:hover { color: #ff6b6b; }
+        .main { margin-left: 240px; flex: 1; min-height: 100vh; }
+        .topbar { background: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 50; }
+        .topbar h1 { font-size: 18px; color: #333; font-weight: 600; }
+        .topbar .user-info { display: flex; align-items: center; gap: 12px; font-size: 14px; color: #666; }
+        .topbar .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: 600; }
+        .container { padding: 24px; }
+        .table-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #f8f9fa; padding: 12px 16px; text-align: left; font-weight: 600; color: #555; font-size: 13px; }
+        td { padding: 12px 16px; border-bottom: 1px solid #eee; font-size: 14px; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+        .badge-pending { background: #fff3e0; color: #e65100; }
+        .badge-resolved { background: #e8f5e9; color: #2e7d32; }
+        .btn-resolve { padding: 6px 12px; background: #e8f5e9; color: #2e7d32; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; }
+        .empty { text-align: center; padding: 60px; color: #999; }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="logo">🐕</div>
+            <div class="text">Dog<span>Nav</span></div>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">内容管理</div>
+            <a href="/admin/dashboard"><span class="icon">📋</span> 站点管理</a>
+            <a href="/admin/categories"><span class="icon">📂</span> 分类管理</a>
+            <a href="/admin/pages"><span class="icon">📄</span> 页面管理</a>
+            <a href="/admin/links"><span class="icon">🔗</span> 友链管理</a>
+            <div class="nav-section">互动管理</div>
+            <a href="/admin/submissions"><span class="icon">📮</span> 提交审核</a>
+            <a href="/admin/reports" class="active"><span class="icon">🚨</span> 举报管理</a>
+            <div class="nav-section">数据分析</div>
+            <a href="/admin/stats"><span class="icon">📊</span> 统计看板</a>
+            <a href="/admin/logs"><span class="icon">📝</span> 操作日志</a>
+            <div class="nav-section">系统</div>
+            <a href="/admin/users"><span class="icon">👥</span> 用户管理</a>
+            <a href="/admin/backup"><span class="icon">💾</span> 备份恢复</a>
+            <a href="/admin/settings"><span class="icon">⚙️</span> 系统设置</a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" onclick="logout()"><span class="icon">🚪</span> 退出登录</a>
+        </div>
+    </aside>
+
+    <div class="main">
+        <div class="topbar">
+            <h1>举报管理</h1>
+            <div class="user-info">
+                <div class="avatar">A</div>
+                <span>Admin</span>
+            </div>
+        </div>
+        <div class="container">
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr><th>网站</th><th>原因</th><th>举报者</th><th>状态</th><th>时间</th><th>操作</th></tr>
+                    </thead>
+                    <tbody id="reportsBody"></tbody>
+                </table>
+                <div class="empty" id="emptyState" style="display:none">暂无举报</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        if (!sessionStorage.getItem('admin_logged_in')) window.location.href = '/admin';
+        function logout() { sessionStorage.removeItem('admin_logged_in'); sessionStorage.removeItem('admin_token'); window.location.href = '/admin'; }
+        function authHeaders() { return { 'Authorization': 'Bearer ' + sessionStorage.getItem('admin_token'), 'Content-Type': 'application/json' }; }
+
+        async function loadReports() {
+            const res = await fetch('/api/reports', { headers: authHeaders() });
+            const reports = await res.json();
+            const tbody = document.getElementById('reportsBody');
+            const empty = document.getElementById('emptyState');
+
+            if (reports.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+            empty.style.display = 'none';
+
+            tbody.innerHTML = reports.map(r => `
+                <tr>
+                    <td><strong>${r.site_name || '已删除'}</strong><br><small style="color:#888">${r.site_url || ''}</small></td>
+                    <td>${r.reason}</td>
+                    <td>${r.reporter_email || '匿名'}</td>
+                    <td><span class="badge badge-${r.status}">${r.status === 'pending' ? '待处理' : '已解决'}</span></td>
+                    <td>${new Date(r.created_at).toLocaleString('zh-CN')}</td>
+                    <td>${r.status === 'pending' ? `<button class="btn-resolve" onclick="resolve(${r.id})">标记解决</button>` : '-'}</td>
+                </tr>
+            `).join('');
+        }
+
+        async function resolve(id) {
+            await fetch(`/api/reports/${id}`, {
+                method: 'PUT',
+                headers: authHeaders(),
+                body: JSON.stringify({ status: 'resolved', remove_site: confirm('同时禁用该站点？') })
+            });
+            loadReports();
+        }
+
+        loadReports();
+    </script>
+</body>
+</html>

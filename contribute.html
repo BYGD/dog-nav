@@ -303,30 +303,65 @@ const obs = new IntersectionObserver(entries => {
 }, { threshold: 0.1 });
 document.querySelectorAll('.rv').forEach(el => { setTimeout(() => { const r = el.getBoundingClientRect(); if (r.top < window.innerHeight && r.bottom > 0) { el.classList.add('vis'); } else { obs.observe(el); } }, 50); });
 
-// Form submission (demo only - replace with real backend)
-document.getElementById('submitForm').addEventListener('submit', function(e) {
+// Dynamic categories from API
+(async function loadCats() {
+    try {
+        const res = await fetch('/api/categories');
+        if (res.ok) {
+            const cats = await res.json();
+            const activeCats = cats.filter(c => c.is_active);
+            if (activeCats.length > 0) {
+                const sel = document.getElementById('siteCat');
+                sel.innerHTML = '<option value="">请选择分类</option>' +
+                    activeCats.map(c =>
+                        `<option value="${c.id}">${c.icon || '📁'} ${c.name}</option>`
+                    ).join('');
+            }
+            // If no active cats from API, keep the hardcoded options in HTML
+        }
+    } catch (err) { /* keep hardcoded options */ }
+})();
+
+// Form submission → POST to CMS API
+document.getElementById('submitForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     const name = document.getElementById('siteName').value.trim();
     const url = document.getElementById('siteUrl').value.trim();
     const desc = document.getElementById('siteDesc').value.trim();
     const cat = document.getElementById('siteCat').value;
+    const reason = document.getElementById('siteReason').value.trim();
+    const contact = document.getElementById('siteContact').value.trim();
     if (!name || !url || !desc || !cat) return;
 
-    // Build mailto link as fallback
-    const subject = encodeURIComponent('[DogNav] 提交收录: ' + name);
-    const body = encodeURIComponent(
-        '网站名称: ' + name + '\n' +
-        '网站地址: ' + url + '\n' +
-        '网站描述: ' + desc + '\n' +
-        '所属分类: ' + cat + '\n' +
-        '推荐理由: ' + (document.getElementById('siteReason').value || '无') + '\n' +
-        '联系方式: ' + (document.getElementById('siteContact').value || '无')
-    );
-    window.open('mailto:mail@Cangdog.com?subject=' + subject + '&body=' + body, '_blank');
+    const btn = this.querySelector('.submit-btn');
+    btn.textContent = '提交中...';
+    btn.disabled = true;
 
-    // Show success
-    document.getElementById('formCard').style.display = 'none';
-    document.getElementById('successMsg').classList.add('show');
+    try {
+        const res = await fetch('/api/submissions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name, url,
+                description: reason || desc,
+                category: cat,
+                submitter_email: contact
+            })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            document.getElementById('formCard').style.display = 'none';
+            document.getElementById('successMsg').classList.add('show');
+        } else {
+            alert(data.error || '提交失败，请稍后重试');
+            btn.textContent = '提交收录申请';
+            btn.disabled = false;
+        }
+    } catch (err) {
+        alert('网络错误，请稍后重试');
+        btn.textContent = '提交收录申请';
+        btn.disabled = false;
+    }
 });
 </script>
 </body>

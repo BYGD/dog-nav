@@ -152,6 +152,13 @@
             background: var(--accent-soft); color: var(--accent);
             border-radius: var(--r-pill); font-weight: 500; flex-shrink: 0;
         }
+        .about-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--r-lg); padding: var(--space-lg);
+            backdrop-filter: blur(12px); transition: all 0.35s var(--ease);
+            color: var(--text-2); font-size: var(--text-base); line-height: 1.8;
+        }
+        .about-card:hover { background: var(--bg-card-hover); border-color: var(--border-hover); }
         .spacer { height: var(--space-lg); }
         .footer {
             position: relative; z-index: 1; text-align: center; padding: var(--space-lg);
@@ -187,14 +194,12 @@
         <p>优秀的朋友们，值得一再访问</p>
     </div>
 
-    <div class="sec-title rv"><span class="ico">🌐</span> 技术博客</div>
-    <div class="links-grid" id="techLinks"></div>
-    <div class="spacer"></div>
-    <div class="sec-title rv"><span class="ico">🎨</span> 设计创意</div>
-    <div class="links-grid" id="designLinks"></div>
-    <div class="spacer"></div>
-    <div class="sec-title rv"><span class="ico">🛠️</span> 工具资源</div>
-    <div class="links-grid" id="toolLinks"></div>
+    <div id="linksPageContent"></div>
+
+    <div class="sec-title rv"><span class="ico">🔗</span> 友情链接</div>
+    <div class="links-grid" id="friendsGrid">
+        <!-- Dynamic content from CMS, fallback below -->
+    </div>
 </div>
 
 <footer class="footer"><p>DogNav &copy; 2026 — Design by <a href="https://www.cangdog.com" target="_blank">CangDog</a> · <a href="https://github.com/BYGD" target="_blank">GitHub</a></p></footer>
@@ -216,44 +221,100 @@ const obs = new IntersectionObserver(entries => {
 function revealEls(els) { setTimeout(() => { els.forEach(el => { const r = el.getBoundingClientRect(); if (r.top < window.innerHeight && r.bottom > 0) { el.classList.add('vis'); } else { obs.observe(el); } }); }, 50); }
 revealEls(document.querySelectorAll('.rv'));
 
-const friends = {
-    tech: [
-        { n: '阮一峰的网络日志', u: 'https://www.ruanyifeng.com', d: '技术周刊与博客', i: '📝', b: '博客' },
-        { n: '酷壳', u: 'https://coolshell.cn', d: '陈皓的技术博客', i: '🐚', b: '博客' },
-        { n: 'V2EX', u: 'https://v2ex.com', d: '创意工作者社区', i: '💬', b: '社区' },
-        { n: '掘金', u: 'https://juejin.cn', d: '开发者技术社区', i: '💎', b: '社区' },
-        { n: '博客园', u: 'https://www.cnblogs.com', d: '开发者的网上家园', i: '🏡', b: '社区' },
-        { n: '少数派', u: 'https://sspai.com', d: '数字生活指南', i: '📲', b: '媒体' },
-    ],
-    design: [
-        { n: 'Dribbble', u: 'https://dribbble.com', d: '设计师作品展示', i: '🏀', b: '设计' },
-        { n: 'Behance', u: 'https://www.behance.net', d: 'Adobe 创意平台', i: '🎭', b: '设计' },
-        { n: '站酷', u: 'https://www.zcool.com.cn', d: '设计师社区', i: '🎯', b: '设计' },
-        { n: '优设', u: 'https://www.uisdc.com', d: '设计师学习平台', i: '📐', b: '设计' },
-        { n: '花瓣网', u: 'https://huaban.com', d: '中文灵感收集', i: '🌺', b: '灵感' },
-    ],
-    tools: [
-        { n: 'GitHub', u: 'https://github.com', d: '全球代码托管平台', i: '🐙', b: '开发' },
-        { n: 'Notion', u: 'https://notion.so', d: '一体化工作空间', i: '📋', b: '效率' },
-        { n: 'Figma', u: 'https://figma.com', d: '协作设计工具', i: '🖌️', b: '设计' },
-        { n: '草料二维码', u: 'https://cli.im', d: '在线二维码生成', i: '📱', b: '工具' },
-        { n: 'iLovePDF', u: 'https://www.ilovepdf.com/zh-cn', d: 'PDF 在线处理', i: '📄', b: '工具' },
-    ]
-};
+// Fallback friend links (used when CMS is unavailable)
+const fallbackFriends = [
+    { name: '阮一峰的网络日志', url: 'https://www.ruanyifeng.com', description: '技术周刊与博客', icon: '📝' },
+    { name: '酷壳', url: 'https://coolshell.cn', description: '陈皓的技术博客', icon: '🐚' },
+    { name: 'V2EX', url: 'https://v2ex.com', description: '创意工作者社区', icon: '💬' },
+    { name: '掘金', url: 'https://juejin.cn', description: '开发者技术社区', icon: '💎' },
+    { name: '博客园', url: 'https://www.cnblogs.com', description: '开发者的网上家园', icon: '🏡' },
+    { name: '少数派', url: 'https://sspai.com', description: '数字生活指南', icon: '📲' },
+    { name: 'Dribbble', url: 'https://dribbble.com', description: '设计师作品展示', icon: '🏀' },
+    { name: 'Behance', url: 'https://www.behance.net', description: 'Adobe 创意平台', icon: '🎭' },
+    { name: '站酷', url: 'https://www.zcool.com.cn', description: '设计师社区', icon: '🎯' },
+    { name: '优设', url: 'https://www.uisdc.com', description: '设计师学习平台', icon: '📐' },
+    { name: '花瓣网', url: 'https://huaban.com', description: '中文灵感收集', icon: '🌺' },
+    { name: 'GitHub', url: 'https://github.com', description: '全球代码托管平台', icon: '🐙' },
+    { name: 'Notion', url: 'https://notion.so', description: '一体化工作空间', icon: '📋' },
+    { name: 'Figma', url: 'https://figma.com', description: '协作设计工具', icon: '🖌️' },
+    { name: '草料二维码', url: 'https://cli.im', description: '在线二维码生成', icon: '📱' },
+    { name: 'iLovePDF', url: 'https://www.ilovepdf.com/zh-cn', description: 'PDF 在线处理', icon: '📄' },
+];
 
-function renderLinks(id, items) {
-    const el = document.getElementById(id);
-    el.innerHTML = items.map(f => `
-        <a href="${f.u}" target="_blank" rel="noopener" class="link-card rv">
-            <div class="link-avatar">${f.i}</div>
-            <div class="link-info"><div class="link-name">${f.n}</div><div class="link-desc">${f.d}</div></div>
-            <span class="link-badge">${f.b}</span>
-        </a>`).join('');
-    revealEls(el.querySelectorAll('.rv'));
+function renderFriendLinks(links) {
+    const grid = document.getElementById('friendsGrid');
+    if (!links || links.length === 0) {
+        grid.innerHTML = '<p style="color:var(--text-3);grid-column:1/-1;text-align:center;padding:var(--space-xl)">暂无友情链接</p>';
+        return;
+    }
+    grid.innerHTML = links.map(f => {
+        const icon = f.icon || f.i || '🔗';
+        const desc = f.description || f.d || '';
+        const name = f.name || f.n || '';
+        const url = f.url || f.u || '#';
+        return `<a href="${url}" target="_blank" rel="noopener" class="link-card rv">
+            <div class="link-avatar">${icon}</div>
+            <div class="link-info"><div class="link-name">${name}</div><div class="link-desc">${desc}</div></div>
+        </a>`;
+    }).join('');
+    revealEls(grid.querySelectorAll('.rv'));
 }
-renderLinks('techLinks', friends.tech);
-renderLinks('designLinks', friends.design);
-renderLinks('toolLinks', friends.tools);
+
+// Load from CMS API
+(async function initCMS() {
+    try {
+        const [linksRes, pageRes, settingsRes] = await Promise.all([
+            fetch('/api/links').catch(() => null),
+            fetch('/api/pages/links').catch(() => null),
+            fetch('/api/settings').catch(() => null)
+        ]);
+
+        // Load friend links from CMS
+        if (linksRes && linksRes.ok) {
+            const links = await linksRes.json();
+            if (links && links.length > 0) {
+                renderFriendLinks(links);
+            } else {
+                renderFriendLinks(fallbackFriends);
+            }
+        } else {
+            renderFriendLinks(fallbackFriends);
+        }
+
+        // Load page content from CMS
+        if (pageRes && pageRes.ok) {
+            const page = await pageRes.json();
+            if (page && page.content) {
+                const container = document.getElementById('linksPageContent');
+                container.innerHTML = '<div class="about-card rv" style="margin-bottom:var(--space-lg)">' + page.content + '</div>';
+                container.querySelectorAll('.rv').forEach(el => obs.observe(el));
+                setTimeout(() => {
+                    container.querySelectorAll('.rv').forEach(el => {
+                        const r = el.getBoundingClientRect();
+                        if (r.top < window.innerHeight && r.bottom > 0) el.classList.add('vis');
+                    });
+                }, 50);
+            }
+            if (page && page.title) {
+                document.title = page.title + ' - DogNav';
+            }
+        }
+
+        // Load settings for footer
+        if (settingsRes && settingsRes.ok) {
+            const settings = await settingsRes.json();
+            if (settings.footer_text) {
+                const footer = document.querySelector('.footer p');
+                const blogUrl = settings.footer_blog_url || 'https://www.cangdog.com';
+                const githubUrl = settings.footer_github_url || 'https://github.com/BYGD';
+                footer.innerHTML = settings.footer_text + ' — Design by <a href="' + blogUrl + '" target="_blank">CangDog</a> · <a href="' + githubUrl + '" target="_blank">GitHub</a>';
+            }
+        }
+    } catch (err) {
+        console.log('CMS not available, using fallback');
+        renderFriendLinks(fallbackFriends);
+    }
+})();
 </script>
 </body>
 </html>

@@ -204,37 +204,40 @@
     </div>
 
     <div class="stats-grid rv">
-        <div class="stat-card"><div class="stat-num">146+</div><div class="stat-label">收录站点</div></div>
-        <div class="stat-card"><div class="stat-num">10</div><div class="stat-label">分类目录</div></div>
-        <div class="stat-card"><div class="stat-num">6</div><div class="stat-label">搜索引擎</div></div>
-        <div class="stat-card"><div class="stat-num">2</div><div class="stat-label">主题模式</div></div>
+        <div class="stat-card"><div class="stat-num" id="statSites">-</div><div class="stat-label">收录站点</div></div>
+        <div class="stat-card"><div class="stat-num" id="statCats">-</div><div class="stat-label">分类目录</div></div>
+        <div class="stat-card"><div class="stat-num" id="statClicks">-</div><div class="stat-label">总点击</div></div>
+        <div class="stat-card"><div class="stat-num" id="statThemes">2</div><div class="stat-label">主题模式</div></div>
     </div>
 
-    <div class="about-card rv">
-        <h2><span class="ico">🐕</span> 项目介绍</h2>
-        <p>DogNav（狗狗导航）是一个精心策划的网址导航项目。我们从海量网站中筛选出真正有价值的站点，涵盖影视、动漫、工具、AI、开发、设计等 10 个分类，帮助你快速找到所需资源。</p>
-        <p>我们相信，好的导航不应该是一面密密麻麻的链接墙，而应该是一个有温度、有品味的推荐清单。每一个收录的站点都经过人工审核，确保其可用性和价值。</p>
-    </div>
-
-    <div class="about-card rv">
-        <h2><span class="ico">✨</span> 设计特色</h2>
-        <p>采用现代玻璃拟态设计风格，支持深色/浅色双主题切换。流体排版自适应各种屏幕尺寸，卡片式布局简洁直观。动态背景光晕与鼠标跟随光效，让浏览体验更加愉悦。</p>
-        <p>技术栈：纯 HTML + CSS + JavaScript，无需框架依赖。使用 CSS Grid 响应式布局、CSS 自定义属性主题系统、IntersectionObserver 滚动动画，以及 Google Fonts 字体（Sora + Noto Sans SC）。</p>
-    </div>
-
-    <div class="about-card rv">
-        <h2><span class="ico">🤝</span> 参与贡献</h2>
-        <p>DogNav 是一个开源项目，欢迎所有人参与贡献。如果你发现了优秀的网站，或者发现某个收录站点已经失效，都可以通过以下方式联系我们：</p>
-        <div class="contact-row" style="margin-top: var(--space-md);">
-            <a href="https://github.com/BYGD" target="_blank" class="contact-tag">🐙 GitHub</a>
-            <a href="mailto:mail@Cangdog.com" class="contact-tag">📧 邮箱</a>
+    <div id="aboutContent">
+        <!-- Dynamic content loaded from CMS -->
+        <div class="about-card rv">
+            <h2><span class="ico">🐕</span> 项目介绍</h2>
+            <p>DogNav（狗狗导航）是一个精心策划的网址导航项目。我们从海量网站中筛选出真正有价值的站点，涵盖影视、动漫、工具、AI、开发、设计等 10 个分类，帮助你快速找到所需资源。</p>
+            <p>我们相信，好的导航不应该是一面密密麻麻的链接墙，而应该是一个有温度、有品味的推荐清单。每一个收录的站点都经过人工审核，确保其可用性和价值。</p>
         </div>
-    </div>
 
-    <div class="about-card rv">
-        <h2><span class="ico">📋</span> 免责声明</h2>
-        <p>DogNav 仅作为网址导航使用，不存储任何用户数据。所有收录的网站内容均归原网站所有，我们不对第三方网站的内容、隐私政策或安全性负责。</p>
-        <p>如果你认为某个收录站点侵犯了您的权益，请通过上方联系方式告知，我们会及时处理。</p>
+        <div class="about-card rv">
+            <h2><span class="ico">✨</span> 设计特色</h2>
+            <p>采用现代玻璃拟态设计风格，支持深色/浅色双主题切换。流体排版自适应各种屏幕尺寸，卡片式布局简洁直观。动态背景光晕与鼠标跟随光效，让浏览体验更加愉悦。</p>
+            <p>技术栈：纯 HTML + CSS + JavaScript，无需框架依赖。使用 CSS Grid 响应式布局、CSS 自定义属性主题系统、IntersectionObserver 滚动动画，以及 Google Fonts 字体（Sora + Noto Sans SC）。</p>
+        </div>
+
+        <div class="about-card rv">
+            <h2><span class="ico">🤝</span> 参与贡献</h2>
+            <p>DogNav 是一个开源项目，欢迎所有人参与贡献。如果你发现了优秀的网站，或者发现某个收录站点已经失效，都可以通过以下方式联系我们：</p>
+            <div class="contact-row" style="margin-top: var(--space-md);">
+                <a href="https://github.com/BYGD" target="_blank" class="contact-tag">🐙 GitHub</a>
+                <a href="mailto:mail@Cangdog.com" class="contact-tag">📧 邮箱</a>
+            </div>
+        </div>
+
+        <div class="about-card rv">
+            <h2><span class="ico">📋</span> 免责声明</h2>
+            <p>DogNav 仅作为网址导航使用，不存储任何用户数据。所有收录的网站内容均归原网站所有，我们不对第三方网站的内容、隐私政策或安全性负责。</p>
+            <p>如果你认为某个收录站点侵犯了您的权益，请通过上方联系方式告知，我们会及时处理。</p>
+        </div>
     </div>
 </div>
 
@@ -255,6 +258,70 @@ const obs = new IntersectionObserver(entries => {
     entries.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.add('vis'), i * 60); obs.unobserve(e.target); } });
 }, { threshold: 0.1 });
 document.querySelectorAll('.rv').forEach(el => { setTimeout(() => { const r = el.getBoundingClientRect(); if (r.top < window.innerHeight && r.bottom > 0) { el.classList.add('vis'); } else { obs.observe(el); } }, 50); });
+
+// Load page content from CMS API
+(async function initCMS() {
+    try {
+        const [pageRes, settingsRes, sitesRes, catsRes] = await Promise.all([
+            fetch('/api/pages/about').catch(() => null),
+            fetch('/api/settings').catch(() => null),
+            fetch('/api/sites').catch(() => null),
+            fetch('/api/categories').catch(() => null)
+        ]);
+
+        // Update stats from real data
+        if (sitesRes && sitesRes.ok) {
+            const sites = await sitesRes.json();
+            const active = sites.filter(s => s.status === 'active');
+            document.getElementById('statSites').textContent = active.length + '+';
+            const totalClicks = active.reduce((sum, s) => sum + (s.click_count || 0), 0);
+            document.getElementById('statClicks').textContent = totalClicks > 9999 ? (totalClicks / 1000).toFixed(1) + 'k' : totalClicks;
+        }
+        if (catsRes && catsRes.ok) {
+            const cats = await catsRes.json();
+            const activeCats = cats.filter(c => c.is_active);
+            document.getElementById('statCats').textContent = activeCats.length;
+        }
+
+        // Load page content from CMS
+        if (pageRes && pageRes.ok) {
+            const page = await pageRes.json();
+            if (page && page.content) {
+                const container = document.getElementById('aboutContent');
+                // Render CMS content as HTML (from Quill editor)
+                container.innerHTML = '<div class="about-card rv">' + page.content + '</div>';
+                // Re-observe new elements for reveal animation
+                container.querySelectorAll('.rv').forEach(el => obs.observe(el));
+                // Trigger immediate reveal for visible elements
+                setTimeout(() => {
+                    container.querySelectorAll('.rv').forEach(el => {
+                        const r = el.getBoundingClientRect();
+                        if (r.top < window.innerHeight && r.bottom > 0) el.classList.add('vis');
+                    });
+                }, 50);
+            }
+            if (page && page.title) {
+                document.title = page.title + ' - DogNav';
+            }
+        }
+
+        // Load settings for footer
+        if (settingsRes && settingsRes.ok) {
+            const settings = await settingsRes.json();
+            if (settings.footer_text) {
+                const footer = document.querySelector('.footer p');
+                const blogUrl = settings.footer_blog_url || 'https://www.cangdog.com';
+                const githubUrl = settings.footer_github_url || 'https://github.com/BYGD';
+                footer.innerHTML = settings.footer_text + ' — Design by <a href="' + blogUrl + '" target="_blank">CangDog</a> · <a href="' + githubUrl + '" target="_blank">GitHub</a>';
+            }
+        }
+    } catch (err) {
+        console.log('CMS not available, using static content');
+        document.getElementById('statSites').textContent = '146+';
+        document.getElementById('statCats').textContent = '10';
+        document.getElementById('statClicks').textContent = '0';
+    }
+})();
 </script>
 </body>
 </html>

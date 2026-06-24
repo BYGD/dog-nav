@@ -555,16 +555,6 @@
 
 <div class="cat-bar" id="catBar">
     <button class="cat-pill on" data-cat="all">🔥 全部</button>
-    <button class="cat-pill" data-cat="recommend">⭐ 推荐</button>
-    <button class="cat-pill" data-cat="video">🎬 影视</button>
-    <button class="cat-pill" data-cat="anime">🌸 动漫</button>
-    <button class="cat-pill" data-cat="software">💿 软件</button>
-    <button class="cat-pill" data-cat="tools">🔧 工具</button>
-    <button class="cat-pill" data-cat="news">📰 资讯</button>
-    <button class="cat-pill" data-cat="community">💬 社区</button>
-    <button class="cat-pill" data-cat="ai">🤖 AI</button>
-    <button class="cat-pill" data-cat="dev">💻 开发</button>
-    <button class="cat-pill" data-cat="design">🎨 设计</button>
 </div>
 
 <main class="cards-area" id="cardsArea"></main>
@@ -876,19 +866,25 @@ let curE = 'baidu', curC = 'all';
 // ═══════════════════════════════════════════
 function render(cat = 'all') {
     const a = document.getElementById('cardsArea');
-    const f = cat === 'all' ? S : S.filter(s => s.c === cat);
+    const f = cat === 'all' ? S : S.filter(s => (s.c || s.category) === cat);
     const g = {};
-    f.forEach(s => { if (!g[s.c]) g[s.c] = []; g[s.c].push(s); });
+    f.forEach(s => { const k = s.c || s.category; if (!g[k]) g[k] = []; g[k].push(s); });
     let h = '';
     for (const [k, items] of Object.entries(g)) {
         const c = C[k] || { i: '📁', l: k };
         h += `<div class="sec-head rv"><div class="sec-ico">${c.i}</div><div class="sec-title">${c.l}</div><div class="sec-line"></div></div>
-        <div class="card-grid">${items.map(s =>
-            `<a href="${s.u}" target="_blank" rel="noopener" class="card rv" title="${s.n} - ${s.d}">
-                <div class="card-row"><div class="card-fav">${s.i}</div><div class="card-name">${s.n}</div></div>
-                <div class="card-desc">${s.d}</div>
-            </a>`
-        ).join('')}</div>`;
+        <div class="card-grid">${items.map(s => {
+            const name = s.n || s.name;
+            const url = s.u || s.url;
+            const desc = s.d || s.description || '';
+            const icon = s.i || s.icon || '🌐';
+            const id = s.id || '';
+            const nf = s.nofollow ? 'noopener nofollow' : 'noopener';
+            return `<a href="${url}" target="_blank" rel="${nf}" class="card rv" title="${name} — ${desc}" data-id="${id}" onclick="trackClick(event,'${id}','${url.replace(/'/g, "\\'")}')">
+                <div class="card-row"><div class="card-fav">${icon}</div><div class="card-name">${name}</div></div>
+                <div class="card-desc">${desc}</div>
+            </a>`;
+        }).join('')}</div>`;
     }
     a.innerHTML = h;
     initReveal();
@@ -960,12 +956,78 @@ window.addEventListener('scroll', () => { btt.classList.toggle('show', window.sc
 btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
 // ═══════════════════════════════════════════
+// CLICK TRACKING
+// ═══════════════════════════════════════════
+function trackClick(e, id, url) {
+    if (id) {
+        fetch(`/api/sites/${id}/click`, { method: 'POST' }).catch(() => {});
+    }
+}
+
+// ═══════════════════════════════════════════
 // LOADER
 // ═══════════════════════════════════════════
 window.addEventListener('load', () => setTimeout(() => document.getElementById('loader').classList.add('hide'), 350));
 
-// INIT — call directly, don't wait for load event (external resources may block it)
-render();
+// ═══════════════════════════════════════════
+// CMS INIT — fetch data from backend API
+// ═══════════════════════════════════════════
+(async function initCMS() {
+    try {
+        // Fetch sites from API
+        const sitesRes = await fetch('/api/sites');
+        if (sitesRes.ok) {
+            const apiSites = await sitesRes.json();
+            if (apiSites.length > 0) {
+                // Only use active sites
+                S.length = 0;
+                apiSites.filter(s => s.status === 'active').forEach(s => S.push(s));
+            }
+        }
+    } catch (err) {
+        console.warn('API sites fetch failed, using fallback data');
+    }
+
+    try {
+        // Fetch categories from API
+        const catsRes = await fetch('/api/categories');
+        if (catsRes.ok) {
+            const apiCats = await catsRes.json();
+            if (apiCats.length > 0) {
+                // Rebuild C object
+                Object.keys(C).forEach(k => delete C[k]);
+                apiCats.filter(c => c.is_active).forEach(c => {
+                    C[c.id] = { i: c.icon || '📁', l: c.name };
+                });
+
+                // Rebuild category bar
+                const bar = document.getElementById('catBar');
+                bar.innerHTML = '<button class="cat-pill on" data-cat="all">🔥 全部</button>' +
+                    apiCats.filter(c => c.is_active).map(c =>
+                        `<button class="cat-pill" data-cat="${c.id}">${c.icon || '📁'} ${c.name}</button>`
+                    ).join('');
+            }
+        }
+    } catch (err) {
+        console.warn('API categories fetch failed, using fallback data');
+    }
+
+    try {
+        // Fetch settings for footer
+        const settingsRes = await fetch('/api/settings');
+        if (settingsRes.ok) {
+            const settings = await settingsRes.json();
+            if (settings.footer_text) {
+                document.querySelector('.footer').innerHTML = `<p>${settings.footer_text}</p>`;
+            }
+        }
+    } catch (err) {
+        // Footer stays as-is
+    }
+
+    // Render with loaded data
+    render();
+})();
 </script>
 </body>
 </html>
