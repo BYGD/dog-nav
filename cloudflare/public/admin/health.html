@@ -1,0 +1,265 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DogNav 站点检测</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f2f5; min-height: 100vh; display: flex; }
+        .sidebar {
+            width: 240px; background: #1e1e2d; min-height: 100vh; position: fixed; left: 0; top: 0;
+            display: flex; flex-direction: column; z-index: 100;
+        }
+        .sidebar-brand { padding: 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar-brand .logo { font-size: 28px; }
+        .sidebar-brand .text { font-size: 18px; font-weight: 700; color: white; }
+        .sidebar-brand .text span { color: #7c83ff; }
+        .sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+        .nav-section { padding: 8px 20px 4px; font-size: 11px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 1px; margin-top: 8px; }
+        .sidebar-nav a {
+            display: flex; align-items: center; gap: 12px; padding: 10px 20px;
+            color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px;
+            transition: all 0.2s; border-left: 3px solid transparent;
+        }
+        .sidebar-nav a:hover { color: white; background: rgba(255,255,255,0.05); }
+        .sidebar-nav a.active { color: white; background: rgba(124,131,255,0.1); border-left-color: #7c83ff; }
+        .sidebar-nav a .icon { font-size: 18px; width: 24px; text-align: center; }
+        .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .sidebar-footer a { display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,0.4); text-decoration: none; font-size: 13px; padding: 8px 0; }
+        .sidebar-footer a:hover { color: #ff6b6b; }
+        .main { margin-left: 240px; flex: 1; min-height: 100vh; }
+        .topbar { background: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 50; }
+        .topbar h1 { font-size: 18px; color: #333; font-weight: 600; }
+        .topbar .user-info { display: flex; align-items: center; gap: 12px; font-size: 14px; color: #666; }
+        .topbar .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: 600; }
+        .container { padding: 24px; }
+        .toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+        .toolbar .stats { display: flex; gap: 16px; }
+        .toolbar .stat { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; }
+        .stat-online { background: #e8f5e9; color: #2e7d32; }
+        .stat-offline { background: #ffebee; color: #c62828; }
+        .stat-slow { background: #fff3e0; color: #e65100; }
+        .stat-total { background: #e3f2fd; color: #1565c0; }
+        .btn-check {
+            padding: 10px 24px; background: linear-gradient(135deg, #667eea, #764ba2); color: white;
+            border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;
+            transition: all 0.2s; display: flex; align-items: center; gap: 8px;
+        }
+        .btn-check:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102,126,234,0.4); }
+        .btn-check:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+        .table-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #f8f9fa; padding: 12px 16px; text-align: left; font-weight: 600; color: #555; font-size: 13px; position: sticky; top: 0; }
+        td { padding: 10px 16px; border-bottom: 1px solid #eee; font-size: 13px; vertical-align: middle; }
+        .site-name-cell { max-width: 200px; }
+        .site-name-cell .name { font-weight: 600; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+        .site-name-cell .url { color: #999; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; margin-top: 2px; }
+        .badge { padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; }
+        .badge-online { background: #e8f5e9; color: #2e7d32; }
+        .badge-offline { background: #ffebee; color: #c62828; }
+        .badge-slow { background: #fff3e0; color: #e65100; }
+        .badge-checking { background: #e3f2fd; color: #1565c0; }
+        .badge-pending { background: #f5f5f5; color: #999; }
+        .progress-bar { height: 4px; background: #e0e0e0; border-radius: 2px; margin-bottom: 16px; overflow: hidden; display: none; }
+        .progress-bar .fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 2px; transition: width 0.3s; width: 0%; }
+        .empty { text-align: center; padding: 60px; color: #999; }
+        .btn-recheck { padding: 4px 10px; background: #e3f2fd; color: #1565c0; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .btn-recheck:hover { background: #bbdefb; }
+        .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #e0e0e0; border-top-color: #667eea; border-radius: 50%; animation: spin 0.6s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="logo">🐕</div>
+            <div class="text">Dog<span>Nav</span></div>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">内容管理</div>
+            <a href="/admin/dashboard"><span class="icon"></span> 站点管理</a>
+            <a href="/admin/categories"><span class="icon">📂</span> 分类管理</a>
+            <a href="/admin/pages"><span class="icon">📄</span> 页面管理</a>
+            <a href="/admin/links"><span class="icon">🔗</span> 友链管理</a>
+            <div class="nav-section">互动管理</div>
+            <a href="/admin/submissions"><span class="icon">📮</span> 提交审核</a>
+            <a href="/admin/health" class="active"><span class="icon"></span> 站点检测</a>
+            <div class="nav-section">数据分析</div>
+            <a href="/admin/stats"><span class="icon">📊</span> 统计看板</a>
+            <a href="/admin/logs"><span class="icon">📝</span> 操作日志</a>
+            <div class="nav-section">系统</div>
+            <a href="/admin/users"><span class="icon">👥</span> 用户管理</a>
+            <a href="/admin/backup"><span class="icon">💾</span> 备份恢复</a>
+            <a href="/admin/settings"><span class="icon">⚙️</span> 系统设置</a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" onclick="logout()"><span class="icon">🚪</span> 退出登录</a>
+        </div>
+    </aside>
+
+    <div class="main">
+        <div class="topbar">
+            <h1>站点检测</h1>
+            <div class="user-info">
+                <div class="avatar">A</div>
+                <span>Admin</span>
+            </div>
+        </div>
+        <div class="container">
+            <div class="toolbar">
+                <div class="stats" id="statsBar">
+                    <span class="stat stat-total" id="statTotal">总计: 0</span>
+                    <span class="stat stat-online" id="statOnline">在线: 0</span>
+                    <span class="stat stat-slow" id="statSlow">缓慢: 0</span>
+                    <span class="stat stat-offline" id="statOffline">离线: 0</span>
+                </div>
+                <button class="btn-check" id="btnCheckAll" onclick="checkAll()">
+                    <span>💓</span> 检测全部站点
+                </button>
+            </div>
+            <div class="progress-bar" id="progressBar"><div class="fill" id="progressFill"></div></div>
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr><th>网站</th><th>状态</th><th>响应时间</th><th>最后检测</th><th>操作</th></tr>
+                    </thead>
+                    <tbody id="sitesBody"></tbody>
+                </table>
+                <div class="empty" id="emptyState" style="display:none">暂无站点</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        if (!sessionStorage.getItem('admin_logged_in')) window.location.href = '/admin';
+        function logout() { sessionStorage.removeItem('admin_logged_in'); sessionStorage.removeItem('admin_token'); window.location.href = '/admin'; }
+        function authHeaders() { return { 'Authorization': 'Bearer ' + sessionStorage.getItem('admin_token'), 'Content-Type': 'application/json' }; }
+
+        let allSites = [];
+        let isChecking = false;
+
+        async function loadSites() {
+            const res = await fetch('/api/sites');
+            allSites = await res.json();
+            renderSites(allSites);
+            updateStats();
+        }
+
+        function renderSites(sites) {
+            const tbody = document.getElementById('sitesBody');
+            const empty = document.getElementById('emptyState');
+            if (!sites || sites.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+            empty.style.display = 'none';
+
+            tbody.innerHTML = sites.map(s => {
+                const status = s._healthStatus || 'pending';
+                const latency = s._healthLatency || '-';
+                const lastCheck = s._healthTime || '-';
+                const badgeClass = status === 'online' ? 'badge-online' : status === 'offline' ? 'badge-offline' : status === 'slow' ? 'badge-slow' : status === 'checking' ? 'badge-checking' : 'badge-pending';
+                const badgeText = status === 'online' ? '在线' : status === 'offline' ? '离线' : status === 'slow' ? '缓慢' : status === 'checking' ? '<span class="spinner"></span> 检测中' : '待检测';
+                return `<tr>
+                    <td class="site-name-cell"><span class="name">${s.name}</span><span class="url">${s.url}</span></td>
+                    <td><span class="badge ${badgeClass}">${badgeText}</span></td>
+                    <td>${latency !== '-' ? latency + 'ms' : '-'}</td>
+                    <td>${lastCheck}</td>
+                    <td><button class="btn-recheck" onclick="checkOne(${s.id})">重新检测</button></td>
+                </tr>`;
+            }).join('');
+        }
+
+        function updateStats() {
+            const total = allSites.length;
+            const online = allSites.filter(s => s._healthStatus === 'online').length;
+            const slow = allSites.filter(s => s._healthStatus === 'slow').length;
+            const offline = allSites.filter(s => s._healthStatus === 'offline').length;
+            document.getElementById('statTotal').textContent = `总计: ${total}`;
+            document.getElementById('statOnline').textContent = `在线: ${online}`;
+            document.getElementById('statSlow').textContent = `缓慢: ${slow}`;
+            document.getElementById('statOffline').textContent = `离线: ${offline}`;
+        }
+
+        async function checkOne(id) {
+            const site = allSites.find(s => s.id === id);
+            if (!site) return;
+            site._healthStatus = 'checking';
+            renderSites(allSites);
+
+            try {
+                const res = await fetch('/api/health-check', {
+                    method: 'POST',
+                    headers: authHeaders(),
+                    body: JSON.stringify({ urls: [site.url] })
+                });
+                const data = await res.json();
+                if (data.results && data.results[0]) {
+                    const r = data.results[0];
+                    site._healthStatus = r.status;
+                    site._healthLatency = r.latency;
+                    site._healthTime = r.time;
+                }
+            } catch (err) {
+                site._healthStatus = 'offline';
+                site._healthLatency = '-';
+                site._healthTime = '检测失败';
+            }
+            renderSites(allSites);
+            updateStats();
+        }
+
+        async function checkAll() {
+            if (isChecking) return;
+            isChecking = true;
+            const btn = document.getElementById('btnCheckAll');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> 检测中...';
+
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+            progressBar.style.display = 'block';
+
+            const batchSize = 5;
+            const total = allSites.length;
+
+            for (let i = 0; i < total; i += batchSize) {
+                const batch = allSites.slice(i, i + batchSize);
+                // Mark batch as checking
+                batch.forEach(s => s._healthStatus = 'checking');
+                renderSites(allSites);
+
+                try {
+                    const res = await fetch('/api/health-check', {
+                        method: 'POST',
+                        headers: authHeaders(),
+                        body: JSON.stringify({ urls: batch.map(s => s.url) })
+                    });
+                    const data = await res.json();
+                    if (data.results) {
+                        data.results.forEach((r, idx) => {
+                            if (batch[idx]) {
+                                batch[idx]._healthStatus = r.status;
+                                batch[idx]._healthLatency = r.latency;
+                                batch[idx]._healthTime = r.time;
+                            }
+                        });
+                    }
+                } catch (err) {
+                    batch.forEach(s => { s._healthStatus = 'offline'; s._healthLatency = '-'; s._healthTime = '检测失败'; });
+                }
+
+                renderSites(allSites);
+                updateStats();
+                progressFill.style.width = Math.min(((i + batchSize) / total * 100), 100) + '%';
+            }
+
+            progressBar.style.display = 'none';
+            progressFill.style.width = '0%';
+            btn.disabled = false;
+            btn.innerHTML = '<span>💓</span> 检测全部站点';
+            isChecking = false;
+        }
+
+        loadSites();
+    </script>
+</body>
+</html>

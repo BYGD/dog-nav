@@ -248,12 +248,15 @@ function renderFriendLinks(links) {
         return;
     }
     grid.innerHTML = links.map(f => {
-        const icon = f.icon || f.i || '🔗';
+        const rawIcon = f.icon || f.i || '🔗';
+        const iconHtml = rawIcon.startsWith('http')
+            ? `<img src="${rawIcon}" style="width:32px;height:32px;border-radius:6px;object-fit:cover" onerror="this.outerHTML=''">`
+            : rawIcon;
         const desc = f.description || f.d || '';
         const name = f.name || f.n || '';
         const url = f.url || f.u || '#';
         return `<a href="${url}" target="_blank" rel="noopener" class="link-card rv">
-            <div class="link-avatar">${icon}</div>
+            <div class="link-avatar">${iconHtml}</div>
             <div class="link-info"><div class="link-name">${name}</div><div class="link-desc">${desc}</div></div>
         </a>`;
     }).join('');

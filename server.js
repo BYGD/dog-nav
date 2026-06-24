@@ -1039,6 +1039,59 @@ app.put('/api/users/:id', requireAuth, (req, res) => {
 });
 
 // ═══════════════════════════════════════════
+// HEALTH CHECK API
+// ═══════════════════════════════════════════
+
+app.post('/api/health-check', requireAuth, (req, res) => {
+    try {
+        const { urls } = req.body;
+        if (!urls || !Array.isArray(urls)) return res.status(400).json({ error: 'urls array required' });
+
+        const http = require('http');
+        const https = require('https');
+        const { URL } = require('url');
+
+        const results = [];
+        let completed = 0;
+        const total = urls.length;
+
+        urls.forEach(url => {
+            const startTime = Date.now();
+            try {
+                const parsed = new URL(url);
+                const client = parsed.protocol === 'https:' ? https : http;
+                const req2 = client.get(url, { timeout: 8000, headers: { 'User-Agent': 'DogNav-HealthCheck/1.0' } }, (resp) => {
+                    const latency = Date.now() - startTime;
+                    let status = 'online';
+                    if (resp.statusCode >= 400) status = 'offline';
+                    else if (latency > 3000) status = 'slow';
+                    results.push({ url, status, latency, time: new Date().toLocaleString('zh-CN'), statusCode: resp.statusCode });
+                    completed++;
+                    if (completed === total) res.json({ results });
+                });
+                req2.on('error', () => {
+                    results.push({ url, status: 'offline', latency: '-', time: new Date().toLocaleString('zh-CN'), error: 'Connection failed' });
+                    completed++;
+                    if (completed === total) res.json({ results });
+                });
+                req2.on('timeout', () => {
+                    req2.destroy();
+                    results.push({ url, status: 'offline', latency: '-', time: new Date().toLocaleString('zh-CN'), error: 'Timeout' });
+                    completed++;
+                    if (completed === total) res.json({ results });
+                });
+            } catch (err) {
+                results.push({ url, status: 'offline', latency: '-', time: new Date().toLocaleString('zh-CN'), error: err.message });
+                completed++;
+                if (completed === total) res.json({ results });
+            }
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ═══════════════════════════════════════════
 // SERVE ADMIN PAGES
 // ═══════════════════════════════════════════
 
@@ -1049,7 +1102,8 @@ app.get('/admin/pages', (req, res) => res.sendFile(path.join(__dirname, 'admin',
 app.get('/admin/links', (req, res) => res.sendFile(path.join(__dirname, 'admin', 'links.html')));
 app.get('/admin/categories', (req, res) => res.sendFile(path.join(__dirname, 'admin', 'categories.html')));
 app.get('/admin/submissions', (req, res) => res.sendFile(path.join(__dirname, 'admin', 'submissions.html')));
-app.get('/admin/reports', (req, res) => res.sendFile(path.join(__dirname, 'admin', 'reports.html')));
+app.get('/admin/reports', (req, res) => res.sendFile(path.join(__dirname, 'admin', 'health.html')));
+app.get('/admin/health', (req, res) => res.sendFile(path.join(__dirname, 'admin', 'health.html')));
 app.get('/admin/stats', (req, res) => res.sendFile(path.join(__dirname, 'admin', 'stats.html')));
 app.get('/admin/logs', (req, res) => res.sendFile(path.join(__dirname, 'admin', 'logs.html')));
 app.get('/admin/users', (req, res) => res.sendFile(path.join(__dirname, 'admin', 'users.html')));

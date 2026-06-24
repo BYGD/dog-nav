@@ -491,4 +491,34 @@ app.post('/api/upload', requireAuth, async (c) => {
     return c.json({ url: '', filename: '', message: 'Upload not available on CF. Use external image hosting.' });
 });
 
+// ═══════════════════════════════════════════
+// HEALTH CHECK API
+// ═══════════════════════════════════════════
+
+app.post('/api/health-check', requireAuth, async (c) => {
+    const { urls } = await c.req.json();
+    if (!urls || !Array.isArray(urls)) return c.json({ error: 'urls array required' }, 400);
+
+    const results = [];
+    await Promise.all(urls.map(async (url) => {
+        const startTime = Date.now();
+        try {
+            const resp = await fetch(url, {
+                method: 'GET',
+                headers: { 'User-Agent': 'DogNav-HealthCheck/1.0' },
+                redirect: 'follow',
+            });
+            const latency = Date.now() - startTime;
+            let status = 'online';
+            if (resp.status >= 400) status = 'offline';
+            else if (latency > 3000) status = 'slow';
+            results.push({ url, status, latency, time: new Date().toLocaleString('zh-CN'), statusCode: resp.status });
+        } catch (err) {
+            results.push({ url, status: 'offline', latency: '-', time: new Date().toLocaleString('zh-CN'), error: 'Connection failed' });
+        }
+    }));
+
+    return c.json({ results });
+});
+
 export default app;
