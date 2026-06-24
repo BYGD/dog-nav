@@ -322,6 +322,21 @@ document.querySelectorAll('.rv').forEach(el => { setTimeout(() => { const r = el
     } catch (err) { /* keep hardcoded options */ }
 })();
 
+// Load site icon from settings
+(async function() {
+    try {
+        const res = await fetch('/api/settings');
+        if (res.ok) {
+            const settings = await res.json();
+            if (settings.site_icon) {
+                let link = document.querySelector('link[rel="icon"]');
+                if (!link) { link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
+                link.href = settings.site_icon;
+            }
+        }
+    } catch (err) {}
+})();
+
 // Form submission → POST to CMS API
 document.getElementById('submitForm').addEventListener('submit', async function(e) {
     e.preventDefault();

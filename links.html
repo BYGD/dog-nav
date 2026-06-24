@@ -303,14 +303,13 @@ function renderFriendLinks(links) {
             }
         }
 
-        // Load settings for footer
+        // Load settings for site icon
         if (settingsRes && settingsRes.ok) {
             const settings = await settingsRes.json();
-            if (settings.footer_text) {
-                const footer = document.querySelector('.footer p');
-                const blogUrl = settings.footer_blog_url || 'https://www.cangdog.com';
-                const githubUrl = settings.footer_github_url || 'https://github.com/BYGD';
-                footer.innerHTML = settings.footer_text + ' — Design by <a href="' + blogUrl + '" target="_blank">CangDog</a> · <a href="' + githubUrl + '" target="_blank">GitHub</a>';
+            if (settings.site_icon) {
+                let link = document.querySelector('link[rel="icon"]');
+                if (!link) { link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
+                link.href = settings.site_icon;
             }
         }
     } catch (err) {

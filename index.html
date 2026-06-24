@@ -1035,16 +1035,18 @@ window.addEventListener('load', () => setTimeout(() => document.getElementById('
     }
 
     try {
-        // Fetch settings for footer
+        // Fetch settings for site icon
         const settingsRes = await fetch('/api/settings');
         if (settingsRes.ok) {
             const settings = await settingsRes.json();
-            if (settings.footer_text) {
-                document.querySelector('.footer').innerHTML = `<p>${settings.footer_text}</p>`;
+            if (settings.site_icon) {
+                let link = document.querySelector('link[rel="icon"]');
+                if (!link) { link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
+                link.href = settings.site_icon;
             }
         }
     } catch (err) {
-        // Footer stays as-is
+        // Settings stay as-is
     }
 
     // Render with loaded data
