@@ -34,6 +34,14 @@
 
 ---
 
+##  Preview
+
+<p align="center">
+  <img src="screenshot.png" alt="DogNav Full Page Screenshot" width="90%" style="border-radius:12px; box-shadow: 0 16px 48px rgba(0,0,0,0.3)">
+</p>
+
+---
+
 ## 🌟 Features
 
 | Feature | Description |
