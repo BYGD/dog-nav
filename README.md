@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://dog-nav.edgeone.dev/ico.ico" alt="DogNav Logo" width="100" style="border-radius:50%; box-shadow: 0 8px 32px rgba(127,90,240,0.3)">
+  <img src="https://nav.cangdog.com/ico.ico" alt="DogNav Logo" width="100" style="border-radius:50%; box-shadow: 0 8px 32px rgba(127,90,240,0.3)">
 </p>
 
 <h1 align="center" style="font-size:2.5em; margin-bottom:0">
@@ -11,8 +11,8 @@
 </p>
 
 <p align="center">
-  <a href="https://dog-nav.edgeone.dev">
-    <img src="https://img.shields.io/badge/_Live_Demo-dog--nav.edgeone.dev-7f5af0?style=flat-square" alt="Live Demo">
+  <a href="https://nav.cangdog.com">
+    <img src="https://img.shields.io/badge/_Live_Demo-nav.cangdog.com-7f5af0?style=flat-square" alt="Live Demo">
   </a>
   <img src="https://img.shields.io/badge/version-1.2.0-blue?style=flat-square" alt="Version">
   <img src="https://img.shields.io/badge/sites-146+-2cb67d?style=flat-square" alt="Sites">
@@ -23,13 +23,13 @@
 </p>
 
 <p align="center">
-  <a href="https://dog-nav.edgeone.dev">🚀 在线访问</a>
+  <a href="https://nav.cangdog.com">🚀 在线访问</a>
   ·
-  <a href="https://dog-nav.edgeone.dev/contribute.html">📮 提交站点</a>
+  <a href="https://nav.cangdog.com/contribute.html">📮 提交站点</a>
   ·
-  <a href="https://dog-nav.edgeone.dev/links.html">🔗 友情链接</a>
+  <a href="https://nav.cangdog.com/links.html">🔗 友情链接</a>
   ·
-  <a href="https://dog-nav.edgeone.dev/about.html">📖 关于项目</a>
+  <a href="https://nav.cangdog.com/about.html">📖 关于项目</a>
 </p>
 
 ---
@@ -123,7 +123,7 @@ Hosted on **Tencent Cloud EdgeOne** — a global edge computing platform.
 
 | Item | Value |
 |------|-------|
-| Domain | `dog-nav.edgeone.dev` |
+| Domain | `nav.cangdog.com` |
 | Provider | Tencent Cloud EdgeOne |
 | Protocol | HTTPS |
 | CDN | Global edge nodes |
@@ -135,8 +135,8 @@ Hosted on **Tencent Cloud EdgeOne** — a global edge computing platform.
 We welcome contributions! Here's how you can help:
 
 1. **Report dead links** — Open an issue with the broken URL
-2. **Suggest new sites** — Use the [Submit Page](https://dog-nav.edgeone.dev/contribute.html) or open an issue
-3. **Add friend links** — If you run a quality site, reach out via [links page](https://dog-nav.edgeone.dev/links.html)
+2. **Suggest new sites** — Use the [Submit Page](https://nav.cangdog.com/contribute.html) or open an issue
+3. **Add friend links** — If you run a quality site, reach out via [links page](https://nav.cangdog.com/links.html)
 4. **Improve code** — Fork, make changes, and submit a PR
 
 ---
