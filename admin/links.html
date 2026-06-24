@@ -268,7 +268,7 @@
                     <input type="url" id="linkUrl" required placeholder="https://">
                 </div>
                 <div class="form-group">
-                    <label>描述</label>
+                    <label>描述 <button type="button" class="btn-fetch-icon" id="fetchDescBtn" onclick="fetchMeta()" title="从URL自动获取名称和描述"> 自动获取</button></label>
                     <textarea id="linkDesc"></textarea>
                 </div>
                 <div class="form-group">
@@ -376,37 +376,51 @@
             }
         }
 
-        async function fetchIcon() {
+        async function fetchMeta() {
             const urlInput = document.getElementById('linkUrl');
-            const iconInput = document.getElementById('linkIcon');
-            const btn = document.getElementById('fetchIconBtn');
             const url = urlInput.value.trim();
             if (!url) { showToast('请先填写URL', 'error'); return; }
 
-            btn.disabled = true;
-            btn.textContent = '⏳ 获取中...';
+            const iconBtn = document.getElementById('fetchIconBtn');
+            const descBtn = document.getElementById('fetchDescBtn');
+            iconBtn.disabled = true; iconBtn.textContent = '⏳ 获取中...';
+            descBtn.disabled = true; descBtn.textContent = '⏳ 获取中...';
+
             try {
                 const res = await fetch('/api/fetch-icon?url=' + encodeURIComponent(url));
                 const data = await res.json();
+                let filled = 0;
                 if (data.icon) {
-                    iconInput.value = data.icon;
-                    showToast('图标已获取');
-                } else {
-                    showToast('未找到图标，可手动填写', 'error');
+                    const iconInput = document.getElementById('linkIcon');
+                    if (!iconInput.value.trim()) { iconInput.value = data.icon; filled++; }
                 }
+                if (data.title) {
+                    const nameInput = document.getElementById('linkName');
+                    if (!nameInput.value.trim()) { nameInput.value = data.title; filled++; }
+                }
+                if (data.description) {
+                    const descInput = document.getElementById('linkDesc');
+                    if (!descInput.value.trim()) { descInput.value = data.description; filled++; }
+                }
+                showToast(filled > 0 ? `已自动填充 ${filled} 项` : '未获取到信息，可手动填写', filled > 0 ? 'success' : 'error');
             } catch (err) {
                 showToast('获取失败', 'error');
             }
-            btn.disabled = false;
-            btn.textContent = '🔗 自动获取';
+            iconBtn.disabled = false; iconBtn.textContent = ' 自动获取';
+            descBtn.disabled = false; descBtn.textContent = ' 自动获取';
         }
 
-        // Auto-fetch icon when URL field loses focus (only if icon is empty)
+        // Alias for the icon button
+        function fetchIcon() { fetchMeta(); }
+
+        // Auto-fetch when URL field loses focus (only if fields are empty)
         document.getElementById('linkUrl').addEventListener('blur', () => {
+            const nameInput = document.getElementById('linkName');
             const iconInput = document.getElementById('linkIcon');
-            if (!iconInput.value.trim()) {
-                const url = document.getElementById('linkUrl').value.trim();
-                if (url) fetchIcon();
+            const descInput = document.getElementById('linkDesc');
+            const url = document.getElementById('linkUrl').value.trim();
+            if (url && !nameInput.value.trim() && !iconInput.value.trim() && !descInput.value.trim()) {
+                fetchMeta();
             }
         });
 

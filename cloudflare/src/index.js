@@ -365,37 +365,53 @@ app.get('/api/fetch-icon', async (c) => {
         const parsed = new URL(url);
         const origin = parsed.origin;
 
-        // Fetch the page HTML
         const resp = await fetch(url, {
             headers: { 'User-Agent': 'Mozilla/5.0' },
             redirect: 'follow',
         });
         const html = await resp.text();
 
-        // Try to find favicon in <link> tags
-        const patterns = [
+        // Extract icon
+        const iconPatterns = [
             /<link[^>]+rel=["'](?:shortcut )?icon["'][^>]+href=["']([^"']+)["']/i,
             /<link[^>]+href=["']([^"']+)["'][^>]+rel=["'](?:shortcut )?icon["']/i,
             /<link[^>]+rel=["']apple-touch-icon["'][^>]+href=["']([^"']+)["']/i,
             /<link[^>]+href=["']([^"']+)["'][^>]+rel=["']apple-touch-icon["']/i,
         ];
-
-        for (const pat of patterns) {
+        let icon = origin + '/favicon.ico';
+        for (const pat of iconPatterns) {
             const m = html.match(pat);
             if (m && m[1]) {
-                let icon = m[1].trim();
-                if (icon.startsWith('data:')) return c.json({ icon });
-                if (icon.startsWith('//')) return c.json({ icon: 'https:' + icon });
-                if (icon.startsWith('/')) return c.json({ icon: origin + icon });
-                if (icon.startsWith('http')) return c.json({ icon });
-                return c.json({ icon: origin + '/' + icon });
+                let ico = m[1].trim();
+                if (ico.startsWith('data:')) { icon = ico; break; }
+                if (ico.startsWith('//')) { icon = 'https:' + ico; break; }
+                if (ico.startsWith('/')) { icon = origin + ico; break; }
+                if (ico.startsWith('http')) { icon = ico; break; }
+                icon = origin + '/' + ico;
+                break;
             }
         }
 
-        // Fallback to /favicon.ico
-        return c.json({ icon: origin + '/favicon.ico' });
+        // Extract title
+        const titleMatch = html.match(/<title[^>]*>([^<]*)<\/title>/i);
+        const title = titleMatch ? titleMatch[1].trim() : '';
+
+        // Extract description
+        const descPatterns = [
+            /<meta[^>]+name=["']description["'][^>]+content=["']([^"']*)["']/i,
+            /<meta[^>]+content=["']([^"']*)["'][^>]+name=["']description["']/i,
+            /<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']*)["']/i,
+            /<meta[^>]+content=["']([^"']*)["'][^>]+property=["']og:description["']/i,
+        ];
+        let description = '';
+        for (const pat of descPatterns) {
+            const m = html.match(pat);
+            if (m && m[1]) { description = m[1].trim(); break; }
+        }
+
+        return c.json({ icon, title, description });
     } catch (err) {
-        return c.json({ icon: '' });
+        return c.json({ icon: '', title: '', description: '' });
     }
 });
 

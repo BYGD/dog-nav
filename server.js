@@ -946,54 +946,75 @@ app.get('/api/fetch-icon', async (req, res) => {
 
     try {
         const origin = new URL(url).origin;
-        const iconUrl = await fetchFavicon(url, origin);
-        res.json({ icon: iconUrl });
+        const meta = await fetchPageMeta(url, origin);
+        res.json(meta);
     } catch (err) {
-        res.json({ icon: '' });
+        res.json({ icon: '', title: '', description: '' });
     }
 });
 
-function fetchFavicon(pageUrl, origin) {
-    return new Promise((resolve, reject) => {
+function fetchPageMeta(pageUrl, origin) {
+    return new Promise((resolve) => {
         const mod = pageUrl.startsWith('https') ? https : http;
-        const req = mod.get(pageUrl, { timeout: 5000, headers: { 'User-Agent': 'Mozilla/5.0' } }, (resp) => {
+        const req = mod.get(pageUrl, { timeout: 8000, headers: { 'User-Agent': 'Mozilla/5.0' } }, (resp) => {
             if (resp.statusCode >= 300 && resp.statusCode < 400 && resp.headers.location) {
                 const newOrigin = new URL(resp.headers.location).origin;
-                fetchFavicon(resp.headers.location, newOrigin).then(resolve).catch(reject);
+                fetchPageMeta(resp.headers.location, newOrigin).then(resolve).catch(() => resolve({ icon: origin + '/favicon.ico', title: '', description: '' }));
                 return;
             }
             let html = '';
             resp.on('data', chunk => {
                 html += chunk;
-                if (html.length > 50000) { resp.destroy(); parseAndResolve(html, origin).then(resolve); }
+                if (html.length > 50000) { resp.destroy(); resolve(parseMeta(html, origin)); }
             });
-            resp.on('end', () => parseAndResolve(html, origin).then(resolve));
-            resp.on('error', () => resolve(origin + '/favicon.ico'));
+            resp.on('end', () => resolve(parseMeta(html, origin)));
+            resp.on('error', () => resolve({ icon: origin + '/favicon.ico', title: '', description: '' }));
         });
-        req.on('error', () => resolve(origin + '/favicon.ico'));
-        req.on('timeout', () => { req.destroy(); resolve(origin + '/favicon.ico'); });
+        req.on('error', () => resolve({ icon: origin + '/favicon.ico', title: '', description: '' }));
+        req.on('timeout', () => { req.destroy(); resolve({ icon: origin + '/favicon.ico', title: '', description: '' }); });
     });
 }
 
-async function parseAndResolve(html, origin) {
+function parseMeta(html, origin) {
+    // Extract icon
     const iconPatterns = [
         /<link[^>]+rel=["'](?:shortcut )?icon["'][^>]+href=["']([^"']+)["']/i,
         /<link[^>]+href=["']([^"']+)["'][^>]+rel=["'](?:shortcut )?icon["']/i,
         /<link[^>]+rel=["']apple-touch-icon["'][^>]+href=["']([^"']+)["']/i,
         /<link[^>]+href=["']([^"']+)["'][^>]+rel=["']apple-touch-icon["']/i,
     ];
+    let icon = origin + '/favicon.ico';
     for (const pat of iconPatterns) {
         const m = html.match(pat);
         if (m && m[1]) {
-            let icon = m[1].trim();
-            if (icon.startsWith('data:')) return icon;
-            if (icon.startsWith('//')) return 'https:' + icon;
-            if (icon.startsWith('/')) return origin + icon;
-            if (icon.startsWith('http')) return icon;
-            return origin + '/' + icon;
+            let ico = m[1].trim();
+            if (ico.startsWith('data:')) { icon = ico; break; }
+            if (ico.startsWith('//')) { icon = 'https:' + ico; break; }
+            if (ico.startsWith('/')) { icon = origin + ico; break; }
+            if (ico.startsWith('http')) { icon = ico; break; }
+            icon = origin + '/' + ico;
+            break;
         }
     }
-    return origin + '/favicon.ico';
+
+    // Extract title
+    const titleMatch = html.match(/<title[^>]*>([^<]*)<\/title>/i);
+    const title = titleMatch ? titleMatch[1].trim() : '';
+
+    // Extract description
+    const descPatterns = [
+        /<meta[^>]+name=["']description["'][^>]+content=["']([^"']*)["']/i,
+        /<meta[^>]+content=["']([^"']*)["'][^>]+name=["']description["']/i,
+        /<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']*)["']/i,
+        /<meta[^>]+content=["']([^"']*)["'][^>]+property=["']og:description["']/i,
+    ];
+    let description = '';
+    for (const pat of descPatterns) {
+        const m = html.match(pat);
+        if (m && m[1]) { description = m[1].trim(); break; }
+    }
+
+    return { icon, title, description };
 }
 
 // ═══════════════════════════════════════════
