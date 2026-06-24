@@ -1,138 +1,821 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DogNav - 狗狗导航 | 精选每一个链接</title>
-  <meta name="description" content="DogNav 狗狗导航 — 精选优质网站，为你导航。影视、软件、工具、资讯一网打尽。">
-  <meta name="keywords" content="导航,网站导航,狗狗导航,DogNav,影视,软件,工具">
-  <meta property="og:title" content="DogNav - 狗狗导航">
-  <meta property="og:description" content="精选每一个链接，为你导航">
-  <meta property="og:type" content="website">
-  <link rel="icon" href="ico.ico">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DogNav - 狗狗导航</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* ═══════════════════════════════════════════
+           DESIGN SYSTEM — Glassmorphism Enhanced
+           ═══════════════════════════════════════════ */
+        :root {
+            --text-xs: clamp(0.7rem, 0.65rem + 0.25vw, 0.78rem);
+            --text-sm: clamp(0.78rem, 0.73rem + 0.25vw, 0.88rem);
+            --text-base: clamp(0.88rem, 0.83rem + 0.25vw, 1rem);
+            --text-lg: clamp(1rem, 0.92rem + 0.4vw, 1.2rem);
+            --text-xl: clamp(1.15rem, 1rem + 0.6vw, 1.5rem);
+            --text-2xl: clamp(1.4rem, 1.15rem + 1.2vw, 2rem);
+            --text-3xl: clamp(1.8rem, 1.3rem + 2.5vw, 3rem);
+            --space-xs: clamp(0.2rem, 0.15rem + 0.25vw, 0.4rem);
+            --space-sm: clamp(0.4rem, 0.3rem + 0.4vw, 0.65rem);
+            --space-md: clamp(0.6rem, 0.4rem + 1vw, 1.2rem);
+            --space-lg: clamp(1rem, 0.6rem + 2vw, 2.5rem);
+            --space-xl: clamp(1.5rem, 0.8rem + 3.5vw, 4rem);
+            --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-pill: 9999px;
+            --ease: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ─── DARK ─── */
+        [data-theme="dark"] {
+            --bg-base: #0f0e17;
+            --bg-surface: #1a1926;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --bg-card-hover: rgba(255, 255, 255, 0.08);
+            --bg-nav: rgba(15, 14, 23, 0.75);
+            --bg-input: rgba(255, 255, 255, 0.05);
+            --text-1: #fffffe;
+            --text-2: rgba(255, 255, 255, 0.6);
+            --text-3: rgba(255, 255, 255, 0.32);
+            --accent: #7f5af0;
+            --accent-2: #e16162;
+            --accent-3: #2cb67d;
+            --accent-soft: rgba(127, 90, 240, 0.12);
+            --accent-glow: rgba(127, 90, 240, 0.25);
+            --border: rgba(255, 255, 255, 0.07);
+            --border-hover: rgba(255, 255, 255, 0.14);
+            --orb-1: rgba(102, 126, 234, 0.18);
+            --orb-2: rgba(118, 75, 162, 0.14);
+            --orb-3: rgba(240, 147, 251, 0.1);
+            --shadow-card: 0 2px 12px rgba(0,0,0,0.2);
+            --shadow-hover: 0 8px 32px rgba(0,0,0,0.35);
+        }
+
+        /* ─── LIGHT ─── */
+        [data-theme="light"] {
+            --bg-base: #f5f5f7;
+            --bg-surface: #ffffff;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --bg-card-hover: rgba(255, 255, 255, 0.95);
+            --bg-nav: rgba(245, 245, 247, 0.78);
+            --bg-input: rgba(0, 0, 0, 0.04);
+            --text-1: #1d1d1f;
+            --text-2: rgba(29, 29, 31, 0.72);
+            --text-3: rgba(29, 29, 31, 0.52);
+            --accent: #6c47d6;
+            --accent-2: #d64547;
+            --accent-3: #1a9d6a;
+            --accent-soft: rgba(108, 71, 214, 0.08);
+            --accent-glow: rgba(108, 71, 214, 0.18);
+            --border: rgba(0, 0, 0, 0.06);
+            --border-hover: rgba(0, 0, 0, 0.12);
+            --orb-1: rgba(102, 126, 234, 0.12);
+            --orb-2: rgba(118, 75, 162, 0.08);
+            --orb-3: rgba(240, 147, 251, 0.06);
+            --shadow-card: 0 1px 8px rgba(0,0,0,0.04);
+            --shadow-hover: 0 6px 24px rgba(0,0,0,0.08);
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+        body {
+            font-family: 'Sora', 'Noto Sans SC', system-ui, sans-serif;
+            background: var(--bg-base);
+            color: var(--text-1);
+            min-height: 100dvh;
+            overflow-x: hidden;
+            line-height: 1.55;
+            transition: background 0.5s var(--ease), color 0.5s var(--ease);
+        }
+
+        /* ═══════════════════════════════════════════
+           ANIMATED BACKGROUND ORBS
+           ═══════════════════════════════════════════ */
+        .bg-orbs { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+        .orb {
+            position: absolute; border-radius: 50%;
+            filter: blur(80px);
+            will-change: transform;
+        }
+        .orb-1 { width: 45vw; height: 45vw; background: var(--orb-1); top: -10%; left: -8%; animation: orbFloat1 22s ease-in-out infinite; }
+        .orb-2 { width: 38vw; height: 38vw; background: var(--orb-2); top: 40%; right: -8%; animation: orbFloat2 26s ease-in-out infinite; }
+        .orb-3 { width: 30vw; height: 30vw; background: var(--orb-3); bottom: -5%; left: 25%; animation: orbFloat3 20s ease-in-out infinite; }
+
+        @keyframes orbFloat1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(4vw,-3vw) scale(1.08)} }
+        @keyframes orbFloat2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-3vw,4vw) scale(0.94)} }
+        @keyframes orbFloat3 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(3vw,-2vw) scale(1.06)} }
+
+        /* ═══════════════════════════════════════════
+           NAVBAR
+           ═══════════════════════════════════════════ */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            padding: 10px var(--space-lg);
+            display: flex; align-items: center; justify-content: space-between;
+            background: var(--bg-nav);
+            backdrop-filter: blur(24px) saturate(1.4);
+            -webkit-backdrop-filter: blur(24px) saturate(1.4);
+            border-bottom: 1px solid var(--border);
+            transition: background 0.5s var(--ease), border-color 0.5s var(--ease);
+        }
+
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-ico {
+            width: 32px; height: 32px; border-radius: 9px;
+            background: linear-gradient(135deg, var(--accent), #a78bfa);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 2px 10px var(--accent-glow);
+        }
+        .logo-text {
+            font-size: var(--text-lg); font-weight: 700;
+            color: var(--text-1); letter-spacing: -0.3px;
+            transition: color 0.5s var(--ease);
+        }
+        .logo-text span { color: var(--accent); }
+
+        .nav-right { display: flex; align-items: center; gap: 8px; }
+        .nav-links { display: flex; gap: 2px; list-style: none; }
+        .nav-links a {
+            color: var(--text-2); text-decoration: none;
+            font-size: var(--text-sm); font-weight: 500;
+            padding: 6px 14px; border-radius: var(--r-pill);
+            transition: all 0.2s var(--ease);
+        }
+        .nav-links a:hover { color: var(--text-1); background: var(--bg-card); }
+        .nav-links a.active { color: var(--accent); background: var(--accent-soft); }
+
+        /* Theme toggle */
+        .theme-btn {
+            width: 34px; height: 34px;
+            border: 1px solid var(--border); border-radius: var(--r-sm);
+            background: var(--bg-card); color: var(--text-2);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 15px; position: relative; overflow: hidden;
+            transition: all 0.2s var(--ease);
+        }
+        .theme-btn:hover { border-color: var(--border-hover); color: var(--accent); }
+        .theme-btn i { position: absolute; transition: transform 0.35s var(--ease), opacity 0.25s; }
+        [data-theme="dark"] .theme-btn .i-sun { transform: translateY(20px); opacity: 0; }
+        [data-theme="dark"] .theme-btn .i-moon { transform: translateY(0); opacity: 1; }
+        [data-theme="light"] .theme-btn .i-sun { transform: translateY(0); opacity: 1; }
+        [data-theme="light"] .theme-btn .i-moon { transform: translateY(-20px); opacity: 0; }
+
+        .mob-btn {
+            display: none; background: none;
+            border: 1px solid var(--border); border-radius: var(--r-sm);
+            padding: 6px; color: var(--text-2); cursor: pointer;
+        }
+
+        /* ═══════════════════════════════════════════
+           HERO
+           ═══════════════════════════════════════════ */
+        .hero {
+            position: relative; z-index: 1;
+            padding: calc(70px + var(--space-xl)) var(--space-lg) var(--space-md);
+            text-align: center; max-width: 680px; margin: 0 auto;
+        }
+
+        .hero-tag {
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 4px 14px; margin-bottom: var(--space-md);
+            background: var(--accent-soft); border: 1px solid var(--border);
+            border-radius: var(--r-pill);
+            font-size: var(--text-xs); color: var(--accent);
+            font-weight: 600; letter-spacing: 1px;
+        }
+        .hero-tag .dot {
+            width: 5px; height: 5px; border-radius: 50%;
+            background: var(--accent); animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.8)} }
+
+        .hero-title {
+            font-size: var(--text-3xl); font-weight: 700;
+            line-height: 1.15; margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            transition: color 0.5s var(--ease);
+        }
+        .hero-title .grad {
+            background: linear-gradient(135deg, var(--accent), #a78bfa, var(--accent-2));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; background-size: 200% 200%;
+            animation: gradShift 6s ease-in-out infinite;
+        }
+        @keyframes gradShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+
+        .hero-sub {
+            font-size: var(--text-base); color: var(--text-2);
+            margin-bottom: var(--space-sm); font-weight: 300;
+            transition: color 0.5s var(--ease);
+        }
+
+        .hitokoto {
+            font-size: var(--text-xs); color: var(--text-3);
+            font-style: italic; margin-bottom: var(--space-md);
+        }
+        .hitokoto cite { color: var(--accent); font-style: normal; margin-left: 6px; }
+
+        /* Search */
+        .search-box { position: relative; max-width: 540px; margin: 0 auto var(--space-sm); }
+        .search-input {
+            width: 100%; padding: 13px 48px 13px 18px;
+            background: var(--bg-input); border: 1px solid var(--border);
+            border-radius: var(--r-lg); color: var(--text-1);
+            font-size: var(--text-base); font-family: inherit; outline: none;
+            backdrop-filter: blur(12px);
+            transition: all 0.3s var(--ease);
+        }
+        .search-input::placeholder { color: var(--text-3); }
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+            background: var(--bg-card-hover);
+        }
+        .search-go {
+            position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+            width: 36px; height: 36px;
+            background: var(--accent); border: none; border-radius: 10px;
+            color: #fff; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.25s var(--ease);
+        }
+        .search-go:hover { transform: translateY(-50%) scale(1.06); box-shadow: 0 4px 14px var(--accent-glow); }
+
+        .eng-row { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; margin-bottom: var(--space-lg); }
+        .eng-btn {
+            padding: 4px 12px; background: transparent;
+            border: 1px solid var(--border); border-radius: var(--r-pill);
+            color: var(--text-3); font-size: var(--text-xs);
+            font-family: inherit; font-weight: 500; cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+        .eng-btn:hover { border-color: var(--border-hover); color: var(--text-2); }
+        .eng-btn.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+        /* ═══════════════════════════════════════════
+           CATEGORY BAR
+           ═══════════════════════════════════════════ */
+        .cat-bar {
+            position: relative; z-index: 1;
+            max-width: 1400px; margin: 0 auto var(--space-md);
+            padding: 0 var(--space-lg);
+            display: flex; gap: 6px; overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .cat-bar::-webkit-scrollbar { display: none; }
+        .cat-pill {
+            flex-shrink: 0; padding: 6px 16px;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--r-pill); color: var(--text-2);
+            font-size: var(--text-sm); font-weight: 500; cursor: pointer;
+            transition: all 0.25s var(--ease); white-space: nowrap;
+            backdrop-filter: blur(8px);
+        }
+        .cat-pill:hover { background: var(--bg-card-hover); border-color: var(--border-hover); }
+        .cat-pill.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+        /* ═══════════════════════════════════════════
+           CARDS — Compact Glass
+           ═══════════════════════════════════════════ */
+        .cards-area {
+            position: relative; z-index: 1;
+            max-width: 1400px; margin: 0 auto;
+            padding: 0 var(--space-lg) var(--space-xl);
+        }
+
+        .sec-head {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: var(--space-sm);
+        }
+        .sec-ico {
+            width: 28px; height: 28px; border-radius: 7px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; background: var(--accent-soft);
+            color: var(--accent);
+        }
+        .sec-title {
+            font-size: var(--text-base); font-weight: 600;
+            color: var(--text-1); transition: color 0.5s var(--ease);
+        }
+        .sec-line { flex: 1; height: 1px; background: var(--border); }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(210px, 100%), 1fr));
+            gap: 8px;
+            margin-bottom: var(--space-lg);
+        }
+
+        .card {
+            position: relative;
+            padding: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--r-md);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            text-decoration: none; display: block; cursor: pointer;
+            transition: all 0.3s var(--ease);
+            overflow: hidden;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute; inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), var(--accent-glow), transparent 60%);
+            opacity: 0; transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+        .card:hover::after { opacity: 1; }
+
+        .card-row { display: flex; align-items: center; gap: 9px; }
+        .card-fav {
+            width: 28px; height: 28px; border-radius: 7px;
+            background: var(--bg-input); border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; flex-shrink: 0;
+            transition: background 0.5s var(--ease), border-color 0.5s var(--ease);
+        }
+        .card-name {
+            font-size: var(--text-sm); font-weight: 600;
+            color: var(--text-1); line-height: 1.3;
+            transition: color 0.5s var(--ease);
+        }
+        .card-desc {
+            font-size: var(--text-xs); color: var(--text-3);
+            margin-top: 5px; line-height: 1.4;
+            display: -webkit-box; -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical; overflow: hidden;
+            transition: color 0.5s var(--ease);
+        }
+
+        /* ═══════════════════════════════════════════
+           FOOTER
+           ═══════════════════════════════════════════ */
+        .footer {
+            position: relative; z-index: 1;
+            text-align: center; padding: var(--space-lg);
+            border-top: 1px solid var(--border);
+            color: var(--text-3); font-size: var(--text-xs);
+            transition: border-color 0.5s var(--ease);
+        }
+        .footer a { color: var(--accent); text-decoration: none; }
+
+        /* Back to top */
+        .btt {
+            position: fixed; bottom: 24px; right: 24px; z-index: 100;
+            width: 38px; height: 38px;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--r-md); backdrop-filter: blur(12px);
+            color: var(--text-2); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transform: translateY(10px);
+            transition: all 0.3s var(--ease);
+            pointer-events: none;
+        }
+        .btt.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .btt:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+        /* ═══════════════════════════════════════════
+           REVEAL
+           ═══════════════════════════════════════════ */
+        .rv { opacity: 0; transform: translateY(10px); transition: opacity 0.4s var(--ease), transform 0.4s var(--ease); }
+        .rv.vis { opacity: 1; transform: translateY(0); }
+
+        /* ═══════════════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════════════ */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mob-btn { display: flex; }
+            .nav-links.open {
+                display: flex; flex-direction: column;
+                position: absolute; top: 100%; left: 0; right: 0;
+                background: var(--bg-nav); backdrop-filter: blur(20px);
+                padding: var(--space-md); border-bottom: 1px solid var(--border);
+            }
+            .hero, .cards-area, .cat-bar { padding-left: var(--space-md); padding-right: var(--space-md); }
+        }
+        @media (max-width: 480px) {
+            .card-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+            .card { padding: 10px; }
+            .card-fav { width: 24px; height: 24px; font-size: 11px; }
+            .card-desc { display: none; }
+        }
+
+        /* LOADER */
+        .loader {
+            position: fixed; inset: 0; z-index: 9999;
+            background: var(--bg-base);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            transition: opacity 0.4s, visibility 0.4s;
+        }
+        .loader.hide { opacity: 0; visibility: hidden; }
+        .loader-spinner {
+            width: 32px; height: 32px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loader-label {
+            margin-top: var(--space-md);
+            font-size: var(--text-sm); color: var(--text-3);
+            letter-spacing: 2px; font-weight: 500;
+        }
+    </style>
 </head>
 <body>
 
-  <!-- Loading Screen -->
-  <div class="loader" id="loader">
-    <div class="loader-dots">
-      <div class="loader-dot"></div>
-      <div class="loader-dot"></div>
-      <div class="loader-dot"></div>
-    </div>
-  </div>
+<div class="loader" id="loader">
+    <div class="loader-spinner"></div>
+    <div class="loader-label">DogNav</div>
+</div>
 
-  <!-- Animated Background -->
-  <div class="bg-orbs">
+<div class="bg-orbs">
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
-  </div>
+</div>
 
-  <!-- Top Navigation Bar -->
-  <nav class="navbar">
-    <div class="navbar-inner">
-      <a href="index.html" class="logo">
-        <span class="logo-icon"></span>
-        <span class="logo-text">Dog<span>Nav</span></span>
-      </a>
-      <div class="nav-links">
-        <a href="index.html" class="active">首页</a>
-        <a href="links.html">友链</a>
-        <a href="about.html">关于</a>
-        <a href="contribute.html">提交</a>
-      </div>
-      <div class="nav-right">
-        <div class="weather-widget" id="weather-widget">--</div>
-        <button class="hamburger" id="mobile-toggle" aria-label="菜单"></button>
-      </div>
+<nav class="navbar">
+    <a href="index.html" class="logo">
+        <div class="logo-ico">🐕</div>
+        <div class="logo-text">Dog<span>Nav</span></div>
+    </a>
+    <div class="nav-right">
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html" class="active">首页</a></li>
+            <li><a href="links.html">友链</a></li>
+            <li><a href="about.html">关于</a></li>
+            <li><a href="contribute.html">提交</a></li>
+        </ul>
+        <button class="theme-btn" id="themeBtn" aria-label="切换主题">
+            <i class="i-sun">☀️</i><i class="i-moon">🌙</i>
+        </button>
+        <button class="mob-btn" id="mobBtn" aria-label="菜单">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        </button>
     </div>
-  </nav>
+</nav>
 
-  <!-- Mobile Navigation -->
-  <div class="mobile-nav" id="mobile-nav">
-    <button class="mobile-nav-close" id="mobile-close" aria-label="关闭"></button>
-    <a href="index.html">首页</a>
-    <a href="links.html">友链</a>
-    <a href="about.html">关于</a>
-    <a href="contribute.html">提交</a>
-  </div>
-
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="hero-inner">
-      <div class="hitokoto-box">
-        <span id="hitokoto-text">加载中...</span>
-        <span class="from" id="hitokoto-from"></span>
-      </div>
-      <div class="search-box">
-        <form id="search-form" class="search-input-row">
-          <span class="search-icon"></span>
-          <input type="text" id="search-input" class="search-input" placeholder="搜索..." autocomplete="off">
-          <button type="submit" class="search-btn">搜索</button>
-        </form>
-        <div class="search-groups" id="search-groups"></div>
-        <div class="search-engines" id="search-engines"></div>
-      </div>
+<section class="hero">
+    <div class="hero-tag"><span class="dot"></span>精选导航</div>
+    <h1 class="hero-title">发现互联网的 <span class="grad">无限精彩</span></h1>
+    <p class="hero-sub">精心收录每一个站点，让发现好网站变得简单</p>
+    <div class="hitokoto" id="hitokoto">"加载中..."</div>
+    <div class="search-box">
+        <input type="text" class="search-input" id="searchInput" placeholder="搜索或输入网址...">
+        <button class="search-go" id="searchBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </button>
     </div>
-  </section>
-
-  <!-- Category Filter Bar -->
-  <div class="category-bar">
-    <div class="category-bar-inner" id="category-filter"></div>
-  </div>
-
-  <!-- Main Content -->
-  <main class="main">
-    <div class="content">
-      <div id="categories-container"></div>
-
-      <!-- Friend Links -->
-      <section class="friend-links reveal">
-        <div class="cat-header">
-          <span class="cat-title">友情链接</span>
-        </div>
-        <div class="friend-grid">
-          <a href="https://bygd.github.io/dog-nav" target="_blank" class="friend-card">
-            <img src="ico.ico" alt="DogNav">
-            <span>DogNav</span>
-          </a>
-          <a href="https://www.52pojie.cn" target="_blank" class="friend-card">
-            <img src="ico/52.png" alt="吾爱破解">
-            <span>吾爱破解</span>
-          </a>
-          <a href="https://www.acoolnav.com" target="_blank" class="friend-card">
-            <img src="ico.ico" alt="阿酷导航">
-            <span>阿酷导航</span>
-          </a>
-        </div>
-      </section>
+    <div class="eng-row" id="engRow">
+        <button class="eng-btn on" data-engine="baidu">百度</button>
+        <button class="eng-btn" data-engine="google">Google</button>
+        <button class="eng-btn" data-engine="bing">Bing</button>
+        <button class="eng-btn" data-engine="github">GitHub</button>
+        <button class="eng-btn" data-engine="bilibili">B站</button>
+        <button class="eng-btn" data-engine="zhihu">知乎</button>
     </div>
-  </main>
+</section>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <p>&copy; 2026 <a href="https://github.com/BYGD/dog-nav">DogNav</a> &middot; 狗狗导航 &middot; 精选每一个链接</p>
-  </footer>
+<div class="cat-bar" id="catBar">
+    <button class="cat-pill on" data-cat="all">🔥 全部</button>
+    <button class="cat-pill" data-cat="recommend">⭐ 推荐</button>
+    <button class="cat-pill" data-cat="video">🎬 影视</button>
+    <button class="cat-pill" data-cat="anime">🌸 动漫</button>
+    <button class="cat-pill" data-cat="software">💿 软件</button>
+    <button class="cat-pill" data-cat="tools">🔧 工具</button>
+    <button class="cat-pill" data-cat="news">📰 资讯</button>
+    <button class="cat-pill" data-cat="community">💬 社区</button>
+    <button class="cat-pill" data-cat="ai">🤖 AI</button>
+    <button class="cat-pill" data-cat="dev">💻 开发</button>
+    <button class="cat-pill" data-cat="design">🎨 设计</button>
+</div>
 
-  <!-- Back to Top -->
-  <button class="back-top" id="back-top" aria-label="回到顶部"></button>
+<main class="cards-area" id="cardsArea"></main>
 
-  <script src="js/app.js"></script>
-  <script>
-    // Inject SVG icons into static elements
-    document.querySelector('.logo-icon').innerHTML = icons.dog;
-    document.querySelector('.search-icon').innerHTML = icons.search;
-    document.querySelector('.hamburger').innerHTML = icons.menu;
-    document.querySelector('.mobile-nav-close').innerHTML = icons.x;
-    document.querySelector('.back-top').innerHTML = icons.arrowUp;
-    document.querySelectorAll('.cat-header').forEach(h => {
-      if (!h.querySelector('svg')) return;
+<footer class="footer">
+    <p>DogNav &copy; 2026 — Built with ♥ by <a href="https://github.com/BYGD" target="_blank">BYGD</a></p>
+</footer>
+
+<button class="btt" id="btt" aria-label="回到顶部">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+
+<script>
+// ═══════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════
+const H = document.documentElement;
+document.getElementById('themeBtn').addEventListener('click', () => {
+    H.setAttribute('data-theme', H.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+});
+
+// ═══════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════
+const S = [
+    // ═══ 常用推荐 ═══
+    { n: 'GitHub', u: 'https://github.com', d: '全球最大的代码托管平台', i: '🐙', c: 'recommend' },
+    { n: 'Gitee', u: 'https://gitee.com', d: '国内最大的代码托管平台', i: '🍊', c: 'recommend' },
+    { n: '哔哩哔哩', u: 'https://www.bilibili.com', d: '国内知名视频弹幕网站', i: '📺', c: 'recommend' },
+    { n: '知乎', u: 'https://www.zhihu.com', d: '有问题，就会有答案', i: '💡', c: 'recommend' },
+    { n: '微博', u: 'https://weibo.com', d: '随时随地发现新鲜事', i: '🔴', c: 'recommend' },
+    { n: '吾爱破解', u: 'https://www.52pojie.cn', d: '软件安全与逆向分析论坛', i: '🔓', c: 'recommend' },
+    { n: '精易论坛', u: 'https://bbs.125.la', d: '编程学习交流论坛', i: '💻', c: 'recommend' },
+    { n: '殁漂遥', u: 'https://www.mpyit.com', d: '精品软件分享', i: '📦', c: 'recommend' },
+    { n: '阿里图标库', u: 'https://www.iconfont.cn', d: '海量矢量图标免费下载', i: '🎨', c: 'recommend' },
+    { n: 'Twitter / X', u: 'https://x.com', d: '全球实时社交媒体平台', i: '🐦', c: 'recommend' },
+    { n: 'YouTube', u: 'https://youtube.com', d: '全球最大的视频分享平台', i: '▶️', c: 'recommend' },
+    { n: '百度网盘', u: 'https://pan.baidu.com', d: '个人云存储', i: '☁️', c: 'recommend' },
+    { n: '有道翻译', u: 'https://fanyi.youdao.com', d: '在线翻译工具', i: '🔤', c: 'recommend' },
+    { n: '阿里云', u: 'https://www.aliyun.com', d: '云计算服务平台', i: '🟠', c: 'recommend' },
+    { n: '腾讯云', u: 'https://cloud.tencent.com', d: '云计算服务', i: '🔷', c: 'recommend' },
+    { n: '石墨文档', u: 'https://shimo.im', d: '在线协作文档', i: '📝', c: 'recommend' },
+    { n: '高德地图', u: 'https://www.amap.com', d: '地图与导航', i: '🗺️', c: 'recommend' },
+    { n: '淘宝', u: 'https://www.taobao.com', d: '综合网购平台', i: '🛒', c: 'recommend' },
+
+    // ═══ 影视资源 ═══
+    { n: '555电影', u: 'https://www.555dy.fun', d: '免费在线观影', i: '🎬', c: 'video' },
+    { n: '爱奇艺', u: 'https://iqiyi.com', d: '中国领先的在线视频平台', i: '🟢', c: 'video' },
+    { n: '优酷', u: 'https://youku.com', d: '海量正版高清视频', i: '🔵', c: 'video' },
+    { n: '腾讯视频', u: 'https://v.qq.com', d: '综合视频平台', i: '🐧', c: 'video' },
+    { n: 'Netflix', u: 'https://netflix.com', d: '全球流媒体巨头', i: '🔴', c: 'video' },
+    { n: '哔嘀影视', u: 'https://www.bdys.me', d: '最新影视资源下载', i: '⚡', c: 'video' },
+    { n: '人人影视', u: 'https://www.yyets.com', d: '美剧字幕组', i: '🇺🇸', c: 'video' },
+    { n: 'AG美剧', u: 'https://www.agmeiju.com', d: '美剧在线观看', i: '📺', c: 'video' },
+    { n: '在线之家', u: 'https://www.zxzj.pro', d: '在线观影', i: '🏡', c: 'video' },
+    { n: '芒果TV', u: 'https://www.mgtv.com', d: '湖南卫视官方视频平台', i: '🥭', c: 'video' },
+    { n: '91美剧', u: 'https://www.91meiju.com', d: '美剧日剧韩剧', i: '🎭', c: 'video' },
+    { n: '搜狐视频', u: 'https://tv.sohu.com', d: '正版高清视频平台', i: '🦊', c: 'video' },
+    { n: '1905电影网', u: 'https://www.1905.com', d: '电影频道官方平台', i: '🎞️', c: 'video' },
+    { n: 'PP视频', u: 'https://www.pptv.com', d: '网络视频服务', i: '📺', c: 'video' },
+
+    // ═══ 动漫 ═══
+    { n: '克拉TV', u: 'https://www.kelatv.com', d: '动漫追番神器', i: '📡', c: 'anime' },
+    { n: 'OmoFun', u: 'https://www.omofun.com', d: '二次元动漫追番', i: '🎀', c: 'anime' },
+    { n: '动漫花园', u: 'https://share.dmhy.org', d: '动漫BT下载', i: '🌺', c: 'anime' },
+    { n: '不可视境界线', u: 'https://www.78dm.net', d: '动漫模型资源分享', i: '🔮', c: 'anime' },
+    { n: 'Nyaa', u: 'https://nyaa.si', d: '动漫种子资源站', i: '🌸', c: 'anime' },
+    { n: 'ACGrip', u: 'https://acg.rip', d: '动漫资源分享', i: '🎌', c: 'anime' },
+    { n: '腾讯动漫', u: 'https://ac.qq.com', d: '正版动漫平台', i: '🐧', c: 'anime' },
+    { n: 'bilibili漫画', u: 'https://manga.bilibili.com', d: '正版漫画阅读', i: '📖', c: 'anime' },
+
+    // ═══ 软件博客 ═══
+    { n: '果核剥壳', u: 'https://www.ghxi.com', d: '精品软件分享', i: '🍑', c: 'software' },
+    { n: '小众软件', u: 'https://www.appinn.com', d: '有趣好用的软件', i: '🐜', c: 'software' },
+    { n: '异次元软件', u: 'https://www.iplaysoft.com', d: '软件推荐与评测', i: '🌀', c: 'software' },
+    { n: '易破解', u: 'https://www.ypojie.com', d: '软件破解资源', i: '🔑', c: 'software' },
+    { n: '远景论坛', u: 'https://bbs.pcbeta.com', d: '微软技术社区', i: '🪟', c: 'software' },
+    { n: '腾讯软件中心', u: 'https://pc.qq.com', d: '官方软件下载', i: '🐧', c: 'software' },
+    { n: 'NICE', u: 'https://www.wepe.com.cn', d: '微PE工具箱', i: '🧰', c: 'software' },
+    { n: '软件管家', u: 'https://www.qq.com/software/', d: '腾讯软件管家', i: '🐧', c: 'software' },
+
+    // ═══ 在线工具 ═══
+    { n: '草料二维码', u: 'https://cli.im', d: '在线二维码生成器', i: '📱', c: 'tools' },
+    { n: 'Bigjpg', u: 'https://bigjpg.com', d: 'AI图片无损放大', i: '🔍', c: 'tools' },
+    { n: '白描', u: 'https://web.baimiaoapp.com', d: 'OCR文字识别', i: '📝', c: 'tools' },
+    { n: 'iLovePDF', u: 'https://www.ilovepdf.com/zh-cn', d: 'PDF在线处理', i: '📄', c: 'tools' },
+    { n: 'ALL TO ALL', u: 'https://www.alltoall.net', d: '在线格式转换', i: '🔄', c: 'tools' },
+    { n: '67工具箱', u: 'https://www.67tool.com', d: '实用在线工具集', i: '🧰', c: 'tools' },
+    { n: 'TinyPNG', u: 'https://tinypng.com', d: '智能图片压缩工具', i: '🐼', c: 'tools' },
+    { n: 'ProcessOn', u: 'https://processon.com', d: '在线流程图思维导图', i: '🗺️', c: 'tools' },
+    { n: 'Notion', u: 'https://notion.so', d: '一体化工作空间', i: '📋', c: 'tools' },
+    { n: 'Google翻译', u: 'https://translate.google.com', d: '支持100+种语言互译', i: '🌐', c: 'tools' },
+    { n: '短视频解析', u: 'https://www.dspjx.com', d: '全网短视频下载', i: '🎥', c: 'tools' },
+    { n: 'PhotoKit', u: 'https://photokit.com', d: '在线智能修图', i: '🖼️', c: 'tools' },
+    { n: 'Moises.ai', u: 'https://moises.ai', d: 'AI音乐分离', i: '🎶', c: 'tools' },
+    { n: '易词云', u: 'https://www.yciyun.com', d: '词云在线生成', i: '☁️', c: 'tools' },
+    { n: 'Remove.bg', u: 'https://www.remove.bg', d: 'AI一键去除图片背景', i: '✂️', c: 'tools' },
+    { n: '菜鸟工具', u: 'https://c.runoob.com', d: '在线编程与工具集', i: '🐣', c: 'tools' },
+    { n: 'JSON格式化', u: 'https://www.json.cn', d: 'JSON在线解析美化', i: '{ }', c: 'tools' },
+    { n: '快递100', u: 'https://www.kuaidi100.com', d: '快递物流查询', i: '📮', c: 'tools' },
+    { n: '在线屏幕录制', u: 'https://www.screenrecorder.com', d: '免费录屏工具', i: '🖥️', c: 'tools' },
+    { n: 'IP查询', u: 'https://www.ip138.com', d: 'IP地址与归属查询', i: '🌍', c: 'tools' },
+    { n: '语雀', u: 'https://www.yuque.com', d: '在线知识协作平台', i: '🐦', c: 'tools' },
+    { n: '腾讯文档', u: 'https://docs.qq.com', d: '在线文档协作', i: '📄', c: 'tools' },
+    { n: '思维导图', u: 'https://www.zxmind.cn', d: '在线思维导图工具', i: '🧠', c: 'tools' },
+
+    // ═══ 资讯 ═══
+    { n: 'IT之家', u: 'https://www.ithome.com', d: '科技资讯门户', i: '📰', c: 'news' },
+    { n: '今日头条', u: 'https://www.toutiao.com', d: '个性化资讯推荐', i: '📱', c: 'news' },
+    { n: '36kr', u: 'https://36kr.com', d: '创业科技媒体', i: '📊', c: 'news' },
+    { n: '少数派', u: 'https://sspai.com', d: '数字生活指南', i: '📲', c: 'news' },
+    { n: '今日热榜', u: 'https://tophub.today', d: '全网热榜聚合', i: '🔥', c: 'news' },
+    { n: '微博热榜', u: 'https://weibo.com/hot', d: '微博热搜榜', i: '🔴', c: 'news' },
+    { n: '中关村', u: 'https://www.zol.com.cn', d: '科技产品资讯', i: '💻', c: 'news' },
+    { n: '知微事见', u: 'https://ef.zhiweidata.com', d: '事件影响力分析', i: '📈', c: 'news' },
+    { n: '大数据', u: 'https://www.cbndata.com', d: '大数据行业资讯', i: '📉', c: 'news' },
+    { n: '虎嗅', u: 'https://www.huxiu.com', d: '深度商业科技资讯', i: '🐯', c: 'news' },
+    { n: '品玩', u: 'https://www.pingwest.com', d: '全球科技媒体', i: '🌐', c: 'news' },
+    { n: '澎湃新闻', u: 'https://www.thepaper.cn', d: '原创新闻资讯', i: '🌊', c: 'news' },
+    { n: '快科技', u: 'https://www.mydrivers.com', d: '硬件科技资讯', i: '⚡', c: 'news' },
+    { n: '爱范儿', u: 'https://www.ifanr.com', d: '科技生活方式', i: '💜', c: 'news' },
+
+    // ═══ 社区 ═══
+    { n: 'V2EX', u: 'https://v2ex.com', d: '创意工作者的社区', i: '💬', c: 'community' },
+    { n: '掘金', u: 'https://juejin.cn', d: '开发者技术社区', i: '💎', c: 'community' },
+    { n: '百度贴吧', u: 'https://tieba.baidu.com', d: '中文最大社区论坛', i: '🏷️', c: 'community' },
+    { n: 'Reddit', u: 'https://reddit.com', d: 'The front page of the internet', i: '🔶', c: 'community' },
+    { n: 'Hacker News', u: 'https://news.ycombinator.com', d: '硅谷科技圈必读', i: '🟧', c: 'community' },
+    { n: '豆瓣', u: 'https://www.douban.com', d: '书影音精神角落', i: '🟩', c: 'community' },
+    { n: '虎扑', u: 'https://www.hupu.com', d: '体育社区', i: '🏀', c: 'community' },
+    { n: 'NGA', u: 'https://bbs.nga.cn', d: '精英玩家社区', i: '🎮', c: 'community' },
+    { n: '龙空', u: 'https://www.lkong.com', d: '网络文学论坛', i: '🐉', c: 'community' },
+    { n: '一亩三分地', u: 'https://www.1point3acres.com', d: '留学申请社区', i: '🌾', c: 'community' },
+    { n: 'Discord', u: 'https://discord.com', d: '社群聊天平台', i: '🎧', c: 'community' },
+    { n: 'Telegram', u: 'https://telegram.org', d: '安全即时通讯', i: '✈️', c: 'community' },
+
+    // ═══ AI 工具 ═══
+    { n: 'ChatGPT', u: 'https://chatgpt.com', d: 'OpenAI 智能对话助手', i: '🤖', c: 'ai' },
+    { n: 'Claude', u: 'https://claude.ai', d: 'Anthropic AI 助手', i: '🧠', c: 'ai' },
+    { n: 'Midjourney', u: 'https://midjourney.com', d: 'AI 图像生成工具', i: '🎨', c: 'ai' },
+    { n: 'Stable Diffusion', u: 'https://stability.ai', d: '开源 AI 图像模型', i: '🖼️', c: 'ai' },
+    { n: 'Poe', u: 'https://poe.com', d: '多模型 AI 聚合平台', i: '🔮', c: 'ai' },
+    { n: 'Hugging Face', u: 'https://huggingface.co', d: 'AI 模型社区', i: '🤗', c: 'ai' },
+    { n: '通义千问', u: 'https://tongyi.aliyun.com', d: '阿里云大模型', i: '🔵', c: 'ai' },
+    { n: '文心一言', u: 'https://yiyan.baidu.com', d: '百度大模型', i: '🟦', c: 'ai' },
+    { n: 'Kimi', u: 'https://kimi.moonshot.cn', d: 'Moonshot AI 助手', i: '🌙', c: 'ai' },
+    { n: 'Suno', u: 'https://suno.com', d: 'AI 音乐生成', i: '🎵', c: 'ai' },
+    { n: '讯飞星火', u: 'https://xinghuo.xfyun.cn', d: '科大讯飞大模型', i: '✨', c: 'ai' },
+    { n: '智谱清言', u: 'https://chatglm.cn', d: '清华系 AI 助手', i: '🎓', c: 'ai' },
+    { n: '通义万相', u: 'https://tongyi.aliyun.com/wanxiang', d: 'AI 图像生成', i: '🖌️', c: 'ai' },
+    { n: '即梦', u: 'https://jimeng.jianying.com', d: '字节 AI 图像创作', i: '💭', c: 'ai' },
+    { n: 'Perplexity', u: 'https://www.perplexity.ai', d: 'AI 搜索引擎', i: '🔎', c: 'ai' },
+    { n: 'Cursor', u: 'https://cursor.com', d: 'AI 代码编辑器', i: '⌨️', c: 'ai' },
+
+    // ═══ 开发编程 ═══
+    { n: 'Stack Overflow', u: 'https://stackoverflow.com', d: '全球最大的开发者问答社区', i: '📚', c: 'dev' },
+    { n: 'MDN Web Docs', u: 'https://developer.mozilla.org', d: 'Web 技术权威文档', i: '📖', c: 'dev' },
+    { n: 'npm', u: 'https://npmjs.com', d: 'Node.js 包管理器', i: '📦', c: 'dev' },
+    { n: 'CodePen', u: 'https://codepen.io', d: '前端代码在线编辑器', i: '✏️', c: 'dev' },
+    { n: 'Can I Use', u: 'https://caniuse.com', d: '浏览器兼容性查询', i: '✅', c: 'dev' },
+    { n: 'CSDN', u: 'https://www.csdn.net', d: '中文开发者社区', i: '🟥', c: 'dev' },
+    { n: '博客园', u: 'https://www.cnblogs.com', d: '开发者的网上家园', i: '🏡', c: 'dev' },
+    { n: 'LeetCode', u: 'https://leetcode.cn', d: '算法刷题平台', i: '🧩', c: 'dev' },
+    { n: 'Vercel', u: 'https://vercel.com', d: '前端部署平台', i: '▲', c: 'dev' },
+    { n: 'Cloudflare', u: 'https://www.cloudflare.com', d: 'CDN与安全服务', i: '🛡️', c: 'dev' },
+    { n: '开源中国', u: 'https://www.oschina.net', d: '中文开源社区', i: '🐉', c: 'dev' },
+    { n: 'SegmentFault', u: 'https://segmentfault.com', d: '中文技术问答社区', i: '💡', c: 'dev' },
+    { n: '51CTO', u: 'https://www.51cto.com', d: 'IT技术社区', i: '🖥️', c: 'dev' },
+    { n: '菜鸟教程', u: 'https://www.runoob.com', d: '编程入门学习', i: '🐣', c: 'dev' },
+    { n: 'W3School', u: 'https://www.w3school.com.cn', d: 'Web技术教程', i: '📖', c: 'dev' },
+    { n: 'GitHub Trending', u: 'https://github.com/trending', d: '热门开源项目', i: '🔥', c: 'dev' },
+    { n: 'Docker Hub', u: 'https://hub.docker.com', d: '容器镜像仓库', i: '🐳', c: 'dev' },
+
+    // ═══ 设计素材 ═══
+    { n: 'Dribbble', u: 'https://dribbble.com', d: '设计师作品展示平台', i: '🏀', c: 'design' },
+    { n: 'Behance', u: 'https://www.behance.net', d: 'Adobe 创意作品平台', i: '🎭', c: 'design' },
+    { n: 'Figma', u: 'https://figma.com', d: '协作式界面设计工具', i: '🖌️', c: 'design' },
+    { n: 'Unsplash', u: 'https://unsplash.com', d: '免费高质量图片素材', i: '📷', c: 'design' },
+    { n: 'Coolors', u: 'https://coolors.co', d: '超快配色方案生成器', i: '🎨', c: 'design' },
+    { n: '包图网', u: 'https://ibaotu.com', d: '免费设计素材下载', i: '📐', c: 'design' },
+    { n: '千图网', u: 'https://www.58pic.com', d: '免费图片素材下载', i: '🖼️', c: 'design' },
+    { n: 'Pinterest', u: 'https://www.pinterest.com', d: '全球灵感收集平台', i: '📌', c: 'design' },
+    { n: '即时设计', u: 'https://js.design', d: '国产在线设计工具', i: '⚡', c: 'design' },
+    { n: 'IconPark', u: 'https://iconpark.oceanengine.com', d: '字节图标库', i: '🔷', c: 'design' },
+    { n: '站酷', u: 'https://www.zcool.com.cn', d: '设计师社区平台', i: '🎯', c: 'design' },
+    { n: '花瓣网', u: 'https://huaban.com', d: '中文灵感收集平台', i: '🌺', c: 'design' },
+    { n: '优设', u: 'https://www.uisdc.com', d: '设计师学习平台', i: '📐', c: 'design' },
+    { n: '字由', u: 'https://www.hellofont.cn', d: '字体管理与下载', i: '🔤', c: 'design' },
+    { n: '摄图网', u: 'https://699pic.com', d: '正版图片素材', i: '📸', c: 'design' },
+    { n: '千库网', u: 'https://588ku.com', d: '免费PNG素材下载', i: '🖼️', c: 'design' },
+];
+
+const E = {
+    baidu: { u: 'https://www.baidu.com/s?wd=', n: '百度' },
+    google: { u: 'https://www.google.com/search?q=', n: 'Google' },
+    bing: { u: 'https://www.bing.com/search?q=', n: 'Bing' },
+    github: { u: 'https://github.com/search?q=', n: 'GitHub' },
+    bilibili: { u: 'https://search.bilibili.com/all?keyword=', n: 'B站' },
+    zhihu: { u: 'https://www.zhihu.com/search?type=content&q=', n: '知乎' },
+};
+
+const C = {
+    recommend: { i: '⭐', l: '常用推荐' },
+    video: { i: '🎬', l: '影视资源' },
+    anime: { i: '🌸', l: '动漫' },
+    software: { i: '💿', l: '软件博客' },
+    tools: { i: '🔧', l: '在线工具' },
+    news: { i: '📰', l: '资讯' },
+    community: { i: '💬', l: '社区' },
+    ai: { i: '🤖', l: 'AI 工具' },
+    dev: { i: '💻', l: '开发编程' },
+    design: { i: '🎨', l: '设计素材' },
+};
+
+let curE = 'baidu', curC = 'all';
+
+// ═══════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════
+function render(cat = 'all') {
+    const a = document.getElementById('cardsArea');
+    const f = cat === 'all' ? S : S.filter(s => s.c === cat);
+    const g = {};
+    f.forEach(s => { if (!g[s.c]) g[s.c] = []; g[s.c].push(s); });
+    let h = '';
+    for (const [k, items] of Object.entries(g)) {
+        const c = C[k] || { i: '📁', l: k };
+        h += `<div class="sec-head rv"><div class="sec-ico">${c.i}</div><div class="sec-title">${c.l}</div><div class="sec-line"></div></div>
+        <div class="card-grid">${items.map(s =>
+            `<a href="${s.u}" target="_blank" rel="noopener" class="card rv">
+                <div class="card-row"><div class="card-fav">${s.i}</div><div class="card-name">${s.n}</div></div>
+                <div class="card-desc">${s.d}</div>
+            </a>`
+        ).join('')}</div>`;
+    }
+    a.innerHTML = h;
+    initReveal();
+    initMouseGlow();
+}
+
+// ═══════════════════════════════════════════
+// MOUSE GLOW ON CARDS
+// ═══════════════════════════════════════════
+function initMouseGlow() {
+    document.querySelectorAll('.card').forEach(c => {
+        c.addEventListener('mousemove', e => {
+            const r = c.getBoundingClientRect();
+            c.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+            c.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+        });
     });
-  </script>
+}
+
+// ═══════════════════════════════════════════
+// SEARCH
+// ═══════════════════════════════════════════
+document.getElementById('searchBtn').addEventListener('click', search);
+document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') search(); });
+function search() { const q = document.getElementById('searchInput').value.trim(); if (q) window.open(E[curE].u + encodeURIComponent(q), '_blank'); }
+
+document.getElementById('engRow').addEventListener('click', e => {
+    const b = e.target.closest('.eng-btn'); if (!b) return;
+    document.querySelectorAll('.eng-btn').forEach(x => x.classList.remove('on'));
+    b.classList.add('on'); curE = b.dataset.engine;
+    document.getElementById('searchInput').placeholder = `在 ${E[curE].n} 中搜索...`;
+});
+
+// ═══════════════════════════════════════════
+// CATEGORY
+// ═══════════════════════════════════════════
+document.getElementById('catBar').addEventListener('click', e => {
+    const p = e.target.closest('.cat-pill'); if (!p) return;
+    document.querySelectorAll('.cat-pill').forEach(x => x.classList.remove('on'));
+    p.classList.add('on'); curC = p.dataset.cat; render(curC);
+});
+
+// ═══════════════════════════════════════════
+// MOBILE NAV
+// ═══════════════════════════════════════════
+document.getElementById('mobBtn').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
+
+// ═══════════════════════════════════════════
+// REVEAL
+// ═══════════════════════════════════════════
+function initReveal() {
+    document.querySelectorAll('.rv').forEach(el => el.classList.add('vis'));
+}
+
+// ═══════════════════════════════════════════
+// HITOKOTO
+// ═══════════════════════════════════════════
+(async () => {
+    try { const r = await fetch('https://v1.hitokoto.cn/'); const d = await r.json();
+        document.getElementById('hitokoto').innerHTML = `"${d.hitokoto}" <cite>— ${d.from || '未知'}</cite>`;
+    } catch { document.getElementById('hitokoto').innerHTML = '"连接每一个节点"'; }
+})();
+
+// ═══════════════════════════════════════════
+// BACK TO TOP
+// ═══════════════════════════════════════════
+const btt = document.getElementById('btt');
+window.addEventListener('scroll', () => { btt.classList.toggle('show', window.scrollY > 400); }, { passive: true });
+btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+// ═══════════════════════════════════════════
+// LOADER
+// ═══════════════════════════════════════════
+window.addEventListener('load', () => setTimeout(() => document.getElementById('loader').classList.add('hide'), 350));
+
+// INIT — call directly, don't wait for load event (external resources may block it)
+render();
+</script>
 </body>
 </html>

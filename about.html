@@ -1,91 +1,255 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>关于 - DogNav 狗狗导航</title>
-  <link rel="icon" href="ico.ico">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于 - DogNav</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --text-xs: clamp(0.7rem, 0.65rem + 0.25vw, 0.78rem);
+            --text-sm: clamp(0.78rem, 0.73rem + 0.25vw, 0.88rem);
+            --text-base: clamp(0.88rem, 0.83rem + 0.25vw, 1rem);
+            --text-lg: clamp(1rem, 0.92rem + 0.4vw, 1.2rem);
+            --text-xl: clamp(1.15rem, 1rem + 0.6vw, 1.5rem);
+            --text-2xl: clamp(1.4rem, 1.15rem + 1.2vw, 2rem);
+            --text-3xl: clamp(1.8rem, 1.3rem + 2.5vw, 3rem);
+            --space-xs: clamp(0.2rem, 0.15rem + 0.25vw, 0.4rem);
+            --space-sm: clamp(0.4rem, 0.3rem + 0.4vw, 0.65rem);
+            --space-md: clamp(0.6rem, 0.4rem + 1vw, 1.2rem);
+            --space-lg: clamp(1rem, 0.6rem + 2vw, 2.5rem);
+            --space-xl: clamp(1.5rem, 0.8rem + 3.5vw, 4rem);
+            --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-pill: 9999px;
+            --ease: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        [data-theme="dark"] {
+            --bg-base: #0f0e17; --bg-surface: #1a1926;
+            --bg-card: rgba(255,255,255,0.04); --bg-card-hover: rgba(255,255,255,0.08);
+            --bg-nav: rgba(15,14,23,0.75); --bg-input: rgba(255,255,255,0.05);
+            --text-1: #fffffe; --text-2: rgba(255,255,255,0.6); --text-3: rgba(255,255,255,0.32);
+            --accent: #7f5af0; --accent-2: #e16162; --accent-3: #2cb67d;
+            --accent-soft: rgba(127,90,240,0.12); --accent-glow: rgba(127,90,240,0.25);
+            --border: rgba(255,255,255,0.07); --border-hover: rgba(255,255,255,0.14);
+            --orb-1: rgba(102,126,234,0.18); --orb-2: rgba(118,75,162,0.14); --orb-3: rgba(240,147,251,0.1);
+            --shadow-card: 0 2px 12px rgba(0,0,0,0.2); --shadow-hover: 0 8px 32px rgba(0,0,0,0.35);
+        }
+        [data-theme="light"] {
+            --bg-base: #f5f5f7; --bg-surface: #ffffff;
+            --bg-card: rgba(255,255,255,0.85); --bg-card-hover: rgba(255,255,255,0.95);
+            --bg-nav: rgba(245,245,247,0.78); --bg-input: rgba(0,0,0,0.04);
+            --text-1: #1d1d1f; --text-2: rgba(29,29,31,0.72); --text-3: rgba(29,29,31,0.52);
+            --accent: #6c47d6; --accent-2: #d64547; --accent-3: #1a9d6a;
+            --accent-soft: rgba(108,71,214,0.08); --accent-glow: rgba(108,71,214,0.18);
+            --border: rgba(0,0,0,0.06); --border-hover: rgba(0,0,0,0.12);
+            --orb-1: rgba(102,126,234,0.12); --orb-2: rgba(118,75,162,0.08); --orb-3: rgba(240,147,251,0.06);
+            --shadow-card: 0 1px 8px rgba(0,0,0,0.04); --shadow-hover: 0 6px 24px rgba(0,0,0,0.08);
+        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+        body {
+            font-family: 'Sora', 'Noto Sans SC', system-ui, sans-serif;
+            background: var(--bg-base); color: var(--text-1);
+            min-height: 100dvh; overflow-x: hidden; line-height: 1.55;
+            transition: background 0.5s var(--ease), color 0.5s var(--ease);
+        }
+        .bg-orbs { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); will-change: transform; }
+        .orb-1 { width: 420px; height: 420px; background: var(--orb-1); top: -8%; left: -5%; animation: f1 22s ease-in-out infinite; }
+        .orb-2 { width: 350px; height: 350px; background: var(--orb-2); top: 40%; right: -8%; animation: f2 28s ease-in-out infinite; }
+        .orb-3 { width: 300px; height: 300px; background: var(--orb-3); bottom: -5%; left: 30%; animation: f3 25s ease-in-out infinite; }
+        @keyframes f1 { 0%,100%{ transform: translate(0,0); } 50%{ transform: translate(60px,40px); } }
+        @keyframes f2 { 0%,100%{ transform: translate(0,0); } 50%{ transform: translate(-50px,-60px); } }
+        @keyframes f3 { 0%,100%{ transform: translate(0,0); } 50%{ transform: translate(40px,-30px); } }
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: var(--space-md) var(--space-lg);
+            background: var(--bg-nav); backdrop-filter: blur(20px) saturate(1.4);
+            border-bottom: 1px solid var(--border); transition: background 0.5s var(--ease);
+        }
+        .logo { display: flex; align-items: center; gap: var(--space-sm); text-decoration: none; color: var(--text-1); }
+        .logo-ico { font-size: 1.5rem; }
+        .logo-text { font-size: var(--text-lg); font-weight: 700; letter-spacing: -0.02em; }
+        .logo-text span { color: var(--accent); }
+        .nav-right { display: flex; align-items: center; gap: var(--space-md); }
+        .nav-links { display: flex; list-style: none; gap: var(--space-xs); }
+        .nav-links a {
+            text-decoration: none; color: var(--text-2); font-size: var(--text-sm); font-weight: 500;
+            padding: var(--space-xs) var(--space-md); border-radius: var(--r-pill);
+            transition: all 0.3s var(--ease);
+        }
+        .nav-links a:hover, .nav-links a.active { color: var(--text-1); background: var(--accent-soft); }
+        .theme-btn {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r-pill);
+            width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; overflow: hidden; transition: all 0.3s var(--ease);
+        }
+        .theme-btn:hover { border-color: var(--accent); background: var(--accent-soft); }
+        .theme-btn i { font-style: normal; font-size: 1rem; transition: transform 0.4s var(--ease); }
+        [data-theme="dark"] .i-moon { display: none; }
+        [data-theme="light"] .i-sun { display: none; }
+        .mob-btn {
+            display: none; background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--r-sm); width: 36px; height: 36px; cursor: pointer;
+            align-items: center; justify-content: center; color: var(--text-1);
+        }
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none; flex-direction: column; position: absolute;
+                top: 100%; left: 0; right: 0; background: var(--bg-nav);
+                backdrop-filter: blur(20px); padding: var(--space-md);
+                border-bottom: 1px solid var(--border);
+            }
+            .nav-links.open { display: flex; }
+            .mob-btn { display: flex; }
+        }
+        .page-wrap {
+            position: relative; z-index: 1;
+            max-width: 800px; margin: 0 auto;
+            padding: calc(70px + var(--space-xl)) var(--space-lg) var(--space-xl);
+        }
+        .page-header { text-align: center; margin-bottom: var(--space-xl); }
+        .page-header h1 { font-size: var(--text-3xl); font-weight: 700; letter-spacing: -0.03em; margin-bottom: var(--space-sm); }
+        .page-header h1 .grad {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .page-header p { color: var(--text-2); font-size: var(--text-base); max-width: 500px; margin: 0 auto; }
+
+        /* ABOUT CONTENT */
+        .about-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--r-lg); padding: var(--space-lg);
+            backdrop-filter: blur(12px); margin-bottom: var(--space-md);
+            transition: all 0.35s var(--ease);
+        }
+        .about-card:hover { background: var(--bg-card-hover); border-color: var(--border-hover); }
+        .about-card h2 {
+            font-size: var(--text-lg); font-weight: 600; margin-bottom: var(--space-md);
+            display: flex; align-items: center; gap: var(--space-sm);
+        }
+        .about-card h2 .ico { font-size: 1.3rem; }
+        .about-card p {
+            color: var(--text-2); font-size: var(--text-base); line-height: 1.8;
+            margin-bottom: var(--space-sm);
+        }
+        .about-card p:last-child { margin-bottom: 0; }
+
+        /* STATS */
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(min(160px, 100%), 1fr));
+            gap: var(--space-md); margin-bottom: var(--space-md);
+        }
+        .stat-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--r-lg); padding: var(--space-lg);
+            text-align: center; backdrop-filter: blur(12px);
+            transition: all 0.35s var(--ease);
+        }
+        .stat-card:hover { background: var(--bg-card-hover); border-color: var(--border-hover); transform: translateY(-2px); }
+        .stat-num {
+            font-size: var(--text-2xl); font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .stat-label { font-size: var(--text-sm); color: var(--text-3); margin-top: var(--space-xs); }
+
+        /* CONTACT */
+        .contact-row {
+            display: flex; flex-wrap: wrap; gap: var(--space-sm);
+        }
+        .contact-tag {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: var(--space-xs) var(--space-md);
+            background: var(--accent-soft); color: var(--accent);
+            border-radius: var(--r-pill); font-size: var(--text-sm); font-weight: 500;
+            text-decoration: none; transition: all 0.3s var(--ease);
+        }
+        .contact-tag:hover { background: var(--accent-glow); }
+
+        .footer {
+            position: relative; z-index: 1; text-align: center; padding: var(--space-lg);
+            color: var(--text-3); font-size: var(--text-sm);
+            border-top: 1px solid var(--border); margin-top: var(--space-xl);
+        }
+        .footer a { color: var(--accent); text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+        .rv { opacity: 0; transform: translateY(16px); transition: opacity 0.5s var(--ease), transform 0.5s var(--ease); }
+        .rv.vis { opacity: 1; transform: none; }
+    </style>
 </head>
 <body>
+<div class="bg-orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
 
-  <div class="bg-orbs">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-  </div>
-
-  <nav class="navbar">
-    <div class="navbar-inner">
-      <a href="index.html" class="logo">
-        <span class="logo-icon"></span>
-        <span class="logo-text">Dog<span>Nav</span></span>
-      </a>
-      <div class="nav-links">
-        <a href="index.html">首页</a>
-        <a href="links.html">友链</a>
-        <a href="about.html" class="active">关于</a>
-        <a href="contribute.html">提交</a>
-      </div>
-      <div class="nav-right">
-        <button class="hamburger" id="mobile-toggle" aria-label="菜单"></button>
-      </div>
+<nav class="navbar">
+    <a href="index.html" class="logo"><div class="logo-ico">🐕</div><div class="logo-text">Dog<span>Nav</span></div></a>
+    <div class="nav-right">
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">首页</a></li>
+            <li><a href="links.html">友链</a></li>
+            <li><a href="about.html" class="active">关于</a></li>
+            <li><a href="contribute.html">提交</a></li>
+        </ul>
+        <button class="theme-btn" id="themeBtn" aria-label="切换主题"><i class="i-sun">☀️</i><i class="i-moon">🌙</i></button>
+        <button class="mob-btn" id="mobBtn" aria-label="菜单"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
     </div>
-  </nav>
+</nav>
 
-  <div class="mobile-nav" id="mobile-nav">
-    <button class="mobile-nav-close" id="mobile-close" aria-label="关闭"></button>
-    <a href="index.html">首页</a>
-    <a href="links.html">友链</a>
-    <a href="about.html">关于</a>
-    <a href="contribute.html">提交</a>
-  </div>
-
-  <section class="page-hero">
-    <h1>关于 DogNav</h1>
-    <p>一个精心 curated 的导航站点，收录优质网站，为你节省找网址的时间。</p>
-  </section>
-
-  <div class="page-content">
-    <div class="content-card reveal">
-      <h2>这是什么</h2>
-      <p>DogNav（狗狗导航）是一个静态导航网站，收录了影视、软件、工具、资讯等多个分类的优质网站链接。所有链接经过人工筛选，确保每个站点都值得收藏。</p>
-      <p>本站托管在 GitHub Pages，无需服务器，永久免费。</p>
+<div class="page-wrap">
+    <div class="page-header rv">
+        <h1>关于 <span class="grad">DogNav</span></h1>
+        <p>一个简洁优雅的网址导航，帮你发现互联网的精彩</p>
     </div>
 
-    <div class="content-card reveal">
-      <h2>技术栈</h2>
-      <p>纯 HTML + CSS + JavaScript 构建，采用现代玻璃拟态（Glassmorphism）设计风格。无框架依赖，无构建工具，代码简洁高效。</p>
-      <p>响应式布局适配手机、平板、桌面端。支持多引擎搜索、分类筛选、心形点击动效等功能。</p>
+    <div class="stats-grid rv">
+        <div class="stat-card"><div class="stat-num">146+</div><div class="stat-label">收录站点</div></div>
+        <div class="stat-card"><div class="stat-num">10</div><div class="stat-label">分类目录</div></div>
+        <div class="stat-card"><div class="stat-num">6</div><div class="stat-label">搜索引擎</div></div>
+        <div class="stat-card"><div class="stat-num">2</div><div class="stat-label">主题模式</div></div>
     </div>
 
-    <div class="content-card reveal">
-      <h2>开源</h2>
-      <p>本站代码完全开源，欢迎 Star 和 Fork。</p>
-      <p><a href="https://github.com/BYGD/dog-nav" target="_blank" style="color:var(--accent)">github.com/BYGD/dog-nav</a></p>
+    <div class="about-card rv">
+        <h2><span class="ico">🐕</span> 项目介绍</h2>
+        <p>DogNav（狗狗导航）是一个精心策划的网址导航项目。我们从海量网站中筛选出真正有价值的站点，涵盖影视、动漫、工具、AI、开发、设计等 10 个分类，帮助你快速找到所需资源。</p>
+        <p>我们相信，好的导航不应该是一面密密麻麻的链接墙，而应该是一个有温度、有品味的推荐清单。每一个收录的站点都经过人工审核，确保其可用性和价值。</p>
     </div>
 
-    <div class="content-card reveal">
-      <h2>联系</h2>
-      <p>如果你有建议或反馈，可以通过 GitHub Issues 联系我们。</p>
+    <div class="about-card rv">
+        <h2><span class="ico">✨</span> 设计特色</h2>
+        <p>采用现代玻璃拟态设计风格，支持深色/浅色双主题切换。流体排版自适应各种屏幕尺寸，卡片式布局简洁直观。动态背景光晕与鼠标跟随光效，让浏览体验更加愉悦。</p>
+        <p>技术栈：纯 HTML + CSS + JavaScript，无需框架依赖。使用 CSS Grid 响应式布局、CSS 自定义属性主题系统、IntersectionObserver 滚动动画，以及 Google Fonts 字体（Sora + Noto Sans SC）。</p>
     </div>
-  </div>
 
-  <footer class="footer">
-    <p>&copy; 2026 <a href="https://github.com/BYGD/dog-nav">DogNav</a> &middot; 狗狗导航</p>
-  </footer>
+    <div class="about-card rv">
+        <h2><span class="ico">🤝</span> 参与贡献</h2>
+        <p>DogNav 是一个开源项目，欢迎所有人参与贡献。如果你发现了优秀的网站，或者发现某个收录站点已经失效，都可以通过以下方式联系我们：</p>
+        <div class="contact-row" style="margin-top: var(--space-md);">
+            <a href="https://github.com/BYGD" target="_blank" class="contact-tag">🐙 GitHub</a>
+            <a href="mailto:mail@Cangdog.com" class="contact-tag">📧 邮箱</a>
+        </div>
+    </div>
 
-  <button class="back-top" id="back-top" aria-label="回到顶部"></button>
+    <div class="about-card rv">
+        <h2><span class="ico">📋</span> 免责声明</h2>
+        <p>DogNav 仅作为网址导航使用，不存储任何用户数据。所有收录的网站内容均归原网站所有，我们不对第三方网站的内容、隐私政策或安全性负责。</p>
+        <p>如果你认为某个收录站点侵犯了您的权益，请通过上方联系方式告知，我们会及时处理。</p>
+    </div>
+</div>
 
-  <script src="js/app.js"></script>
-  <script>
-    document.querySelector('.logo-icon').innerHTML = icons.dog;
-    document.querySelector('.hamburger').innerHTML = icons.menu;
-    document.querySelector('.mobile-nav-close').innerHTML = icons.x;
-    document.querySelector('.back-top').innerHTML = icons.arrowUp;
-  </script>
+<footer class="footer"><p>DogNav &copy; 2026 — Built with ♥ by <a href="https://github.com/BYGD" target="_blank">BYGD</a></p></footer>
+
+<script>
+const H = document.documentElement;
+document.getElementById('themeBtn').addEventListener('click', () => {
+    H.setAttribute('data-theme', H.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+});
+document.getElementById('mobBtn').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
+const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.add('vis'), i * 60); obs.unobserve(e.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.rv').forEach(el => { setTimeout(() => { const r = el.getBoundingClientRect(); if (r.top < window.innerHeight && r.bottom > 0) { el.classList.add('vis'); } else { obs.observe(el); } }, 50); });
+</script>
 </body>
 </html>
