@@ -3,10 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DogNav - 狗狗导航</title>
+    <title>DogNav - 精选网址导航 | 发现互联网的无限精彩</title>
+    <meta name="description" content="DogNav 精选网址导航，收录146+优质网站，涵盖影视、动漫、软件、工具、资讯、社区、AI、开发、设计等10大分类，让发现好网站变得简单。">
+    <meta name="keywords" content="网址导航,导航网站,精选导航,影视网站,动漫网站,AI工具,开发工具,设计素材,软件下载,在线工具">
+    <meta name="author" content="CangDog">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://nav.cangdog.com/">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "DogNav",
+        "url": "https://nav.cangdog.com/",
+        "description": "精选网址导航，收录146+优质网站，涵盖影视、动漫、软件、工具、资讯、社区、AI、开发、设计等10大分类。",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://nav.cangdog.com/?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
     <style>
         /* ═══════════════════════════════════════════
            DESIGN SYSTEM — Glassmorphism Enhanced
@@ -393,6 +412,46 @@
         .rv { opacity: 0; transform: translateY(10px); transition: opacity 0.4s var(--ease), transform 0.4s var(--ease); }
         .rv.vis { opacity: 1; transform: translateY(0); }
 
+        /* ══════════════════════════════════════════
+           WEATHER WIDGET
+           ═══════════════════════════════════════════ */
+        .weather-widget {
+            position: fixed; top: 100px; right: 48px; z-index: 99;
+            padding: 8px 0;
+            transition: all 0.3s var(--ease);
+            opacity: 0; transform: translateX(20px);
+            pointer-events: none;
+        }
+        .weather-widget.show { opacity: 1; transform: translateX(0); pointer-events: auto; }
+
+        .weather-city {
+            font-size: var(--text-base); font-weight: 600;
+            color: var(--text-1); margin-bottom: 4px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .weather-main {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 6px;
+        }
+        .weather-icon { font-size: 36px; line-height: 1; }
+        .weather-temp {
+            font-size: 2.2rem; font-weight: 700;
+            color: var(--text-1); line-height: 1;
+        }
+        .weather-desc {
+            font-size: var(--text-sm); color: var(--text-2);
+            margin-bottom: 6px;
+        }
+        .weather-details {
+            display: flex; gap: 14px;
+            font-size: var(--text-sm); color: var(--text-3);
+        }
+        .weather-details span { display: flex; align-items: center; gap: 4px; }
+        .weather-loading {
+            font-size: var(--text-sm); color: var(--text-3);
+            text-align: center; padding: 8px 0;
+        }
+
         /* ═══════════════════════════════════════════
            RESPONSIVE
            ═══════════════════════════════════════════ */
@@ -406,6 +465,7 @@
                 padding: var(--space-md); border-bottom: 1px solid var(--border);
             }
             .hero, .cards-area, .cat-bar { padding-left: var(--space-md); padding-right: var(--space-md); }
+            .weather-widget { display: none; }
         }
         @media (max-width: 480px) {
             .card-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
@@ -513,6 +573,22 @@
     <p>DogNav &copy; 2026 — Design by <a href="https://www.cangdog.com" target="_blank">CangDog</a> · <a href="https://github.com/BYGD" target="_blank">GitHub</a></p>
 </footer>
 
+<div class="weather-widget" id="weatherWidget">
+    <div class="weather-loading" id="weatherLoading">天气加载中...</div>
+    <div id="weatherContent" style="display:none">
+        <div class="weather-city" id="weatherCity"></div>
+        <div class="weather-main">
+            <div class="weather-icon" id="weatherIcon"></div>
+            <div class="weather-temp" id="weatherTemp"></div>
+        </div>
+        <div class="weather-desc" id="weatherDesc"></div>
+        <div class="weather-details">
+            <span id="weatherHumidity"></span>
+            <span id="weatherWind"></span>
+        </div>
+    </div>
+</div>
+
 <button class="btt" id="btt" aria-label="回到顶部">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
 </button>
@@ -530,6 +606,75 @@ document.getElementById('themeBtn').addEventListener('click', () => {
     H.setAttribute('data-theme', next);
     localStorage.setItem('dognav-theme', next);
 });
+
+// ═══════════════════════════════════════════
+// WEATHER — QWeather API
+// ═══════════════════════════════════════════
+const WEATHER_KEY = 'd7ebb8f4da72492f9ac290d366e8dab4';
+
+// Weather icon code to emoji mapping
+const WEATHER_EMOJI = {
+    '100': '☀️', '101': '⛅', '102': '⛅', '103': '🌤️', '104': '☁️',
+    '150': '🌙', '151': '🌙', '153': '',
+    '300': '️', '301': '️', '302': '⛈️', '303': '⛈️', '304': '⛈️',
+    '305': '🌧️', '306': '🌧️', '307': '🌧️', '308': '🌧️', '309': '️',
+    '310': '🌧️', '311': '🌧️', '312': '️', '313': '️', '314': '️', '315': '🌧️',
+    '316': '🌧️', '317': '🌧️', '318': '🌧️', '399': '🌧️',
+    '400': '🌨️', '401': '🌨️', '402': '️', '403': '❄️', '404': '️',
+    '405': '️', '406': '🌨️', '407': '🌨️', '408': '🌨️', '409': '🌨️',
+    '410': '❄️', '456': '🌨️', '457': '🌨️', '499': '❄️',
+    '500': '🌫️', '501': '🌫️', '502': '🌫️', '503': '️', '504': '️',
+    '507': '️', '508': '️', '509': '🌫️', '510': '🌫️', '514': '🌫️',
+    '515': '🌫️', '900': '🌡️', '901': '🌡️', '999': '🌡️',
+};
+
+(async function initWeather() {
+    const widget = document.getElementById('weatherWidget');
+    const loading = document.getElementById('weatherLoading');
+    const content = document.getElementById('weatherContent');
+
+    try {
+        // Step 1: Get location by IP
+        const geoRes = await fetch(`https://geoapi.qweather.com/v2/city/lookup?location=auto&key=${WEATHER_KEY}`);
+        const geoData = await geoRes.json();
+
+        if (geoData.code !== '200' || !geoData.location || geoData.location.length === 0) {
+            throw new Error('Location lookup failed');
+        }
+
+        const locationId = geoData.location[0].id;
+        const cityName = geoData.location[0].name;
+
+        // Step 2: Get current weather
+        const weatherRes = await fetch(`https://devapi.qweather.com/v7/weather/now?location=${locationId}&key=${WEATHER_KEY}`);
+        const weatherData = await weatherRes.json();
+
+        if (weatherData.code !== '200') {
+            throw new Error('Weather fetch failed');
+        }
+
+        const now = weatherData.now;
+        const emoji = WEATHER_EMOJI[now.icon] || '🌡️';
+
+        // Populate widget
+        document.getElementById('weatherCity').textContent = cityName;
+        document.getElementById('weatherIcon').textContent = emoji;
+        document.getElementById('weatherTemp').textContent = now.temp + '°C';
+        document.getElementById('weatherDesc').textContent = now.text;
+        document.getElementById('weatherHumidity').innerHTML = '💧 ' + now.humidity + '%';
+        document.getElementById('weatherWind').innerHTML = '💨 ' + now.windSpeed + 'm/s';
+
+        // Show widget
+        loading.style.display = 'none';
+        content.style.display = 'block';
+        widget.classList.add('show');
+
+    } catch (err) {
+        console.warn('Weather widget error:', err);
+        loading.textContent = '天气加载失败';
+        setTimeout(() => { widget.style.display = 'none'; }, 3000);
+    }
+})();
 
 // ═══════════════════════════════════════════
 // DATA
@@ -739,7 +884,7 @@ function render(cat = 'all') {
         const c = C[k] || { i: '📁', l: k };
         h += `<div class="sec-head rv"><div class="sec-ico">${c.i}</div><div class="sec-title">${c.l}</div><div class="sec-line"></div></div>
         <div class="card-grid">${items.map(s =>
-            `<a href="${s.u}" target="_blank" rel="noopener" class="card rv">
+            `<a href="${s.u}" target="_blank" rel="noopener" class="card rv" title="${s.n} - ${s.d}">
                 <div class="card-row"><div class="card-fav">${s.i}</div><div class="card-name">${s.n}</div></div>
                 <div class="card-desc">${s.d}</div>
             </a>`
