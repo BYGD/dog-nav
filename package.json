@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "deploy": "npx wrangler d1 execute DB --remote --file=./cloudflare/schema.sql && npx wrangler d1 execute DB --remote --file=./cloudflare/seed.sql",
+    "db:init": "npx wrangler d1 execute DB --remote --file=./cloudflare/schema.sql && npx wrangler d1 execute DB --remote --file=./cloudflare/seed.sql"
   },
   "dependencies": {
     "express": "^4.18.2",

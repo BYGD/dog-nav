@@ -17,8 +17,8 @@
 
 <br>
 
-<a href="https://dash.cloudflare.com/sign-up?pt=f&utm_source=workers-github" target="_blank">
-<img src="https://img.shields.io/badge/一键部署到_Cloudflare-F38020?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Deploy to Cloudflare">
+<a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BYGD/dog-nav" target="_blank">
+<img src="https://deploy.workers.cloudflare.com/button" alt="Deploy to Cloudflare">
 </a>
 
 </div>
@@ -130,6 +130,21 @@ npm start
 
 ### Cloudflare 一键部署
 
+点击上方的 **「Deploy to Cloudflare」** 按钮，即可自动完成部署：
+
+- 自动克隆仓库
+- 自动创建 D1 数据库
+- 自动执行数据库初始化（建表 + 导入示例数据）
+- 自动部署 Worker 及所有静态资源
+
+部署完成后你将在 Cloudflare Dashboard 中看到你的站点地址。
+
+> **提示**：部署过程中会要求你登录 Cloudflare 账号。如果你还没有账号，会引导你免费注册（Worker 免费额度足够个人使用）。
+
+### 命令行部署（备选方案）
+
+如果你更习惯用命令行，也可以在本地执行：
+
 ```bash
 # 克隆仓库
 git clone https://github.com/BYGD/dog-nav.git
@@ -142,14 +157,7 @@ npm install
 npm run deploy
 ```
 
-部署脚本会自动完成以下步骤：
-
-1. 检查并安装 Wrangler CLI
-2. 引导你通过浏览器登录 Cloudflare（OAuth）
-3. 创建 D1 数据库（或复用已有的）
-4. 更新 `wrangler.toml` 中的数据库 ID
-5. 执行 `schema.sql` + `seed.sql` 初始化数据
-6. 部署 Worker 及所有静态资源
+部署脚本会自动完成：检查 Wrangler → 登录 Cloudflare → 创建 D1 → 初始化数据库 → 部署上线。
 
 **你的站点将上线于：** `https://dognav.<你的子域名>.workers.dev`
 
