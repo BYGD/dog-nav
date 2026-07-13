@@ -166,6 +166,26 @@
         .nav-links a:hover { color: var(--text-1); background: var(--bg-card); }
         .nav-links a.active { color: var(--accent); background: var(--accent-soft); }
 
+        /* Nav dropdown — custom pages */
+        .nav-dropdown { position: relative; }
+        .nav-dropdown > a::after { content: ' ▾'; font-size: 10px; }
+        .nav-dropdown-menu {
+            position: absolute; top: 100%; right: 0;
+            background: var(--bg-card); backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border); border-radius: var(--r-md);
+            padding: 4px; min-width: 140px; display: none;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            z-index: 1001;
+        }
+        .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+        .nav-dropdown-menu a {
+            display: block; padding: 8px 14px; border-radius: var(--r-sm);
+            color: var(--text-2); text-decoration: none; font-size: var(--text-sm);
+            white-space: nowrap;
+        }
+        .nav-dropdown-menu a:hover { color: var(--text-1); background: var(--accent-soft); }
+
         /* Theme toggle */
         .theme-btn {
             width: 34px; height: 34px;
@@ -522,6 +542,10 @@
             <li><a href="links.html">友链</a></li>
             <li><a href="about.html">关于</a></li>
             <li><a href="contribute.html">提交</a></li>
+            <li class="nav-dropdown" id="moreDropdown" style="display:none">
+                <a href="#">更多</a>
+                <ul class="nav-dropdown-menu" id="moreDropdownMenu"></ul>
+            </li>
         </ul>
         <button class="theme-btn" id="themeBtn" aria-label="切换主题">
             <i class="i-sun">☀️</i><i class="i-moon">🌙</i>
@@ -1047,6 +1071,25 @@ window.addEventListener('load', () => setTimeout(() => document.getElementById('
         }
     } catch (err) {
         // Settings stay as-is
+    }
+
+    try {
+        // Fetch custom pages for navbar "更多" dropdown
+        const pagesRes = await fetch('/api/pages');
+        if (pagesRes.ok) {
+            const pages = await pagesRes.json();
+            const customPages = pages.filter(p => !['about','links','contribute'].includes(p.id));
+            if (customPages.length > 0) {
+                const dropdown = document.getElementById('moreDropdown');
+                const menu = document.getElementById('moreDropdownMenu');
+                menu.innerHTML = customPages.map(p =>
+                    `<a href="/page.html?slug=${p.id}">${p.title || p.id}</a>`
+                ).join('');
+                dropdown.style.display = '';
+            }
+        }
+    } catch (err) {
+        // Pages dropdown stays hidden
     }
 
     // Render with loaded data
