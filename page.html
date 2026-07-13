@@ -48,11 +48,12 @@
         }
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+        .notransition, .notransition * { transition: none !important; }
         body {
             font-family: 'Sora', 'Noto Sans SC', system-ui, sans-serif;
             background: var(--bg-base); color: var(--text-1);
             min-height: 100dvh; overflow-x: hidden; line-height: 1.55;
-            transition: background 0.5s var(--ease), color 0.5s var(--ease);
+            transition: background 0.3s var(--ease), color 0.3s var(--ease);
         }
         .bg-orbs { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
         .orb { position: absolute; border-radius: 50%; filter: blur(80px); will-change: transform; }
@@ -67,7 +68,7 @@
             display: flex; align-items: center; justify-content: space-between;
             padding: var(--space-md) var(--space-lg);
             background: var(--bg-nav); backdrop-filter: blur(20px) saturate(1.4);
-            border-bottom: 1px solid var(--border); transition: background 0.5s var(--ease);
+            border-bottom: 1px solid var(--border); transition: background 0.3s var(--ease);
         }
         .logo { display: flex; align-items: center; gap: var(--space-sm); text-decoration: none; color: var(--text-1); }
         .logo-ico { font-size: 1.5rem; }
@@ -210,8 +211,12 @@ if (savedTheme) H.setAttribute('data-theme', savedTheme);
 
 document.getElementById('themeBtn').addEventListener('click', () => {
     const next = H.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    H.classList.add('notransition');
     H.setAttribute('data-theme', next);
     localStorage.setItem('dognav-theme', next);
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => H.classList.remove('notransition'));
+    });
 });
 document.getElementById('mobBtn').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
 const obs = new IntersectionObserver(entries => {
