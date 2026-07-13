@@ -99,6 +99,7 @@
 
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+        .notransition, .notransition * { transition: none !important; }
         body {
             font-family: 'Sora', 'Noto Sans SC', system-ui, sans-serif;
             background: var(--bg-base);
@@ -106,7 +107,7 @@
             min-height: 100dvh;
             overflow-x: hidden;
             line-height: 1.55;
-            transition: background 0.5s var(--ease), color 0.5s var(--ease);
+            transition: background 0.3s var(--ease), color 0.3s var(--ease);
         }
 
         /* ═══════════════════════════════════════════
@@ -235,7 +236,7 @@
             font-size: var(--text-3xl); font-weight: 700;
             line-height: 1.15; margin-bottom: 8px;
             letter-spacing: -0.5px;
-            transition: color 0.5s var(--ease);
+            transition: color 0.2s var(--ease);
         }
         .hero-title .grad {
             background: linear-gradient(135deg, var(--accent), #a78bfa, var(--accent-2));
@@ -248,7 +249,7 @@
         .hero-sub {
             font-size: var(--text-base); color: var(--text-2);
             margin-bottom: var(--space-sm); font-weight: 300;
-            transition: color 0.5s var(--ease);
+            transition: color 0.2s var(--ease);
         }
 
         .hitokoto {
@@ -337,7 +338,7 @@
         }
         .sec-title {
             font-size: var(--text-base); font-weight: 600;
-            color: var(--text-1); transition: color 0.5s var(--ease);
+            color: var(--text-1); transition: color 0.2s var(--ease);
         }
         .sec-line { flex: 1; height: 1px; background: var(--border); }
 
@@ -357,7 +358,7 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             text-decoration: none; display: block; cursor: pointer;
-            transition: all 0.3s var(--ease);
+            transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
             overflow: hidden;
         }
 
@@ -384,19 +385,19 @@
             background: var(--bg-input); border: 1px solid var(--border);
             display: flex; align-items: center; justify-content: center;
             font-size: 13px; flex-shrink: 0;
-            transition: background 0.5s var(--ease), border-color 0.5s var(--ease);
+            transition: background 0.2s var(--ease), border-color 0.2s var(--ease);
         }
         .card-name {
             font-size: var(--text-sm); font-weight: 600;
             color: var(--text-1); line-height: 1.3;
-            transition: color 0.5s var(--ease);
+            transition: color 0.2s var(--ease);
         }
         .card-desc {
             font-size: var(--text-xs); color: var(--text-3);
             margin-top: 5px; line-height: 1.4;
             display: -webkit-box; -webkit-line-clamp: 1;
             -webkit-box-orient: vertical; overflow: hidden;
-            transition: color 0.5s var(--ease);
+            transition: color 0.2s var(--ease);
         }
 
         /* ═══════════════════════════════════════════
@@ -617,8 +618,13 @@ if (savedTheme) H.setAttribute('data-theme', savedTheme);
 
 document.getElementById('themeBtn').addEventListener('click', () => {
     const next = H.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    // Briefly disable transitions to avoid jank from 150+ cards
+    H.classList.add('notransition');
     H.setAttribute('data-theme', next);
     localStorage.setItem('dognav-theme', next);
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => H.classList.remove('notransition'));
+    });
 });
 
 // ═══════════════════════════════════════════
