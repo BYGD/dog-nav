@@ -3,6 +3,74 @@ import { cors } from 'hono/cors';
 
 const app = new Hono();
 
+// ═══════════════════════════════════════════
+// AUTO-INIT: Create tables + seed data on first deploy
+// ═══════════════════════════════════════════
+let dbReady = false;
+
+async function ensureDB(db) {
+    if (dbReady) return;
+    dbReady = true; // Set early to avoid concurrent init
+
+    // ── Create all tables ──
+    await db.batch([
+        db.prepare(`CREATE TABLE IF NOT EXISTS sites (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, url TEXT NOT NULL, description TEXT, icon TEXT, screenshot TEXT, category TEXT NOT NULL, sort_order INTEGER DEFAULT 0, is_featured INTEGER DEFAULT 0, click_count INTEGER DEFAULT 0, nofollow INTEGER DEFAULT 0, seo_title TEXT, seo_description TEXT, status TEXT DEFAULT 'active', created_at DATETIME DEFAULT CURRENT_TIMESTAMP, updated_at DATETIME DEFAULT CURRENT_TIMESTAMP)`),
+        db.prepare(`CREATE TABLE IF NOT EXISTS categories (id TEXT PRIMARY KEY, name TEXT NOT NULL, icon TEXT, sort_order INTEGER DEFAULT 0, is_active INTEGER DEFAULT 1)`),
+        db.prepare(`CREATE TABLE IF NOT EXISTS tags (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE NOT NULL, color TEXT DEFAULT '#667eea')`),
+        db.prepare(`CREATE TABLE IF NOT EXISTS site_tags (site_id INTEGER, tag_id INTEGER, PRIMARY KEY (site_id, tag_id))`),
+        db.prepare(`CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE NOT NULL, password TEXT NOT NULL, role TEXT DEFAULT 'editor', is_active INTEGER DEFAULT 1, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)`),
+        db.prepare(`CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT, updated_at DATETIME DEFAULT CURRENT_TIMESTAMP)`),
+        db.prepare(`CREATE TABLE IF NOT EXISTS pages (id TEXT PRIMARY KEY, title TEXT, content TEXT, updated_at DATETIME DEFAULT CURRENT_TIMESTAMP)`),
+        db.prepare(`CREATE TABLE IF NOT EXISTS links (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, url TEXT NOT NULL, description TEXT, icon TEXT, sort_order INTEGER DEFAULT 0, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)`),
+        db.prepare(`CREATE TABLE IF NOT EXISTS submissions (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, url TEXT NOT NULL, description TEXT, category TEXT, submitter_email TEXT, status TEXT DEFAULT 'pending', created_at DATETIME DEFAULT CURRENT_TIMESTAMP, reviewed_at DATETIME, reviewed_by INTEGER)`),
+        db.prepare(`CREATE TABLE IF NOT EXISTS reports (id INTEGER PRIMARY KEY AUTOINCREMENT, site_id INTEGER, reason TEXT, reporter_email TEXT, status TEXT DEFAULT 'pending', created_at DATETIME DEFAULT CURRENT_TIMESTAMP, resolved_at DATETIME, resolved_by INTEGER)`),
+        db.prepare(`CREATE TABLE IF NOT EXISTS logs (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, action TEXT NOT NULL, detail TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)`),
+        db.prepare(`CREATE TABLE IF NOT EXISTS stats (id INTEGER PRIMARY KEY AUTOINCREMENT, site_id INTEGER, ip_address TEXT, user_agent TEXT, referrer TEXT, clicked_at DATETIME DEFAULT CURRENT_TIMESTAMP)`),
+    ]);
+
+    // ── Check if already seeded ──
+    const admin = await db.prepare('SELECT id FROM users WHERE username=?').bind('admin').first();
+    if (admin) return; // Already initialized
+
+    // ── Seed default data ──
+    await db.prepare("INSERT OR IGNORE INTO users (username, password, role) VALUES ('admin', 'admin123', 'admin')").run();
+
+    await db.batch([
+        db.prepare("INSERT OR IGNORE INTO categories (id, name, icon, sort_order, is_active) VALUES ('recommend', '常用推荐', '⭐', 1, 1)"),
+        db.prepare("INSERT OR IGNORE INTO categories (id, name, icon, sort_order, is_active) VALUES ('video', '影视资源', '🎬', 2, 1)"),
+        db.prepare("INSERT OR IGNORE INTO categories (id, name, icon, sort_order, is_active) VALUES ('anime', '动漫', '🌸', 3, 1)"),
+        db.prepare("INSERT OR IGNORE INTO categories (id, name, icon, sort_order, is_active) VALUES ('software', '软件博客', '💿', 4, 1)"),
+        db.prepare("INSERT OR IGNORE INTO categories (id, name, icon, sort_order, is_active) VALUES ('tools', '在线工具', '🔧', 5, 1)"),
+        db.prepare("INSERT OR IGNORE INTO categories (id, name, icon, sort_order, is_active) VALUES ('news', '资讯', '📰', 6, 1)"),
+        db.prepare("INSERT OR IGNORE INTO categories (id, name, icon, sort_order, is_active) VALUES ('community', '社区', '💬', 7, 1)"),
+        db.prepare("INSERT OR IGNORE INTO categories (id, name, icon, sort_order, is_active) VALUES ('ai', 'AI 工具', '🤖', 8, 1)"),
+        db.prepare("INSERT OR IGNORE INTO categories (id, name, icon, sort_order, is_active) VALUES ('dev', '开发编程', '💻', 9, 1)"),
+        db.prepare("INSERT OR IGNORE INTO categories (id, name, icon, sort_order, is_active) VALUES ('design', '设计素材', '🎨', 10, 1)"),
+    ]);
+
+    await db.batch([
+        db.prepare("INSERT OR IGNORE INTO settings (key, value) VALUES ('site_name', 'DogNav')"),
+        db.prepare("INSERT OR IGNORE INTO settings (key, value) VALUES ('site_description', '发现互联网的无限精彩')"),
+        db.prepare("INSERT OR IGNORE INTO settings (key, value) VALUES ('footer_text', 'DogNav © 2026')"),
+        db.prepare("INSERT OR IGNORE INTO settings (key, value) VALUES ('submission_enabled', 'true')"),
+    ]);
+
+    await db.batch([
+        db.prepare("INSERT OR IGNORE INTO pages (id, title, content) VALUES ('about', '关于 DogNav', 'DogNav 是一个精选网址导航，致力于帮助用户发现和探索互联网上优质的网站和工具。')"),
+        db.prepare("INSERT OR IGNORE INTO pages (id, title, content) VALUES ('contribute', '提交站点', '如果你发现了好网站，欢迎提交给我们。我们会审核后将其添加到导航中。')"),
+        db.prepare("INSERT OR IGNORE INTO pages (id, title, content) VALUES ('links', '友情链接', '以下是与本站有友好往来的网站，欢迎交换友情链接。')"),
+        db.prepare("INSERT OR IGNORE INTO pages (id, title, content) VALUES ('guide', '使用指南', '<p>欢迎使用 DogNav 导航站！</p>')"),
+    ]);
+
+    console.log('DogNav: Database initialized with default data.');
+}
+
+// ── Init middleware: ensure DB is ready on every request ──
+app.use('*', async (c, next) => {
+    if (c.env.DB) await ensureDB(c.env.DB);
+    await next();
+});
+
 // Middleware
 app.use('*', cors());
 
@@ -321,6 +389,27 @@ app.put('/api/pages/:id', requireAuth, async (c) => {
     return c.json({ message: 'Page updated' });
 });
 
+app.post('/api/pages', requireAuth, async (c) => {
+    const { id, title, content } = await c.req.json();
+    if (!id || !title) return c.json({ error: 'Missing required fields (id, title)' }, 400);
+    if (!/^[a-z0-9-]+$/.test(id)) return c.json({ error: 'Invalid page ID (a-z, 0-9, hyphens only)' }, 400);
+    // Check if page with this id already exists
+    const existing = await c.env.DB.prepare('SELECT id FROM pages WHERE id=?').bind(id).first();
+    if (existing) return c.json({ error: 'Page with this ID already exists' }, 409);
+    await c.env.DB.prepare('INSERT INTO pages (id, title, content) VALUES (?, ?, ?)')
+        .bind(id, title, content || '').run();
+    await logAction(c.env.DB, c.get('userId'), 'create_page', `Created page: ${id}`);
+    return c.json({ message: 'Page created', id }, 201);
+});
+
+app.delete('/api/pages/:id', requireAuth, async (c) => {
+    const existing = await c.env.DB.prepare('SELECT id FROM pages WHERE id=?').bind(c.req.param('id')).first();
+    if (!existing) return c.json({ error: 'Page not found' }, 404);
+    await c.env.DB.prepare('DELETE FROM pages WHERE id=?').bind(c.req.param('id')).run();
+    await logAction(c.env.DB, c.get('userId'), 'delete_page', `Deleted page: ${c.req.param('id')}`);
+    return c.json({ message: 'Page deleted' });
+});
+
 // ═══════════════════════════════════════════
 // LINKS API
 // ═══════════════════════════════════════════
@@ -451,11 +540,12 @@ app.get('/api/export', requireAuth, async (c) => {
     const categories = (await db.prepare('SELECT * FROM categories').all()).results;
     const tags = (await db.prepare('SELECT * FROM tags').all()).results;
     const links = (await db.prepare('SELECT * FROM links').all()).results;
+    const pages = (await db.prepare('SELECT * FROM pages').all()).results;
     const settingsRows = (await db.prepare('SELECT key,value FROM settings').all()).results;
     const settings = {};
     for (const row of settingsRows) settings[row.key] = row.value;
     await logAction(c.env.DB, c.get('userId'), 'export', 'Database exported');
-    return c.json({ sites, categories, tags, links, settings, exportDate: new Date().toISOString() });
+    return c.json({ sites, categories, tags, links, pages, settings, exportDate: new Date().toISOString() });
 });
 
 app.post('/api/import', requireAuth, async (c) => {
@@ -486,6 +576,13 @@ app.post('/api/import', requireAuth, async (c) => {
         for (const l of data.links) {
             await db.prepare('INSERT INTO links (id,name,url,description,icon,sort_order) VALUES (?,?,?,?,?,?)')
                 .bind(l.id,l.name,l.url,l.description||'',l.icon||'',l.sort_order||0).run();
+        }
+    }
+    if (data.pages) {
+        await db.prepare('DELETE FROM pages').run();
+        for (const p of data.pages) {
+            await db.prepare('INSERT INTO pages (id, title, content) VALUES (?, ?, ?)')
+                .bind(p.id, p.title, p.content || '').run();
         }
     }
     if (data.settings) {
@@ -535,6 +632,17 @@ app.post('/api/health-check', requireAuth, async (c) => {
     }));
 
     return c.json({ results });
+});
+
+// ═══════════════════════════════════════════
+// DYNAMIC PAGE ROUTING
+// ═══════════════════════════════════════════
+
+app.get('/p/:slug', async (c) => {
+    const slug = c.req.param('slug');
+    const page = await c.env.DB.prepare('SELECT id FROM pages WHERE id=?').bind(slug).first();
+    if (!page) return c.notFound();
+    return c.redirect(`/page.html?slug=${encodeURIComponent(slug)}`);
 });
 
 export default app;
