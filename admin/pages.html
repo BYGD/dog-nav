@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -32,32 +32,40 @@
         .main { margin-left: 240px; flex: 1; min-height: 100vh; }
         .topbar { background: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 50; }
         .topbar h1 { font-size: 18px; color: #333; font-weight: 600; }
+        .topbar .topbar-left { display: flex; align-items: center; gap: 16px; }
         .topbar .user-info { display: flex; align-items: center; gap: 12px; font-size: 14px; color: #666; }
         .topbar .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: 600; }
         .container { padding: 24px; }
         .page-list { display: grid; gap: 16px; }
-        .page-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .page-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: relative; }
         .page-card h3 { font-size: 16px; color: #333; margin-bottom: 8px; }
         .page-card .page-id { font-size: 12px; color: #888; margin-bottom: 12px; }
         .page-card .preview { color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 16px; max-height: 100px; overflow: hidden; position: relative; }
         .page-card .preview::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 40px; background: linear-gradient(transparent, white); }
+        .page-card .card-actions { display: flex; gap: 8px; }
         .btn-edit { padding: 8px 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
         .btn-edit:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102,126,234,0.4); }
+        .btn-delete { padding: 8px 16px; background: #fff; color: #ef4444; border: 1px solid #fecaca; border-radius: 6px; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+        .btn-delete:hover { background: #fef2f2; border-color: #ef4444; }
+        .btn-create { padding: 10px 20px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; }
+        .btn-create:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(34,197,94,0.4); }
 
-        /* ═══ MODAL ═══ */
+        /* MODAL */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
         .modal-overlay.show { display: flex; }
         .modal { background: white; padding: 30px; border-radius: 12px; width: 95%; max-width: 900px; max-height: 92vh; overflow-y: auto; }
+        .modal-sm { max-width: 480px; }
         .modal h2 { margin-bottom: 20px; color: #333; }
         .modal .form-group { margin-bottom: 16px; }
         .modal label { display: block; margin-bottom: 6px; font-weight: 500; color: #555; font-size: 14px; }
         .modal input[type="text"] { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-family: inherit; }
         .modal input[type="text"]:focus { outline: none; border-color: #7c83ff; }
+        .modal .hint { font-size: 12px; color: #999; margin-top: 4px; }
         .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; }
         .btn-cancel { padding: 10px 20px; background: #f5f5f5; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; font-size: 14px; }
         .btn-save { padding: 10px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; }
 
-        /* ═══ QUILL OVERRIDES ═══ */
+        /* QUILL OVERRIDES */
         .ql-toolbar { border-radius: 8px 8px 0 0; border-color: #e0e0e0 !important; }
         .ql-container { border-radius: 0 0 8px 8px; border-color: #e0e0e0 !important; font-size: 15px; min-height: 300px; }
         .ql-editor { min-height: 300px; line-height: 1.8; }
@@ -67,6 +75,14 @@
         .toast.show { opacity: 1; transform: translateY(0); }
         .toast.success { background: #22c55e; }
         .toast.error { background: #ef4444; }
+
+        .confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; z-index: 1200; }
+        .confirm-overlay.show { display: flex; }
+        .confirm-box { background: white; padding: 24px 30px; border-radius: 12px; text-align: center; max-width: 380px; width: 90%; }
+        .confirm-box p { margin-bottom: 20px; font-size: 15px; color: #333; }
+        .confirm-box .confirm-actions { display: flex; gap: 12px; justify-content: center; }
+        .btn-confirm-yes { padding: 8px 24px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
+        .btn-confirm-no { padding: 8px 24px; background: #f5f5f5; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -99,7 +115,10 @@
 
     <div class="main">
         <div class="topbar">
-            <h1>页面管理</h1>
+            <div class="topbar-left">
+                <h1>页面管理</h1>
+                <button class="btn-create" onclick="showCreateModal()">+ 新建页面</button>
+            </div>
             <div class="user-info">
                 <div class="avatar">A</div>
                 <span>Admin</span>
@@ -111,7 +130,7 @@
     </div>
 
     <!-- Edit Modal -->
-    <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-overlay" id="editModalOverlay">
         <div class="modal">
             <h2 id="modalTitle">编辑页面</h2>
             <div class="form-group">
@@ -123,8 +142,39 @@
                 <div id="quillEditor"></div>
             </div>
             <div class="modal-actions">
-                <button type="button" class="btn-cancel" onclick="closeModal()">取消</button>
+                <button type="button" class="btn-cancel" onclick="closeEditModal()">取消</button>
                 <button type="button" class="btn-save" onclick="savePage()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Modal -->
+    <div class="modal-overlay" id="createModalOverlay">
+        <div class="modal modal-sm">
+            <h2>新建页面</h2>
+            <div class="form-group">
+                <label>页面标识 (Slug)</label>
+                <input type="text" id="newPageSlug" placeholder="例如: guide, my-page, faq">
+                <div class="hint">仅允许小写字母、数字和连字符，如 "my-page"</div>
+            </div>
+            <div class="form-group">
+                <label>页面标题</label>
+                <input type="text" id="newPageTitle" placeholder="输入页面标题">
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeCreateModal()">取消</button>
+                <button type="button" class="btn-save" onclick="createPage()">创建</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirm -->
+    <div class="confirm-overlay" id="confirmOverlay">
+        <div class="confirm-box">
+            <p id="confirmMsg">确定要删除此页面吗？此操作不可撤销。</p>
+            <div class="confirm-actions">
+                <button class="btn-confirm-no" onclick="closeConfirm()">取消</button>
+                <button class="btn-confirm-yes" id="confirmYesBtn">删除</button>
             </div>
         </div>
     </div>
@@ -144,9 +194,9 @@
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        const PAGE_NAMES = { about: '关于页面', contribute: '提交站点页面', links: '友情链接页面' };
         let allPages = [];
         let currentEditId = '';
+        let pendingDeleteId = '';
 
         // ═══ QUILL EDITOR ═══
         const quill = new Quill('#quillEditor', {
@@ -178,35 +228,86 @@
 
         function renderPages() {
             const list = document.getElementById('pageList');
+            if (allPages.length === 0) {
+                list.innerHTML = '<div style="text-align:center;padding:48px;color:#999;font-size:14px;">还没有自定义页面，点击上方"新建页面"按钮创建第一个页面</div>';
+                return;
+            }
             list.innerHTML = allPages.map(page => `
                 <div class="page-card">
-                    <h3>${page.title || '未命名'}</h3>
-                    <div class="page-id">/${page.id}.html</div>
+                    <h3>${escapeHtml(page.title || '未命名')}</h3>
+                    <div class="page-id">/page/${page.id}</div>
                     <div class="preview">${page.content || '<em style="color:#bbb">暂无内容</em>'}</div>
-                    <button class="btn-edit" onclick="editPage('${page.id}')">编辑内容</button>
+                    <div class="card-actions">
+                        <button class="btn-edit" onclick="editPage('${page.id}')">编辑内容</button>
+                        <button class="btn-delete" onclick="confirmDelete('${page.id}', '${escapeHtml(page.title || page.id)}')">删除</button>
+                    </div>
                 </div>
             `).join('');
         }
 
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // ═══ CREATE ═══
+        function showCreateModal() {
+            document.getElementById('newPageSlug').value = '';
+            document.getElementById('newPageTitle').value = '';
+            document.getElementById('createModalOverlay').classList.add('show');
+        }
+
+        function closeCreateModal() {
+            document.getElementById('createModalOverlay').classList.remove('show');
+        }
+
+        async function createPage() {
+            const slug = document.getElementById('newPageSlug').value.trim();
+            const title = document.getElementById('newPageTitle').value.trim();
+
+            if (!slug) { showToast('请输入页面标识', 'error'); return; }
+            if (!/^[a-z0-9-]+$/.test(slug)) { showToast('页面标识只能包含小写字母、数字和连字符', 'error'); return; }
+            if (!title) { showToast('请输入页面标题', 'error'); return; }
+
+            try {
+                const res = await fetch('/api/pages', {
+                    method: 'POST',
+                    headers: authHeaders(),
+                    body: JSON.stringify({ id: slug, title, content: '' })
+                });
+                const data = await res.json();
+                if (data.message) {
+                    showToast('页面已创建');
+                    closeCreateModal();
+                    loadPages();
+                } else {
+                    showToast(data.error || '创建失败', 'error');
+                }
+            } catch (err) {
+                showToast('创建失败', 'error');
+            }
+        }
+
+        // ═══ EDIT ═══
         function editPage(id) {
             const page = allPages.find(p => p.id === id);
             if (!page) return;
             currentEditId = page.id;
             document.getElementById('pageTitle').value = page.title || '';
-            document.getElementById('modalTitle').textContent = '编辑 ' + (PAGE_NAMES[id] || id);
+            document.getElementById('modalTitle').textContent = '编辑: ' + (page.title || page.id);
 
-            // Load content into Quill
             if (page.content) {
                 quill.root.innerHTML = page.content;
             } else {
                 quill.setText('');
             }
 
-            document.getElementById('modalOverlay').classList.add('show');
+            document.getElementById('editModalOverlay').classList.add('show');
         }
 
-        function closeModal() {
-            document.getElementById('modalOverlay').classList.remove('show');
+        function closeEditModal() {
+            document.getElementById('editModalOverlay').classList.remove('show');
             currentEditId = '';
         }
 
@@ -229,7 +330,7 @@
                 const data = await res.json();
                 if (data.message) {
                     showToast('页面已保存');
-                    closeModal();
+                    closeEditModal();
                     loadPages();
                 } else {
                     showToast('保存失败', 'error');
@@ -239,8 +340,49 @@
             }
         }
 
-        document.getElementById('modalOverlay').addEventListener('click', (e) => {
-            if (e.target === e.currentTarget) closeModal();
+        // ═══ DELETE ═══
+        function confirmDelete(id, title) {
+            pendingDeleteId = id;
+            document.getElementById('confirmMsg').textContent = `确定要删除页面 "${title}" 吗？此操作不可撤销。`;
+            document.getElementById('confirmOverlay').classList.add('show');
+        }
+
+        function closeConfirm() {
+            document.getElementById('confirmOverlay').classList.remove('show');
+            pendingDeleteId = '';
+        }
+
+        document.getElementById('confirmYesBtn').addEventListener('click', async () => {
+            const id = pendingDeleteId;
+            closeConfirm();
+            if (!id) return;
+
+            try {
+                const res = await fetch(`/api/pages/${id}`, {
+                    method: 'DELETE',
+                    headers: authHeaders()
+                });
+                const data = await res.json();
+                if (data.message) {
+                    showToast('页面已删除');
+                    loadPages();
+                } else {
+                    showToast(data.error || '删除失败', 'error');
+                }
+            } catch (err) {
+                showToast('删除失败', 'error');
+            }
+        });
+
+        // ═══ MODAL CLICK OUTSIDE ═══
+        document.getElementById('editModalOverlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeEditModal();
+        });
+        document.getElementById('createModalOverlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeCreateModal();
+        });
+        document.getElementById('confirmOverlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeConfirm();
         });
 
         loadPages();
