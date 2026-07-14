@@ -179,7 +179,7 @@ async function main() {
     // ─── Done! ───
     console.log(`\n${'═'.repeat(50)}`);
     console.log('  ✅ 部署成功!');
-    console.log('═'.repeat(50)');
+    console.log('═'.repeat(50));
     console.log(`\n  🌐 网站地址: https://${DB_NAME}.<你的子域名>.workers.dev`);
     console.log(`  🔧 后台管理: https://${DB_NAME}.<你的子域名>.workers.dev/admin`);
     console.log(`  👤 默认账号: admin / admin123`);
