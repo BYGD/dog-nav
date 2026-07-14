@@ -10,7 +10,7 @@
 
 [![在线演示](https://img.shields.io/badge/在线演示-nav.cangdog.com-FF6B6B?style=flat-square)](https://nav.cangdog.com)
 [![Cloudflare](https://img.shields.io/badge/Cloudflare-dognav.ccgg.workers.dev-F38020?style=flat-square&logo=cloudflare&logoColor=white)](https://dognav.ccgg.workers.dev)
-[![版本](https://img.shields.io/badge/版本-2.1-4ECDC4?style=flat-square)]()
+[![版本](https://img.shields.io/badge/版本-3.0-4ECDC4?style=flat-square)]()
 [![收录站点](https://img.shields.io/badge/收录站点-150+-45B7D1?style=flat-square)]()
 [![分类](https://img.shields.io/badge/分类-10-96CEB4?style=flat-square)]()
 [![开源协议](https://img.shields.io/badge/开源协议-MIT-FFEAA7?style=flat-square)]()
@@ -63,12 +63,13 @@ DogNav 是一个精心策划的网址导航站，帮助你发现互联网上最�
 | 📱 **全端响应式** | 针对桌面、平板和移动端全面适配 |
 | 🇨🇳 **国内可达** | 所有收录站点从大陆均可访问，CDN 使用国内友好服务商 |
 | 🗄️ **完整 CMS 后台** | 通过管理面板管理站点、分类、页面、友链、用户和设置 |
+| 📄 **自定义页面** | 后台随意创建、编辑、删除页面，首页导航栏自动展示 |
 | 🩺 **站点健康监控** | 批量检测所有站点可用性 — 按在线 / 缓慢 / 离线筛选 |
 | 🔄 **自动获取元信息** | 输入网址一键获取图标、站名和描述 |
 | 🖼️ **自定义 Favicon** | 在系统设置中上传自己的站点图标 |
 | 📊 **点击统计** | 内置点击计数，追踪站点热度 |
 | 📝 **用户提交** | 访客可提交网站，由管理员审核收录 |
-| ☁️ **Cloudflare 部署** | 一键部署到 Cloudflare Workers + D1 无服务器架构 |
+| ☁️ **Cloudflare 部署** | 一键部署到 Cloudflare Workers + D1，首次访问自动初始化数据库 |
 | 🔐 **后台鉴权** | Bearer Token 认证，操作日志全程记录 |
 | 📦 **开箱即用** | 预置 150+ 站点、10 个分类和默认设置 |
 
@@ -82,7 +83,7 @@ DogNav 提供**两种部署模式**，前端和 API 完全一致：
 ┌─────────────────────────────────────────────────────┐
 │                  前端 (HTML/CSS/JS)                   │
 │   index.html · about.html · links.html · contribute  │
-│                + 13 个后台管理页面                     │
+│   page.html · + 13 个后台管理页面                     │
 └────────────────────┬────────────────────────────────┘
                      │ fetch('/api/...')
         ┌────────────┴────────────┐
@@ -101,7 +102,8 @@ DogNav 提供**两种部署模式**，前端和 API 完全一致：
 |:--|:---------|:---------------|
 | **运行时** | Node.js (Express) | Cloudflare Workers (Hono) |
 | **数据库** | sql.js（文件型 SQLite） | D1（无服务器 SQLite） |
-| **部署方式** | \`node server.js\` | \`wrangler deploy\` |
+| **部署方式** | `node server.js` | 点击部署按钮或 `wrangler deploy` |
+| **数据库初始化** | `node seed.js` | 首次访问自动完成 |
 | **费用** | 免费（自备服务器） | 免费额度充裕 |
 
 ---
@@ -130,14 +132,14 @@ npm start
 
 ### Cloudflare 一键部署
 
-点击上方的 **「Deploy to Cloudflare」** 按钮，即可自动完成部署：
+点击上方的 **「Deploy to Cloudflare」** 按钮，即可完成部署：
 
-- 自动克隆仓库
-- 自动创建 D1 数据库
-- 自动执行数据库初始化（建表 + 导入示例数据）
-- 自动部署 Worker 及所有静态资源
+1. Cloudflare 自动克隆仓库并安装依赖
+2. 自动创建 D1 数据库（无需手动配置）
+3. 部署 Worker 及所有静态资源
+4. **首次访问时 Worker 自动建表并写入默认数据**（管理员账号、10 个分类、默认页面等）
 
-部署完成后你将在 Cloudflare Dashboard 中看到你的站点地址。
+部署完成后在 Cloudflare Dashboard 即可看到站点地址，访问后即自动完成数据库初始化。
 
 > **提示**：部署过程中会要求你登录 Cloudflare 账号。如果你还没有账号，会引导你免费注册（Worker 免费额度足够个人使用）。
 
@@ -157,7 +159,7 @@ npm install
 npm run deploy
 ```
 
-部署脚本会自动完成：检查 Wrangler → 登录 Cloudflare → 创建 D1 → 初始化数据库 → 部署上线。
+部署脚本会自动完成：检查 Wrangler → 登录 Cloudflare → 创建 D1 → 部署上线。
 
 **你的站点将上线于：** `https://dognav.<你的子域名>.workers.dev`
 
@@ -173,13 +175,16 @@ npx wrangler login
 npx wrangler d1 create dognav
 # → 将 database_id 复制到 wrangler.toml
 
-# 初始化数据库
-npx wrangler d1 execute dognav --remote --file=./schema.sql
-npx wrangler d1 execute dognav --remote --file=./seed.sql
-
 # 部署
 npx wrangler deploy
 ```
+
+> 部署后首次访问站点时，Worker 会自动创建所有数据库表并写入默认数据（管理员、分类、页面等），无需手动执行 SQL。如需导入完整的 150+ 站点数据，可额外执行：
+>
+> ```bash
+> npx wrangler d1 execute dognav --remote --file=./schema.sql
+> npx wrangler d1 execute dognav --remote --file=./seed.sql
+> ```
 
 ---
 
@@ -191,7 +196,7 @@ npx wrangler deploy
 |:-----|:-----|
 | 📋 **站点管理** | 增删改查导航站点，支持一键获取图标和描述 |
 | 📂 **分类管理** | 管理站点分类，自定义图标和排序 |
-| 📄 **页面管理** | 可视化编辑关于、友链、投稿等页面内容 |
+| 📄 **页面管理** | 创建、编辑、删除自定义页面，首页导航栏自动展示 |
 | 🔗 **友链管理** | 管理友情链接，支持自动获取站点元信息 |
 | 📮 **提交审核** | 审核访客提交的站点，一键通过或拒绝 |
 | 🩺 **站点检测** | 批量可用性监控 — 按在线 / 缓慢 / 离线筛选 |
@@ -211,9 +216,11 @@ dog-nav/
 ├── about.html              # 关于页面（CMS 驱动）
 ├── links.html              # 友链页面（CMS 驱动）
 ├── contribute.html          # 投稿页面（CMS 驱动）
-├── server.js               # 本地 CMS 服务（Express + sql.js，约 1150 行）
+├── page.html               # 自定义页面模板（CMS 驱动）
+├── server.js               # 本地 CMS 服务（Express + sql.js）
 ├── seed.js                 # 数据库初始化脚本
-├── package.json            # Node.js 依赖
+├── package.json            # Node.js 依赖（含 hono 供 CF 部署）
+├── wrangler.toml           # Cloudflare Workers 配置（一键部署用）
 │
 ├── css/
 │   ├── style.css           # 主样式表（玻璃拟态、主题）
@@ -226,18 +233,19 @@ dog-nav/
 │   ├── index.html          # 登录页
 │   ├── dashboard.html      # 站点管理
 │   ├── categories.html     # 分类管理
+│   ├── pages.html          # 页面管理（增删改查）
 │   ├── health.html         # 站点检测
 │   ├── ...                 # （见后台管理章节）
 │   └── backup.html         # 备份恢复
 │
 ├── cloudflare/             # Cloudflare Workers 部署
 │   ├── src/
-│   │   └── index.js        # Hono API 后端（约 540 行）
+│   │   └── index.js        # Hono API 后端 + 自动初始化
 │   ├── public/             # 静态资源（前端副本）
-│   ├── schema.sql          # D1 数据库结构（10 张表）
-│   ├── seed.sql            # 种子数据
+│   ├── schema.sql          # D1 数据库结构（12 张表）
+│   ├── seed.sql            # 种子数据（150+ 站点）
 │   ├── deploy.js           # 一键部署脚本
-│   ├── wrangler.toml       # Cloudflare 配置
+│   ├── wrangler.toml       # Cloudflare 配置（手动部署用）
 │   └── package.json        # CF 依赖（hono, wrangler）
 │
 ├── robots.txt              # 搜索引擎规则
