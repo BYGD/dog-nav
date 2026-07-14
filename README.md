@@ -17,9 +17,13 @@
 
 <br>
 
-<a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BYGD/dog-nav" target="_blank">
-<img src="https://deploy.workers.cloudflare.com/button" alt="Deploy to Cloudflare">
-</a>
+**🚀 三步部署到 Cloudflare（含 D1 数据库自动创建）：**
+
+```bash
+git clone https://github.com/BYGD/dog-nav.git
+cd dog-nav && npm install
+npm run deploy:cf
+```
 
 </div>
 
@@ -132,48 +136,40 @@ npm start
 
 ### Cloudflare 一键部署
 
-点击上方的 **「Deploy to Cloudflare」** 按钮，即可完成部署：
-
-1. Cloudflare 自动克隆仓库并安装依赖
-2. 自动创建 D1 数据库（无需手动配置）
-3. 部署 Worker 及所有静态资源
-4. **首次访问时 Worker 自动建表并写入默认数据**（管理员账号、10 个分类、默认页面等）
-
-部署完成后在 Cloudflare Dashboard 即可看到站点地址，访问后即自动完成数据库初始化。
-
-> **提示**：部署过程中会要求你登录 Cloudflare 账号。如果你还没有账号，会引导你免费注册（Worker 免费额度足够个人使用）。
-
-### 命令行部署（备选方案）
-
-如果你更习惯用命令行，也可以在本地执行：
-
 ```bash
 # 克隆仓库
 git clone https://github.com/BYGD/dog-nav.git
-cd dog-nav/cloudflare
+cd dog-nav
 
 # 安装依赖
 npm install
 
-# 一键部署（自动处理认证、创建 D1、初始化数据、部署上线）
-npm run deploy
+# 一键部署（自动创建 D1、部署 Worker）
+npm run deploy:cf
 ```
 
-部署脚本会自动完成：检查 Wrangler → 登录 Cloudflare → 创建 D1 → 部署上线。
+部署脚本会自动完成：检查认证 → 创建 D1 数据库 → 更新配置 → 部署上线。
+
+**首次访问站点时，Worker 会自动创建所有数据库表并写入默认数据**（管理员账号、10 个分类、默认页面等），无需手动执行 SQL。
 
 **你的站点将上线于：** `https://dognav.<你的子域名>.workers.dev`
+
+> **提示**：首次运行 `npm run deploy:cf` 会引导你登录 Cloudflare。如果你还没有账号，会引导你免费注册（Worker 免费额度足够个人使用）。
+
+> **导入完整数据**：默认只初始化基础数据（管理员、分类、页面）。如需导入完整的 150+ 站点数据，部署后运行：
+> ```bash
+> npm run db:seed
+> ```
 
 ### 手动部署到 Cloudflare
 
 ```bash
-cd cloudflare
-
 # 登录 Cloudflare
 npx wrangler login
 
 # 创建 D1 数据库
 npx wrangler d1 create dognav
-# → 将 database_id 复制到 wrangler.toml
+# → 将 database_id 复制到根目录 wrangler.toml
 
 # 部署
 npx wrangler deploy
@@ -182,8 +178,8 @@ npx wrangler deploy
 > 部署后首次访问站点时，Worker 会自动创建所有数据库表并写入默认数据（管理员、分类、页面等），无需手动执行 SQL。如需导入完整的 150+ 站点数据，可额外执行：
 >
 > ```bash
-> npx wrangler d1 execute dognav --remote --file=./schema.sql
-> npx wrangler d1 execute dognav --remote --file=./seed.sql
+> npx wrangler d1 execute dognav --remote --file=./cloudflare/schema.sql
+> npx wrangler d1 execute dognav --remote --file=./cloudflare/seed.sql
 > ```
 
 ---
@@ -218,6 +214,7 @@ dog-nav/
 ├── contribute.html          # 投稿页面（CMS 驱动）
 ├── page.html               # 自定义页面模板（CMS 驱动）
 ├── server.js               # 本地 CMS 服务（Express + sql.js）
+├── deploy.js               # Cloudflare 一键部署脚本
 ├── seed.js                 # 数据库初始化脚本
 ├── package.json            # Node.js 依赖（含 hono 供 CF 部署）
 ├── wrangler.toml           # Cloudflare Workers 配置（一键部署用）
