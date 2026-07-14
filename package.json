@@ -6,8 +6,10 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "deploy": "npx wrangler d1 execute DB --remote --file=./cloudflare/schema.sql && npx wrangler d1 execute DB --remote --file=./cloudflare/seed.sql",
-    "db:init": "npx wrangler d1 execute DB --remote --file=./cloudflare/schema.sql && npx wrangler d1 execute DB --remote --file=./cloudflare/seed.sql"
+    "deploy:cf": "node deploy.js",
+    "db:seed": "npx wrangler d1 execute dognav --remote --file=./cloudflare/schema.sql && npx wrangler d1 execute dognav --remote --file=./cloudflare/seed.sql",
+    "deploy": "node deploy.js",
+    "db:init": "npx wrangler d1 execute dognav --remote --file=./cloudflare/schema.sql && npx wrangler d1 execute dognav --remote --file=./cloudflare/seed.sql"
   },
   "dependencies": {
     "express": "^4.18.2",
