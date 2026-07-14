@@ -17,13 +17,20 @@
 
 <br>
 
-**🚀 三步部署到 Cloudflare（含 D1 数据库自动创建）：**
+**🚀 一键部署到 Cloudflare（自动创建 D1 数据库）：**
+
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/BYGD/dog-nav)
+
+<details>
+<summary>或用命令行部署</summary>
 
 ```bash
 git clone https://github.com/BYGD/dog-nav.git
 cd dog-nav && npm install
 npm run deploy:cf
 ```
+
+</details>
 
 </div>
 
