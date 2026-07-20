@@ -8,7 +8,7 @@
 
 **一个精心策划的网址导航站，自带完整 CMS 后台 — 支持本地部署或一键部署到 Cloudflare。**
 
-[![在线演示](https://img.shields.io/badge/在线演示-nav.cangdog.com-FF6B6B?style=flat-square)](https://nav.cangdog.com)
+[![在线演示](https://img.shields.io/badge/在线演示-nav.125600.xyz-FF6B6B?style=flat-square)](https://nav.125600.xyz)
 [![Cloudflare](https://img.shields.io/badge/Cloudflare-dognav.ccgg.workers.dev-F38020?style=flat-square&logo=cloudflare&logoColor=white)](https://dognav.ccgg.workers.dev)
 [![版本](https://img.shields.io/badge/版本-3.0-4ECDC4?style=flat-square)]()
 [![收录站点](https://img.shields.io/badge/收录站点-150+-45B7D1?style=flat-square)]()
@@ -303,7 +303,7 @@ dog-nav/
 | 平台 | 地址 | 说明 |
 |:-----|:-----|:-----|
 | Cloudflare Workers | [dognav.ccgg.workers.dev](https://dognav.ccgg.workers.dev) | 全栈 CMS 版本 |
-| 自定义域名 | [nav.cangdog.com](https://nav.cangdog.com) | 前端演示 |
+| 自定义域名 | [nav.125600.xyz](https://nav.125600.xyz) | 前端演示 |
 | 本地部署 | `localhost:3000` | 自备 Node.js 环境 |
 
 ---
@@ -318,6 +318,6 @@ dog-nav/
 
 **⭐ 如果觉得这个项目对你有帮助，欢迎点个 Star！⭐**
 
-[在线演示](https://nav.cangdog.com) · [Cloudflare 版](https://dognav.ccgg.workers.dev) · [反馈问题](https://github.com/BYGD/dog-nav/issues) · [提出建议](https://github.com/BYGD/dog-nav/issues)
+[在线演示](https://nav.125600.xyz) · [Cloudflare 版](https://dognav.ccgg.workers.dev) · [反馈问题](https://github.com/BYGD/dog-nav/issues) · [提出建议](https://github.com/BYGD/dog-nav/issues)
 
 </div>
